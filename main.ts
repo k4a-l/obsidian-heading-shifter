@@ -1,14 +1,34 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {
+	App,
+	Editor,
+	MarkdownView,
+	Modal,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	EditorPosition,
+	EditorTransaction,
+	EditorChange,
+	Command,
+} from "obsidian";
 
-// Remember to rename these classes and interfaces!
+import { applyHeading, ApplyHeading, Heading } from "./src/applyHeading";
 
 interface MyPluginSettings {
-	mySetting: string;
+	limitHeadingFrom: number;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
-}
+	limitHeadingFrom: 1,
+};
+
+const checkHeading = (content: string): number => {
+	const match = content.match(/^(#+) /);
+	if (!match) return 0;
+	if (match[1]) return match[1].length;
+	return 0;
+};
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -16,74 +36,96 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
+		const headings: Heading[] = [0, 1, 2, 3, 4, 5];
+		headings.forEach((heading) =>
+			this.addCommand(new ApplyHeading(heading).command)
+		);
 
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status Bar Text');
+		const setMin = (prev: undefined | number, cur: number): number => {
+			if (prev == undefined || (prev !== undefined && cur < prev)) {
+				return cur;
+			}
+			return prev;
+		};
 
-		// This adds a simple command that can be triggered anywhere
-		this.addCommand({
-			id: 'open-sample-modal-simple',
-			name: 'Open sample modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
+		const setMax = (prev: undefined | number, cur: number): number => {
+			if (prev == undefined || (prev !== undefined && cur > prev)) {
+				return cur;
 			}
-		});
-		// This adds an editor command that can perform some operation on the current editor instance
+			return prev;
+		};
+
 		this.addCommand({
-			id: 'sample-editor-command',
-			name: 'Sample editor command',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
-				editor.replaceSelection('Sample Editor Command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-sample-modal-complex',
-			name: 'Open sample modal (complex)',
-			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
+			id: "increase-heading",
+			name: "Increase Heading",
+			editorCallback(editor, view) {
+				const lineRange = {
+					from: editor.getCursor("from").line,
+					to: editor.getCursor("to").line,
+				};
+
+				let headingLines: { line: number; heading: number }[] = [];
+				let minHeading: undefined | number = undefined;
+				let maxHeading: undefined | number = undefined;
+
+				for (let line = lineRange.from; line <= lineRange.to; line++) {
+					const heading = checkHeading(editor.getLine(line));
+					if (heading > 0) {
+						headingLines.push({ line, heading });
+						minHeading = setMin(minHeading, heading);
+						maxHeading = setMax(maxHeading, heading);
 					}
-
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
 				}
-			}
+
+				if (maxHeading !== undefined && maxHeading >= 5) {
+					new Notice("Cannot Increase (Includes over Heading 5)");
+					return;
+				}
+
+				const editorChange: EditorChange[] = [];
+
+				for (const headingLine of headingLines) {
+					const shifted = applyHeading(
+						editor.getLine(headingLine.line),
+						headingLine.heading + 1
+					);
+
+					editorChange.push({
+						text: shifted,
+						from: { line: headingLine.line, ch: 0 },
+						to: {
+							line: headingLine.line,
+							ch: editor.getLine(headingLine.line).length,
+						},
+					});
+				}
+
+				const transaction: EditorTransaction = {
+					changes: editorChange,
+				};
+
+				console.log(minHeading, maxHeading);
+
+				editor.transaction(transaction);
+			},
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
+		this.addCommand({
+			id: "decrease-heading",
+			name: "Decrease Heading",
+			editorCallback(editor, view) {},
 		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		this.addSettingTab(new SettingTab(this.app, this));
 	}
 
-	onunload() {
-
-	}
+	onunload() {}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		this.settings = Object.assign(
+			{},
+			DEFAULT_SETTINGS,
+			await this.loadData()
+		);
 	}
 
 	async saveSettings() {
@@ -91,23 +133,7 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-class SampleSettingTab extends PluginSettingTab {
+class SettingTab extends PluginSettingTab {
 	plugin: MyPlugin;
 
 	constructor(app: App, plugin: MyPlugin) {
@@ -116,22 +142,40 @@ class SampleSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this;
+		const { containerEl } = this;
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
+			.setName("Lower limit of Heading")
+			.setDesc("")
+			.addDropdown((n) => {
+				const headingOptions: Record<string, string> = {
+					noHeading: "0",
+					heading1: "1",
+					heading2: "2",
+					heading3: "3",
+					heading4: "4",
+					heading5: "5",
+				};
+				n.addOptions(headingOptions).onChange(async (value) => {
+					this.plugin.settings.limitHeadingFrom = Number(value);
 					await this.plugin.saveSettings();
-				}));
+				});
+			});
+
+		// new Setting(containerEl)
+		// 	.setName("Setting #1")
+		// 	.setDesc("It's a secret")
+		// 	.addText((text) =>
+		// 		text
+		// 			.setPlaceholder("Enter your secret")
+		// 			.setValue(this.plugin.settings.mySetting)
+		// 			.onChange(async (value) => {
+		// 				console.log("Secret: " + value);
+		// 				this.plugin.settings.mySetting = value;
+		// 				await this.plugin.saveSettings();
+		// 			})
+		// 	);
 	}
 }
