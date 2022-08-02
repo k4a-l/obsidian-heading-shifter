@@ -5,9 +5,9 @@ export type Heading = number;
 export const applyHeading = (chunk: string, heading: Heading): string => {
 	const remove = chunk.replace(/^#+ /, "");
 
-	if (heading <= 0) return chunk;
+	if (heading <= 0) return remove;
 	return (
-		new Array(Math.min(heading, 5)).fill("#").reduce((prev, cur) => {
+		new Array(heading).fill("#").reduce((prev, cur) => {
 			return cur + prev;
 		}, " ") + remove
 	);

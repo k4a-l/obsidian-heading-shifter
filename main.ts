@@ -1,3 +1,4 @@
+import { decreaseHeading, increaseHeading } from "features/shiftHeading";
 import {
 	App,
 	Editor,
@@ -12,8 +13,14 @@ import {
 	EditorChange,
 	Command,
 } from "obsidian";
+import { checkHeading } from "utils/checkHeading";
+import { setMin, setMax } from "utils/range";
 
-import { applyHeading, ApplyHeading, Heading } from "./src/features/applyHeading";
+import {
+	applyHeading,
+	ApplyHeading,
+	Heading,
+} from "./src/features/applyHeading";
 
 interface MyPluginSettings {
 	limitHeadingFrom: number;
@@ -21,13 +28,6 @@ interface MyPluginSettings {
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	limitHeadingFrom: 1,
-};
-
-const checkHeading = (content: string): number => {
-	const match = content.match(/^(#+) /);
-	if (!match) return 0;
-	if (match[1]) return match[1].length;
-	return 0;
 };
 
 export default class MyPlugin extends Plugin {
@@ -41,79 +41,119 @@ export default class MyPlugin extends Plugin {
 			this.addCommand(new ApplyHeading(heading).command)
 		);
 
-		const setMin = (prev: undefined | number, cur: number): number => {
-			if (prev == undefined || (prev !== undefined && cur < prev)) {
-				return cur;
-			}
-			return prev;
+		const getLineRange = (editor: Editor) => {
+			return {
+				from: editor.getCursor("from").line,
+				to: editor.getCursor("to").line,
+			};
 		};
 
-		const setMax = (prev: undefined | number, cur: number): number => {
-			if (prev == undefined || (prev !== undefined && cur > prev)) {
-				return cur;
+		const getHeadingLines = (editor: Editor, from: number, to: number) => {
+			let headingLines: { line: number; heading: number }[] = [];
+			let minHeading: undefined | number = undefined;
+			let maxHeading: undefined | number = undefined;
+
+			for (
+				let line = Math.min(from, to);
+				line <= Math.max(from, to);
+				line++
+			) {
+				const heading = checkHeading(editor.getLine(line));
+				if (heading > 0) {
+					headingLines.push({ line, heading });
+					minHeading = setMin(minHeading, heading);
+					maxHeading = setMax(maxHeading, heading);
+				}
 			}
-			return prev;
+			return { headingLines, minHeading, maxHeading };
+		};
+
+		type HeadingLine = { line: number; heading: number };
+
+		const getHeadingShiftChanges = (
+			editor: Editor,
+			headingLines: HeadingLine[],
+			callback: (chunk: string) => string
+		) => {
+			const editorChange: EditorChange[] = [];
+
+			for (const headingLine of headingLines) {
+				const shifted = callback(editor.getLine(headingLine.line));
+
+				editorChange.push({
+					text: shifted,
+					from: { line: headingLine.line, ch: 0 },
+					to: {
+						line: headingLine.line,
+						ch: editor.getLine(headingLine.line).length,
+					},
+				});
+			}
+
+			return editorChange;
 		};
 
 		this.addCommand({
 			id: "increase-heading",
 			name: "Increase Heading",
 			editorCallback(editor, view) {
-				const lineRange = {
-					from: editor.getCursor("from").line,
-					to: editor.getCursor("to").line,
-				};
+				const lineRange = getLineRange(editor);
 
-				let headingLines: { line: number; heading: number }[] = [];
-				let minHeading: undefined | number = undefined;
-				let maxHeading: undefined | number = undefined;
-
-				for (let line = lineRange.from; line <= lineRange.to; line++) {
-					const heading = checkHeading(editor.getLine(line));
-					if (heading > 0) {
-						headingLines.push({ line, heading });
-						minHeading = setMin(minHeading, heading);
-						maxHeading = setMax(maxHeading, heading);
-					}
-				}
+				const { headingLines, maxHeading } = getHeadingLines(
+					editor,
+					lineRange.from,
+					lineRange.to
+				);
 
 				if (maxHeading !== undefined && maxHeading >= 5) {
 					new Notice("Cannot Increase (Includes over Heading 5)");
 					return;
 				}
 
-				const editorChange: EditorChange[] = [];
+				const editorChange = getHeadingShiftChanges(
+					editor,
+					headingLines,
+					increaseHeading
+				);
 
-				for (const headingLine of headingLines) {
-					const shifted = applyHeading(
-						editor.getLine(headingLine.line),
-						headingLine.heading + 1
-					);
-
-					editorChange.push({
-						text: shifted,
-						from: { line: headingLine.line, ch: 0 },
-						to: {
-							line: headingLine.line,
-							ch: editor.getLine(headingLine.line).length,
-						},
-					});
-				}
-
-				const transaction: EditorTransaction = {
+				editor.transaction({
 					changes: editorChange,
-				};
-
-				console.log(minHeading, maxHeading);
-
-				editor.transaction(transaction);
+				});
 			},
 		});
 
 		this.addCommand({
 			id: "decrease-heading",
 			name: "Decrease Heading",
-			editorCallback(editor, view) {},
+			editorCallback: (editor, view) => {
+				const lineRange = getLineRange(editor);
+
+				const { headingLines, minHeading } = getHeadingLines(
+					editor,
+					lineRange.from,
+					lineRange.to
+				);
+
+				if (
+					minHeading !== undefined &&
+					minHeading <= Number(this.settings.limitHeadingFrom)
+				) {
+					new Notice(
+						"Cannot Decrease (Includes under Heading 'Lower limit of Heading')"
+					);
+					return;
+				}
+
+				const editorChange = getHeadingShiftChanges(
+					editor,
+					headingLines,
+					decreaseHeading
+				);
+
+				editor.transaction({
+					changes: editorChange,
+				});
+			},
 		});
 		this.addSettingTab(new SettingTab(this.app, this));
 	}
@@ -158,10 +198,12 @@ class SettingTab extends PluginSettingTab {
 					heading4: "4",
 					heading5: "5",
 				};
-				n.addOptions(headingOptions).onChange(async (value) => {
-					this.plugin.settings.limitHeadingFrom = Number(value);
-					await this.plugin.saveSettings();
-				});
+				n.addOptions(headingOptions)
+					.setValue(String(this.plugin.settings.limitHeadingFrom))
+					.onChange(async (value) => {
+						this.plugin.settings.limitHeadingFrom = Number(value);
+						await this.plugin.saveSettings();
+					});
 			});
 
 		// new Setting(containerEl)
