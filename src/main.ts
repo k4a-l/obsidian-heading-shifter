@@ -26,7 +26,7 @@ export default class MyPlugin extends Plugin {
 		/* Shift Heading Command */
 		this.addCommand({
 			id: "increase-heading",
-			name: "Increase Heading",
+			name: "Increase Headings",
 			editorCallback: (editor, view) => {
 				const { headingLines, maxHeading } = getHeadingLines(
 					editor,
@@ -34,9 +34,17 @@ export default class MyPlugin extends Plugin {
 					editor.getCursor("to").line
 				);
 
+				console.log(editor.getSelection());
+				console.log(
+					editor.getCursor("anchor"),
+					editor.getCursor("from"),
+					editor.getCursor("to"),
+					editor.getCursor("head")
+				);
+
 				if (maxHeading !== undefined && maxHeading >= 5) {
 					return new Notice(
-						"Cannot Increase (includes over Heading 5)"
+						"Cannot Increase (contains more than Heading 5)"
 					);
 				}
 
@@ -52,7 +60,7 @@ export default class MyPlugin extends Plugin {
 
 		this.addCommand({
 			id: "decrease-heading",
-			name: "Decrease Heading",
+			name: "Decrease Headings",
 			editorCallback: (editor, view) => {
 				const { headingLines, minHeading } = getHeadingLines(
 					editor,
@@ -65,9 +73,11 @@ export default class MyPlugin extends Plugin {
 					minHeading <= Number(this.settings.limitHeadingFrom)
 				) {
 					return new Notice(
-						`Cannot Decrease (includes under Heading${this.settings.limitHeadingFrom})`
+						`Cannot Decrease (contains less than Heading${this.settings.limitHeadingFrom})`
 					);
 				}
+
+				console.log(this.settings.limitHeadingFrom, minHeading);
 
 				editor.transaction({
 					changes: composeLineChanges(
@@ -112,15 +122,17 @@ class SettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Lower limit of Heading")
-			.setDesc("")
+			.setDesc(
+				"The lower Heading Size that will be decreased by the Heading Shift "
+			)
 			.addDropdown((n) => {
 				const headingOptions: Record<string, string> = {
-					noHeading: "0",
-					heading1: "1",
-					heading2: "2",
-					heading3: "3",
-					heading4: "4",
-					heading5: "5",
+					"0": "0",
+					"1": "1",
+					"2": "2",
+					"3": "3",
+					"4": "4",
+					"5": "5",
 				};
 				n.addOptions(headingOptions)
 					.setValue(String(this.plugin.settings.limitHeadingFrom))
