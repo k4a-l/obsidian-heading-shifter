@@ -34,14 +34,6 @@ export default class MyPlugin extends Plugin {
 					editor.getCursor("to").line
 				);
 
-				console.log(editor.getSelection());
-				console.log(
-					editor.getCursor("anchor"),
-					editor.getCursor("from"),
-					editor.getCursor("to"),
-					editor.getCursor("head")
-				);
-
 				if (maxHeading !== undefined && maxHeading >= 5) {
 					return new Notice(
 						"Cannot Increase (contains more than Heading 5)"
@@ -76,8 +68,6 @@ export default class MyPlugin extends Plugin {
 						`Cannot Decrease (contains less than Heading${this.settings.limitHeadingFrom})`
 					);
 				}
-
-				console.log(this.settings.limitHeadingFrom, minHeading);
 
 				editor.transaction({
 					changes: composeLineChanges(
