@@ -3,7 +3,7 @@
 	"name": "Heading Shifter",
 	"version": "1.0.1",
 	"minAppVersion": "0.12.0",
-	"description": "Easily shift multiple heading of markdown.",
+	"description": "Easily Shift and Change markdown headings.",
 	"author": "k4a",
 	"authorUrl": "https://github.com/k4a-dev",
 	"isDesktopOnly": false
