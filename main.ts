@@ -13,7 +13,7 @@ import {
 	Command,
 } from "obsidian";
 
-import { applyHeading, ApplyHeading, Heading } from "./src/applyHeading";
+import { applyHeading, ApplyHeading, Heading } from "./src/features/applyHeading";
 
 interface MyPluginSettings {
 	limitHeadingFrom: number;
