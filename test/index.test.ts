@@ -1,5 +1,5 @@
 import { applyHeading } from "features/applyHeading";
-import { decreaseHeading, increaseHeading } from "features/shiftHeading";
+import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
 
 const content = "headingShifter";
 

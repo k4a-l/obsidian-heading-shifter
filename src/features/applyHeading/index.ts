@@ -1,2 +1,2 @@
 export { applyHeading } from "./module";
-export { ApplyHeading } from "./operation";
+export { createApplyHeadingCommand } from "./operation";

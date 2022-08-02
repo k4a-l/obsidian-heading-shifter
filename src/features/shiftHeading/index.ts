@@ -1,1 +1,4 @@
-export { increaseHeading, decreaseHeading } from "./module";
+export {
+	createIncreaseHeadingCommand,
+	createDecreaseHeadingCommand,
+} from "./operation";
