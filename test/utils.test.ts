@@ -1,3 +1,4 @@
+import { composeLineChanges } from "utils/editorChange";
 import {
 	checkFence,
 	checkHeading,
@@ -117,5 +118,36 @@ Normal
 			minHeading: 1,
 			maxHeading: 3,
 		});
+	});
+});
+
+describe("compose editorChange", () => {
+	test("", () => {
+		const input = `a
+b
+c
+d
+e
+f`;
+		const editor = new Editor(input);
+		const changeCallback = (chunk: string) =>
+			`==begin==${chunk.toUpperCase()}==end==`;
+		expect(composeLineChanges(editor, [0, 2, 4], changeCallback)).toEqual([
+			{
+				text: "==begin==A==end==",
+				from: { line: 0, ch: 0 },
+				to: { line: 0, ch: 1 },
+			},
+			{
+				text: "==begin==C==end==",
+				from: { line: 2, ch: 0 },
+				to: { line: 2, ch: 1 },
+			},
+			{
+				text: "==begin==E==end==",
+				from: { line: 4, ch: 0 },
+				to: { line: 4, ch: 1 },
+			},
+		]);
 	});
 });

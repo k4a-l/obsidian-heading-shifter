@@ -12,15 +12,17 @@ export default class HeadingShifter extends Plugin {
 	settings: HeadingShifterSettings;
 
 	async onload() {
+		// Loading
 		await this.loadSettings();
 
+		// Command
 		HEADINGS.forEach((heading) =>
 			this.addCommand(createApplyHeadingCommand(this.settings, heading))
 		);
-
 		this.addCommand(createIncreaseHeadingCommand(this.settings));
 		this.addCommand(createDecreaseHeadingCommand(this.settings));
 
+		// Setting
 		this.addSettingTab(new SettingTab(this.app, this));
 	}
 
@@ -49,7 +51,6 @@ class SettingTab extends PluginSettingTab {
 
 	display(): void {
 		const { containerEl } = this;
-
 		containerEl.empty();
 
 		new Setting(containerEl)
@@ -57,7 +58,8 @@ class SettingTab extends PluginSettingTab {
 			.setDesc(
 				"The lower Heading Size that will be decreased by the Heading Shift "
 			)
-			.addDropdown((n) => {
+			.addDropdown((dropdown) => {
+				// Create options from heading array like {'0':'0','1':'1',.......}
 				const headingOptions: Record<string, string> = HEADINGS.reduce(
 					(prev, heading) => {
 						return { ...prev, [heading]: String(heading) };
@@ -65,7 +67,8 @@ class SettingTab extends PluginSettingTab {
 					{}
 				);
 
-				n.addOptions(headingOptions)
+				dropdown
+					.addOptions(headingOptions)
 					.setValue(String(this.plugin.settings.limitHeadingFrom))
 					.onChange(async (value) => {
 						this.plugin.settings.limitHeadingFrom = Number(value);

@@ -1,13 +1,13 @@
 import { Editor, EditorChange } from "obsidian";
 
 export const composeLineChanges = (
-	editor: Editor,
-	lines: number[],
+	editor: { getLine: (number: number) => string },
+	lineNumbers: number[],
 	changeCallback: (chunk: string) => string
 ) => {
 	const editorChange: EditorChange[] = [];
 
-	for (const line of lines) {
+	for (const line of lineNumbers) {
 		const shifted = changeCallback(editor.getLine(line));
 
 		editorChange.push({
