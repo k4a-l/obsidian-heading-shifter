@@ -1,7 +1,7 @@
 import { Editor, View, Notice } from "obsidian";
 import { HeadingShifterSettings } from "settings";
 import { composeLineChanges } from "utils/editorChange";
-import { getHeadingLines } from "utils/heading";
+import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
 
 export const createIncreaseHeadingCommand = (

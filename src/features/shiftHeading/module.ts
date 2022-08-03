@@ -1,5 +1,5 @@
 import { applyHeading } from "features/applyHeading";
-import { checkHeading } from "utils/check";
+import { checkHeading } from "utils/markdown";
 
 const shiftHeading = (chunk: string, dir: 1 | -1): string => {
 	const heading = checkHeading(chunk);
