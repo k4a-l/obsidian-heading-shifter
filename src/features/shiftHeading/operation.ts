@@ -7,10 +7,8 @@ import { increaseHeading, decreaseHeading } from "./module";
 export const createIncreaseHeadingCommand = (
 	pluginSetting: HeadingShifterSettings
 ) => {
-	return {
-		id: "increase-heading",
-		name: "Increase Headings",
-		editorCallback: (editor: Editor, view: View) => {
+	const createEditorCallback = () => {
+		(editor: Editor, view: View) => {
 			const { headingLines, maxHeading } = getHeadingLines(
 				editor,
 				editor.getCursor("from").line,
@@ -30,29 +28,30 @@ export const createIncreaseHeadingCommand = (
 					increaseHeading
 				),
 			});
-		},
+		};
+	};
+
+	return {
+		id: "increase-heading",
+		name: "Increase Headings",
+		editorCallback: createEditorCallback,
 	};
 };
 
 export const createDecreaseHeadingCommand = (
 	pluginSetting: HeadingShifterSettings
 ) => {
-	return {
-		id: "decrease-heading",
-		name: "Decrease Headings",
-		editorCallback: (editor: Editor, view: View) => {
+	const createEditorCallback = (underHeadingLimit: number) => {
+		return (editor: Editor, view: View) => {
 			const { headingLines, minHeading } = getHeadingLines(
 				editor,
 				editor.getCursor("from").line,
 				editor.getCursor("to").line
 			);
 
-			if (
-				minHeading !== undefined &&
-				minHeading <= Number(pluginSetting.limitHeadingFrom)
-			) {
+			if (minHeading !== undefined && minHeading <= underHeadingLimit) {
 				return new Notice(
-					`Cannot Decrease (contains less than Heading${pluginSetting.limitHeadingFrom})`
+					`Cannot Decrease (contains less than Heading${underHeadingLimit})`
 				);
 			}
 
@@ -63,6 +62,14 @@ export const createDecreaseHeadingCommand = (
 					decreaseHeading
 				),
 			});
-		},
+		};
+	};
+
+	return {
+		id: "decrease-heading",
+		name: "Decrease Headings",
+		editorCallback: createEditorCallback(
+			Number(pluginSetting.limitHeadingFrom)
+		),
 	};
 };
