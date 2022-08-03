@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
 	preset: "ts-jest",
 	testEnvironment: "node",
 	silent: true,
+	collectCoverage: true,
 	moduleNameMapper: {
 		"^@src(.*)$": "<rootDir>/src/$1",
 	},

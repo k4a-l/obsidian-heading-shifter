@@ -1,5 +1,5 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
@@ -23,3 +23,6 @@ data.json
 
 # release
 release
+
+## test
+coverage
