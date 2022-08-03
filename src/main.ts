@@ -23,7 +23,7 @@ export default class HeadingShifter extends Plugin {
 		this.addCommand(createDecreaseHeadingCommand(this.settings));
 
 		// Setting
-		this.addSettingTab(new SettingTab(this.app, this));
+		this.addSettingTab(new HeadingShifterSettingTab(this.app, this));
 	}
 
 	onunload() {}
@@ -41,7 +41,7 @@ export default class HeadingShifter extends Plugin {
 	}
 }
 
-class SettingTab extends PluginSettingTab {
+class HeadingShifterSettingTab extends PluginSettingTab {
 	plugin: HeadingShifter;
 
 	constructor(app: App, plugin: HeadingShifter) {
