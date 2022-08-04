@@ -2,6 +2,7 @@
 
 ![github workflow](https://img.shields.io/github/workflow/status/k4a-dev/obsidian-heading-shifter/jest?style=for-the-badge)
 ![github release](https://img.shields.io/github/v/release/k4a-dev/obsidian-heading-shifter?style=for-the-badge)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/kasahala)
 
 Easily Shift and Change markdown headings.
 
