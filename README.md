@@ -51,9 +51,9 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 | Command           | Description                         | Hotkey |
 | ----------------- | ----------------------------------- | ------ |
 | Apply Heading 0   | Change Current line to no heading.  | -      |
-| Apply Heading 1~5 | Change Current line to heading 1~5. | -      |
+| Apply Heading 1~5 | Change Current line to heading 1~6. | -      |
 
-> It is useful to assign a hotkey such as `Ctrl + 0 ~ 5`
+> It is useful to assign a hotkey such as `Ctrl + 0 ~ 6`
 
 ### Headings Shift
 
@@ -63,7 +63,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Setting                | Description                                                        | Value |
 | ---------------------- | ------------------------------------------------------------------ | ----- |
-| Lower limit of Heading | The lower Heading Size that will be decreased by the Heading Shift | 0~5   |
+| Lower limit of Heading | The lower Heading Size that will be decreased by the Heading Shift | 0~6   |
 
 #### Commands
 
@@ -75,7 +75,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
 -   `Increase Headings` is ineffective if selected lines contains less than `Lower limit of Heading`.
--   `Decrease Headings` is ineffective if selected lines contains more than heading 5.
+-   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
 
 ## Loadmap
 

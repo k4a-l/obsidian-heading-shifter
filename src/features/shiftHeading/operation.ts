@@ -1,5 +1,6 @@
 import { Editor, View, Notice, Command } from "obsidian";
 import { HeadingShifterSettings } from "settings";
+import { icon_increase_heading } from "ui/icon";
 import { composeLineChanges } from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
@@ -16,10 +17,10 @@ export const createIncreaseHeadingCommand = (
 				editor.getCursor("to").line
 			);
 
-			// Do not increase If it contains more than heading 5 .
-			if (maxHeading !== undefined && maxHeading >= 5) {
+			// Do not increase If it contains more than heading 6 .
+			if (maxHeading !== undefined && maxHeading >= 6) {
 				return new Notice(
-					"Cannot Increase (contains more than Heading 5)"
+					"Cannot Increase (contains more than Heading 6)"
 				);
 			}
 

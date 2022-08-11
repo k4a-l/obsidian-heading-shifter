@@ -6,7 +6,7 @@ import {
 } from "features/shiftHeading";
 import { createApplyHeadingCommand } from "features/applyHeading";
 
-const HEADINGS = [0, 1, 2, 3, 4, 5];
+const HEADINGS = [0, 1, 2, 3, 4, 5, 6];
 
 export default class HeadingShifter extends Plugin {
 	settings: HeadingShifterSettings;
