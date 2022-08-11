@@ -1,10 +1,21 @@
-import { App, Plugin, PluginSettingTab, Setting } from "obsidian";
+import { addIcon, App, Plugin, PluginSettingTab, Setting } from "obsidian";
 import { DEFAULT_SETTINGS, HeadingShifterSettings } from "settings";
 import {
 	createDecreaseHeadingCommand,
 	createIncreaseHeadingCommand,
 } from "features/shiftHeading";
 import { createApplyHeadingCommand } from "features/applyHeading";
+import {
+	icon_decrease_heading,
+	icon_heading_0,
+	icon_heading_1,
+	icon_heading_2,
+	icon_heading_3,
+	icon_heading_4,
+	icon_heading_5,
+	icon_heading_6,
+	icon_increase_heading,
+} from "ui/icon";
 
 const HEADINGS = [0, 1, 2, 3, 4, 5, 6];
 
@@ -24,6 +35,19 @@ export default class HeadingShifter extends Plugin {
 
 		// Setting
 		this.addSettingTab(new HeadingShifterSettingTab(this.app, this));
+
+		addIcon("headingShifter_decreaseIcon", icon_decrease_heading);
+		addIcon("headingShifter_increaseIcon", icon_increase_heading);
+		addIcon("headingShifter_heading0", icon_heading_0);
+		addIcon("headingShifter_heading1", icon_heading_1);
+		addIcon("headingShifter_heading2", icon_heading_2);
+		addIcon("headingShifter_heading3", icon_heading_3);
+		addIcon("headingShifter_heading4", icon_heading_4);
+		addIcon("headingShifter_heading5", icon_heading_5);
+		addIcon("headingShifter_heading6", icon_heading_6);
+
+		this.addRibbonIcon("headingShifter_increaseIcon", "increase", () => {});
+		this.addRibbonIcon("headingShifter_decreaseIcon", "decrease", () => {});
 	}
 
 	onunload() {}

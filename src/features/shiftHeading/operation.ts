@@ -39,6 +39,7 @@ export const createIncreaseHeadingCommand = (
 	return {
 		id: "increase-heading",
 		name: "Increase Headings",
+		icon: "headingShifter_increaseIcon",
 		editorCallback: createEditorCallback(),
 	};
 };
@@ -82,6 +83,7 @@ export const createDecreaseHeadingCommand = (
 	return {
 		id: "decrease-heading",
 		name: "Decrease Headings",
+		icon: "headingShifter_decreaseIcon",
 		editorCallback: createEditorCallback(pluginSetting),
 	};
 };

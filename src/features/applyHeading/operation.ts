@@ -34,6 +34,7 @@ export const createApplyHeadingCommand = (
 	return {
 		id: `apply-heading${headingSize}`,
 		name: `Apply Heading ${headingSize}`,
+		icon: `headingShifter_heading${headingSize}`,
 		editorCallback: createEditorCallback(headingSize),
 	};
 };
