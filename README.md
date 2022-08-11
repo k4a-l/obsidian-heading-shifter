@@ -52,7 +52,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 | Command           | Description                         | Hotkey |
 | ----------------- | ----------------------------------- | ------ |
 | Apply Heading 0   | Change Current line to no heading.  | -      |
-| Apply Heading 1~5 | Change Current line to heading 1~6. | -      |
+| Apply Heading 1~6 | Change Current line to heading 1~6. | -      |
 
 > It is useful to assign a hotkey such as `Ctrl + 0 ~ 6`
 

@@ -1,6 +1,5 @@
 import { Editor, View, Notice, Command } from "obsidian";
 import { HeadingShifterSettings } from "settings";
-import { icon_increase_heading } from "ui/icon";
 import { composeLineChanges } from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
