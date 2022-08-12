@@ -45,9 +45,6 @@ export default class HeadingShifter extends Plugin {
 		addIcon("headingShifter_heading4", icon_heading_4);
 		addIcon("headingShifter_heading5", icon_heading_5);
 		addIcon("headingShifter_heading6", icon_heading_6);
-
-		this.addRibbonIcon("headingShifter_increaseIcon", "increase", () => {});
-		this.addRibbonIcon("headingShifter_decreaseIcon", "decrease", () => {});
 	}
 
 	onunload() {}
