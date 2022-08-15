@@ -8,7 +8,7 @@ Easily Shift and Change markdown headings.
 
 ## Demo
 
-![](./doc/attachment/shiftHeadings.gif)
+![Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/shiftHeadings.gif)
 
 ## Why use this plugin
 
@@ -43,7 +43,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ### Applying Heading
 
-![](./doc/attachment//applyingHeading.gif)
+![Applying Heading Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/applyingHeading.gif)
 
 #### Commands
 
@@ -58,7 +58,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ### Headings Shift
 
-![](./doc/attachment/shiftHeadings.gif)
+![Headings Shift Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/shiftHeadings.gif)
 
 #### Settings
 
