@@ -1,88 +1,110 @@
 import { Editor, View, Notice, Command } from "obsidian";
 import { HeadingShifterSettings } from "settings";
+import { StopPropagation } from "types/type";
 import { composeLineChanges } from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
 
-export const createIncreaseHeadingCommand = (
-	pluginSetting: HeadingShifterSettings
-): Command => {
-	const createEditorCallback = () => {
-		return (editor: Editor, view: View) => {
-			// Get the lines that contain heading
-			const { headingLines, maxHeading } = getHeadingLines(
-				editor,
-				editor.getCursor("from").line,
-				editor.getCursor("to").line
-			);
+interface EditorOperation {
+	settings: HeadingShifterSettings;
+	editorCallback: (editor: Editor) => StopPropagation;
+	createCommand: (pluginSetting: HeadingShifterSettings) => Command;
+}
 
-			// Do not increase If it contains more than heading 6 .
-			if (maxHeading !== undefined && maxHeading >= 6) {
-				return new Notice(
-					"Cannot Increase (contains more than Heading 6)"
-				);
-			}
+export class IncreaseHeading implements EditorOperation {
+	settings: HeadingShifterSettings;
+	constructor(settings: HeadingShifterSettings) {
+		this.settings = settings;
+	}
 
-			// Dispatch Transaction
-			editor.transaction({
-				changes: composeLineChanges(
-					editor,
-					headingLines,
-					increaseHeading
-				),
-			});
+	editorCallback = (editor: Editor): StopPropagation => {
+		// Get the lines that contain heading
+		const { headingLines, maxHeading } = getHeadingLines(
+			editor,
+			editor.getCursor("from").line,
+			editor.getCursor("to").line
+		);
+
+		// Do not increase If it contains more than heading 6 .
+		if (maxHeading !== undefined && maxHeading >= 6) {
+			new Notice("Cannot Increase (contains more than Heading 6)");
+			return true;
+		}
+
+		// Dispatch Transaction
+		const editorChange = composeLineChanges(
+			editor,
+			headingLines,
+			increaseHeading
+		);
+		editor.transaction({
+			changes: editorChange,
+		});
+		return editorChange.length ? true : false;
+	};
+
+	createCommand = (): Command => {
+		return {
+			id: "increase-heading",
+			name: "Increase Headings",
+			icon: "headingShifter_increaseIcon",
+			editorCallback: this.editorCallback,
 		};
 	};
 
-	// return CommandObject
-	return {
-		id: "increase-heading",
-		name: "Increase Headings",
-		icon: "headingShifter_increaseIcon",
-		editorCallback: createEditorCallback(),
+	check = (): boolean => {
+		return this.settings.overrideTab;
 	};
-};
+}
 
-export const createDecreaseHeadingCommand = (
-	pluginSetting: HeadingShifterSettings
-): Command => {
-	const createEditorCallback = (settings: HeadingShifterSettings) => {
-		return (editor: Editor, view: View) => {
-			// Get the lines that contain heading
-			const { headingLines, minHeading } = getHeadingLines(
-				editor,
-				editor.getCursor("from").line,
-				editor.getCursor("to").line
+export class DecreaseHeading implements EditorOperation {
+	settings: HeadingShifterSettings;
+	constructor(settings: HeadingShifterSettings) {
+		this.settings = settings;
+	}
+	editorCallback = (editor: Editor) => {
+		// Get the lines that contain heading
+		const { headingLines, minHeading } = getHeadingLines(
+			editor,
+			editor.getCursor("from").line,
+			editor.getCursor("to").line
+		);
+
+		// Do not decrease If it contains less than specified in the configuration heading.
+		if (
+			minHeading !== undefined &&
+			minHeading <= Number(this.settings.limitHeadingFrom)
+		) {
+			new Notice(
+				`Cannot Decrease (contains less than Heading${Number(
+					this.settings.limitHeadingFrom
+				)})`
 			);
+			return true;
+		}
 
-			// Do not decrease If it contains less than specified in the configuration heading.
-			if (
-				minHeading !== undefined &&
-				minHeading <= Number(settings.limitHeadingFrom)
-			) {
-				return new Notice(
-					`Cannot Decrease (contains less than Heading${Number(
-						settings.limitHeadingFrom
-					)})`
-				);
-			}
+		// Dispatch Transaction
+		const editorChange = composeLineChanges(
+			editor,
+			headingLines,
+			decreaseHeading
+		);
+		editor.transaction({
+			changes: editorChange,
+		});
+		return editorChange.length ? true : false;
+	};
 
-			// Dispatch Transaction
-			editor.transaction({
-				changes: composeLineChanges(
-					editor,
-					headingLines,
-					decreaseHeading
-				),
-			});
+	createCommand = () => {
+		return {
+			id: "decrease-heading",
+			name: "Decrease Headings",
+			icon: "headingShifter_decreaseIcon",
+			editorCallback: this.editorCallback,
 		};
 	};
 
-	// return CommandObject
-	return {
-		id: "decrease-heading",
-		name: "Decrease Headings",
-		icon: "headingShifter_decreaseIcon",
-		editorCallback: createEditorCallback(pluginSetting),
+	check = (): boolean => {
+		return this.settings.overrideTab;
 	};
-};
+}

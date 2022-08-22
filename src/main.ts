@@ -1,9 +1,12 @@
-import { addIcon, App, Plugin, PluginSettingTab, Setting } from "obsidian";
-import { DEFAULT_SETTINGS, HeadingShifterSettings } from "settings";
 import {
-	createDecreaseHeadingCommand,
-	createIncreaseHeadingCommand,
-} from "features/shiftHeading";
+	addIcon,
+	App,
+	editorViewField,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+} from "obsidian";
+import { DEFAULT_SETTINGS, HeadingShifterSettings } from "settings";
 import { createApplyHeadingCommand } from "features/applyHeading";
 import {
 	icon_decrease_heading,
@@ -17,6 +20,12 @@ import {
 	icon_increase_heading,
 } from "ui/icon";
 
+import { Prec } from "@codemirror/state";
+import { keymap, EditorView } from "@codemirror/view";
+
+import { ObsidianService } from "services/obsidianService";
+import { DecreaseHeading, IncreaseHeading } from "features/shiftHeading";
+
 const HEADINGS = [0, 1, 2, 3, 4, 5, 6];
 
 export default class HeadingShifter extends Plugin {
@@ -26,15 +35,47 @@ export default class HeadingShifter extends Plugin {
 		// Loading
 		await this.loadSettings();
 
+		const increaseHeading = new IncreaseHeading(this.settings);
+		const decreaseHeading = new DecreaseHeading(this.settings);
+		const obsidianService = new ObsidianService();
+
 		// Command
 		HEADINGS.forEach((heading) =>
 			this.addCommand(createApplyHeadingCommand(this.settings, heading))
 		);
-		this.addCommand(createIncreaseHeadingCommand(this.settings));
-		this.addCommand(createDecreaseHeadingCommand(this.settings));
+		this.addCommand(increaseHeading.createCommand());
+		this.addCommand(decreaseHeading.createCommand());
 
 		// Setting
 		this.addSettingTab(new HeadingShifterSettingTab(this.app, this));
+
+		this.registerEditorExtension(
+			Prec.highest(
+				keymap.of([
+					{
+						key: "Tab",
+						run: obsidianService.createKeymapRunCallback({
+							check: increaseHeading.check,
+							run: increaseHeading.editorCallback,
+						}),
+					},
+				])
+			)
+		);
+
+		this.registerEditorExtension(
+			Prec.highest(
+				keymap.of([
+					{
+						key: "s-Tab",
+						run: obsidianService.createKeymapRunCallback({
+							check: decreaseHeading.check,
+							run: decreaseHeading.editorCallback,
+						}),
+					},
+				])
+			)
+		);
 
 		addIcon("headingShifter_decreaseIcon", icon_decrease_heading);
 		addIcon("headingShifter_increaseIcon", icon_increase_heading);
@@ -96,5 +137,19 @@ class HeadingShifterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+
+		new Setting(containerEl)
+			.setName("Enable override tab behavior")
+			.setDesc(
+				'Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings"'
+			)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.overrideTab)
+					.onChange(async (value) => {
+						this.plugin.settings.overrideTab = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 }
