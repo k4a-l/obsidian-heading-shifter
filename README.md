@@ -41,13 +41,13 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Features
 
-### Applying Heading
+### Applying Heading [^1]
 
 ![Applying Heading Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/applyingHeading.gif)
 
 #### Commands
 
-\*All commands work when only one line is selected.
+[^1]: All of Applying Heading commands work when only one line is selected.
 
 | Command           | Description                         | Hotkey |
 | ----------------- | ----------------------------------- | ------ |
@@ -62,9 +62,12 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 #### Settings
 
-| Setting                | Description                                                        | Value |
-| ---------------------- | ------------------------------------------------------------------ | ----- |
-| Lower limit of Heading | The lower Heading Size that will be decreased by the Heading Shift | 0~6   |
+| Setting                      | Description                                                                             | Value(Default) |
+| ---------------------------- | --------------------------------------------------------------------------------------- | -------------- |
+| Lower limit of Heading       | The lower Heading Size that will be decreased by the Heading Shift                      | 0~6(1)         |
+| Enable override tab behavior | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" [^2] | boolean(false) |
+
+[^2]: May conflict with other plugin behavior
 
 #### Commands
 
