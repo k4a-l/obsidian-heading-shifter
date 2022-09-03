@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
@@ -14,8 +14,8 @@
 		"test-watch": "jest --watchAll --config config/jest.config.ts"
 	},
 	"keywords": [],
-	"author": "k4a",
-	"url": "https://github.com/k4a-dev/obsidian-heading-shifter",
+	"author": "kasahala",
+	"url": "https://github.com/k4a-l/obsidian-heading-shifter",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
