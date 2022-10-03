@@ -7,6 +7,8 @@ import {
 	getHeadingLines,
 } from "utils/markdown";
 
+import { createRange } from "utils/range";
+
 describe("checkHeading", () => {
 	test("match", () => {
 		expect(checkHeading("# content")).toBe(1);
@@ -149,5 +151,11 @@ f`;
 				to: { line: 4, ch: 1 },
 			},
 		]);
+	});
+});
+
+describe("range", () => {
+	test("createRange", () => {
+		expect(createRange(0, 3)).toStrictEqual([0, 1, 2]);
 	});
 });

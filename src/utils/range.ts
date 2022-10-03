@@ -11,3 +11,6 @@ export const setMax = (prev: undefined | number, cur: number): number => {
 	}
 	return prev;
 };
+
+export const createRange = (start: number, num: number) =>
+	Array.from(Array(num), (v, k) => k + start);

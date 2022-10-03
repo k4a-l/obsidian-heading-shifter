@@ -1,6 +1,7 @@
 import { Command, Editor } from "obsidian";
 import { HeadingShifterSettings } from "settings";
 import { composeLineChanges } from "utils/editorChange";
+import { createRange } from "utils/range";
 import { applyHeading } from "./module";
 
 /** Return obsidian command object : apply heading
@@ -14,17 +15,15 @@ export const createApplyHeadingCommand = (
 ): Command => {
 	const createEditorCallback = (heading: number) => {
 		return (editor: Editor) => {
-			// Do not process if multiple lines are selected
-			if (editor.getCursor("from").line! != editor.getCursor("to").line) {
-				return;
-			}
+			const lines = createRange(
+				editor.getCursor("from").line,
+				editor.getCursor("to").line - editor.getCursor("from").line + 1
+			);
 
 			// Dispatch Transaction
 			editor.transaction({
-				changes: composeLineChanges(
-					editor,
-					[editor.getCursor().line],
-					(chunk: string) => applyHeading(chunk, heading)
+				changes: composeLineChanges(editor, lines, (chunk: string) =>
+					applyHeading(chunk, heading)
 				),
 			});
 		};

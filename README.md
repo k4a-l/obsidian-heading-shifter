@@ -41,13 +41,11 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Features
 
-### Applying Heading [^1]
+### Applying Heading
 
 ![Applying Heading Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/applyingHeading.gif)
 
 #### Commands
-
-[^1]: All of Applying Heading commands work when only one line is selected.
 
 | Command           | Description                         | Hotkey |
 | ----------------- | ----------------------------------- | ------ |
