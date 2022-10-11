@@ -20,12 +20,20 @@ export const createApplyHeadingCommand = (
 				editor.getCursor("to").line - editor.getCursor("from").line + 1
 			);
 
+			const isOneline =
+				editor.getCursor("from").line === editor.getCursor("to").line;
+
 			// Dispatch Transaction
 			editor.transaction({
 				changes: composeLineChanges(editor, lines, (chunk: string) =>
 					applyHeading(chunk, heading)
 				),
 			});
+
+            // If only one line is targeted, move the cursor to the end of the line.
+			if (isOneline) {
+				editor.setCursor(editor.getCursor("anchor").line);
+			}
 		};
 	};
 
