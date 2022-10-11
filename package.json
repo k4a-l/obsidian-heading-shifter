@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.2.0",
+	"version": "1.3.0",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
@@ -8,7 +8,7 @@
 		"check": "tsc -noEmit",
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"version": "node version-bump.mjs && git add manifest.json versions.json package.json",
 		"test": "jest --config config/jest.config.ts",
 		"test-action": "jest --config config/jest.action.config.ts",
 		"test-watch": "jest --watchAll --config config/jest.config.ts"
