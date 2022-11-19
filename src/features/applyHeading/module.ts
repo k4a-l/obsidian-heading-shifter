@@ -4,7 +4,7 @@
  * @params headingSize - The Heading Size to be applied
  */
 export const applyHeading = (chunk: string, headingSize: number): string => {
-	const remove = chunk.replace(/^#+ /, "").replace(/^(\-|\*|\d+\.) /, "");
+	const remove = chunk.replace(/^(\-|\*|\d+\.) /, "").replace(/^#+ /, "");
 
 	if (headingSize <= 0) return remove;
 	return (
