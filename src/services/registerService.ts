@@ -1,5 +1,6 @@
 import { createApplyHeadingCommand } from "features/applyHeading";
 import { IncreaseHeading, DecreaseHeading } from "features/shiftHeading";
+import { createInsertHeadingAtCurrentLevelCommand, createInsertHeadingAtDeeperLevelCommand, createInsertHeadingAtHigherLevelCommand } from "features/insertHeading";
 import HeadingShifter from "main";
 import { HEADINGS } from "types/type";
 
@@ -28,6 +29,9 @@ export class RegisterService {
 		);
 		this.plugin.addCommand(increaseHeading.createCommand());
 		this.plugin.addCommand(decreaseHeading.createCommand());
+		this.plugin.addCommand(createInsertHeadingAtCurrentLevelCommand())
+		this.plugin.addCommand(createInsertHeadingAtDeeperLevelCommand())
+		this.plugin.addCommand(createInsertHeadingAtHigherLevelCommand())
 
 		this.plugin.registerEditorExtension(
 			Prec.highest(
