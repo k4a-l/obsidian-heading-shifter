@@ -138,6 +138,17 @@ Normal
 		expect(getPreviousHeading(editor, 4)).toEqual(2);
 	});
 
+	test("edge", () => {
+		const input = `# Heading1
+
+## Heading2
+
+Normal
+`;
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 1)).toEqual(0);
+	});
+
 	test("no heading", () => {
 		const input = `Normal
 

@@ -72,7 +72,9 @@ export const getPreviousHeading = (
 ) => {
 
 	let fence: FenceType = null;
-	for (let line = from-1; line > 0; line--) {
+	let start = from > 0 ? from-- : 0
+
+	for (let line = start; line >= 0; line--) {
 		fence = getFenceStatus(fence, checkFence(editor.getLine(line)));
 		if (fence) continue;
 

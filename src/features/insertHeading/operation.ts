@@ -12,7 +12,7 @@ export const createInsertHeadingAtCurrentLevelCommand = (): Command => {
 
 			// current heading level == most recently added heading
 			// 0 if no heading exists yet
-			const headingLevel = lastHeadingLine ? checkHeading(editor.getLine(lastHeadingLine)) : 0
+			const headingLevel = lastHeadingLine != undefined ? checkHeading(editor.getLine(lastHeadingLine)) : 0
 
 			editor.transaction({
 				changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
