@@ -62,3 +62,27 @@ export const getHeadingLines = (
 	}
 	return { headingLines, minHeading, maxHeading };
 };
+
+// goes backwards from the `from` line, returns line number of first line containing any heading
+export const getPreviousHeading = (
+	editor: {
+		getLine: (number: number) => string;
+	}, 
+	from: number 
+) => {
+
+	let fence: FenceType = null;
+	let start = from > 0 ? from - 1 : 0
+
+	for (let line = start; line >= 0; line--) {
+		fence = getFenceStatus(fence, checkFence(editor.getLine(line)));
+		if (fence) continue;
+
+		if (checkHeading(editor.getLine(line)) > 0) {
+			return line
+		}
+	}
+
+	// no heading found
+	return undefined
+};

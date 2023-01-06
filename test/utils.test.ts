@@ -5,6 +5,7 @@ import {
 	FenceType,
 	getFenceStatus,
 	getHeadingLines,
+	getPreviousHeading
 } from "utils/markdown";
 
 import { createRange } from "utils/range";
@@ -120,6 +121,62 @@ Normal
 			minHeading: 1,
 			maxHeading: 3,
 		});
+	});
+});
+
+describe("getPreviousHeading", () => {
+	test("normal", () => {
+		const input = `# Heading1
+
+## Heading2
+
+Normal
+
+`;
+
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 4)).toEqual(2);
+	});
+
+	test("edge", () => {
+		const input = `# Heading1
+
+## Heading2
+
+Normal
+`;
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 1)).toEqual(0);
+	});
+
+	test("no heading", () => {
+		const input = `Normal
+
+Normal
+
+~~~~
+
+addAbortSignal
+
+~~~
+
+Normal
+
+`;
+
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 10)).toEqual(undefined);
+	});
+
+	test("'from line' contains heading", () => {
+		const input = `# Heading1
+
+## Heading2
+
+Normal
+	`;
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 2)).toEqual(0);
 	});
 });
 
