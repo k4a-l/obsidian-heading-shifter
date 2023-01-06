@@ -6,10 +6,6 @@
 
 Easily Shift and Change markdown headings.
 
-## Demo
-
-![Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/shiftHeadings.gif)
-
 ## Why use this plugin
 
 Obsidian links numerous markdown files to form knowledge. Daily rearrangement of links is important to create a good knowledge base.
@@ -41,7 +37,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Features
 
-### Applying Heading
+### Apply Headings
 
 ![Applying Heading Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/applyingHeading.gif)
 
@@ -54,7 +50,7 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 > It is useful to assign a hotkey such as `Ctrl + 0 ~ 6`
 
-### Headings Shift
+### Shift Headings
 
 ![Headings Shift Demo](https://raw.githubusercontent.com/k4a-dev/obsidian-heading-shifter/main/doc/attachment/shiftHeadings.gif)
 
@@ -78,6 +74,44 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 -   `Increase Headings` is ineffective if selected lines contains less than `Lower limit of Heading`.
 -   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
+
+### Insert Headings
+
+#### Commands
+
+| Command                            | Description                                       | Hotkey |
+| ---------------------------------- | ------------------------------------------------- | ------ |
+| Insert Heading at current level    | Change current line headings to current level     |        |
+| Insert Heading at one level deeper | Change current line headings to current level + 1 |        |
+| Insert Heading at one level higher | Change current line headings to current level - 1 |        |
+
+#### Use Case
+
+Operate headings like an outliner like the following,
+
+```markdown
+# The Festival Myster -> hit "Apply 1"
+
+This is a great document.
+
+## Chapter One -> hit "Insert deeper"
+
+### Prologue -> hit "Insert deeper"
+
+The sun was setting over the horizon...
+
+### The Summer Festival -> hit "Insert current"
+
+As the townspeople gathered in the town square...
+
+## Chapter Two -> hit "Insert higher"
+
+### The Mystery of the Missing Prize -> hit "Insert deeper"
+
+As the summer festival came to a close...
+```
+
+If you want to make headings deeper or higher than 2, use "shift" or "apply".
 
 ## Loadmap
 
