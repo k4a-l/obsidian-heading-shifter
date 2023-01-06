@@ -167,6 +167,17 @@ Normal
 		const editor = new Editor(input);
 		expect(getPreviousHeading(editor, 10)).toEqual(undefined);
 	});
+
+	test("'from line' contains heading", () => {
+		const input = `# Heading1
+
+## Heading2
+
+Normal
+	`;
+		const editor = new Editor(input);
+		expect(getPreviousHeading(editor, 2)).toEqual(0);
+	});
 });
 
 describe("compose editorChange", () => {
