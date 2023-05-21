@@ -1,14 +1,16 @@
-import { Editor, EditorChange } from "obsidian";
+import { EditorChange } from "obsidian";
+import { HeadingShifterSettings } from "settings";
 
 export const composeLineChanges = (
 	editor: { getLine: (number: number) => string },
 	lineNumbers: number[],
-	changeCallback: (chunk: string) => string
+	changeCallback: (chunk: string, settings?: HeadingShifterSettings) => string,
+	settings?: HeadingShifterSettings
 ) => {
 	const editorChange: EditorChange[] = [];
 
 	for (const line of lineNumbers) {
-		const shifted = changeCallback(editor.getLine(line));
+		const shifted = changeCallback(editor.getLine(line), settings);
 
 		editorChange.push({
 			text: shifted,

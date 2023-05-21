@@ -1,11 +1,15 @@
-import { createApplyHeadingCommand } from "features/applyHeading";
 import { IncreaseHeading, DecreaseHeading } from "features/shiftHeading";
-import { createInsertHeadingAtCurrentLevelCommand, createInsertHeadingAtDeeperLevelCommand, createInsertHeadingAtHigherLevelCommand } from "features/insertHeading";
+import {
+	InsertHeadingAtCurrentLevel,
+	InsertHeadingAtDeeperLevel,
+	InsertHeadingAtHigherLevel,
+} from "features/insertHeading";
 import HeadingShifter from "main";
 import { HEADINGS } from "types/type";
 
 import { Prec } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
+import { ApplyHeading } from "features/applyHeading";
 
 export class RegisterService {
 	plugin: HeadingShifter;
@@ -21,17 +25,28 @@ export class RegisterService {
 	addCommands() {
 		const increaseHeading = new IncreaseHeading(this.plugin.settings);
 		const decreaseHeading = new DecreaseHeading(this.plugin.settings);
-
-		HEADINGS.forEach((heading) =>
-			this.plugin.addCommand(
-				createApplyHeadingCommand(this.plugin.settings, heading)
-			)
+		const insertHeadingAtCurrentLebel = new InsertHeadingAtCurrentLevel(
+			this.plugin.settings
 		);
+		const insertHeadingAtDeeperLevel = new InsertHeadingAtDeeperLevel(
+			this.plugin.settings
+		);
+		const insertHeadingAtHigherLevel = new InsertHeadingAtHigherLevel(
+			this.plugin.settings
+		);
+
+		HEADINGS.forEach((heading) => {
+			const applyHeading = new ApplyHeading(
+				this.plugin.settings,
+				heading
+			);
+			this.plugin.addCommand(applyHeading.createCommand());
+		});
 		this.plugin.addCommand(increaseHeading.createCommand());
 		this.plugin.addCommand(decreaseHeading.createCommand());
-		this.plugin.addCommand(createInsertHeadingAtCurrentLevelCommand())
-		this.plugin.addCommand(createInsertHeadingAtDeeperLevelCommand())
-		this.plugin.addCommand(createInsertHeadingAtHigherLevelCommand())
+		this.plugin.addCommand(insertHeadingAtCurrentLebel.createCommand());
+		this.plugin.addCommand(insertHeadingAtDeeperLevel.createCommand());
+		this.plugin.addCommand(insertHeadingAtHigherLevel.createCommand());
 
 		this.plugin.registerEditorExtension(
 			Prec.highest(

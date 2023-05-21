@@ -1,10 +1,13 @@
+import { HeadingShifterSettings } from "settings";
+
 /**Return heading applied string from chunk
  * @return heading applied string
  * @params chunk - String to which heading is to be applied
  * @params headingSize - The Heading Size to be applied
  */
-export const applyHeading = (chunk: string, headingSize: number): string => {
-	const remove = chunk.replace(/^(\-|\*|\d+\.) /, "").replace(/^#+ /, "");
+	chunk: string,
+	headingSize: number,
+	settings?: HeadingShifterSettings
 
 	if (headingSize <= 0) return remove;
 	return (

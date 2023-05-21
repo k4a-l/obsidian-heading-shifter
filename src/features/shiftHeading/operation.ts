@@ -1,15 +1,11 @@
-import { Editor, View, Notice, Command } from "obsidian";
+import { Editor, Notice, Command } from "obsidian";
 import { HeadingShifterSettings } from "settings";
 import { StopPropagation } from "types/type";
 import { composeLineChanges } from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
+import { EditorOperation } from "types/editorOperation";
 
-interface EditorOperation {
-	settings: HeadingShifterSettings;
-	editorCallback: (editor: Editor) => StopPropagation;
-	createCommand: (pluginSetting: HeadingShifterSettings) => Command;
-}
 
 export class IncreaseHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
@@ -35,7 +31,8 @@ export class IncreaseHeading implements EditorOperation {
 		const editorChange = composeLineChanges(
 			editor,
 			headingLines,
-			increaseHeading
+			increaseHeading,
+			this.settings
 		);
 		editor.transaction({
 			changes: editorChange,
@@ -87,7 +84,8 @@ export class DecreaseHeading implements EditorOperation {
 		const editorChange = composeLineChanges(
 			editor,
 			headingLines,
-			decreaseHeading
+			decreaseHeading,
+			this.settings
 		);
 		editor.transaction({
 			changes: editorChange,

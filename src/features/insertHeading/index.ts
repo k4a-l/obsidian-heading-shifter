@@ -1,1 +1,5 @@
-export { createInsertHeadingAtCurrentLevelCommand, createInsertHeadingAtDeeperLevelCommand, createInsertHeadingAtHigherLevelCommand } from "./operation";
+export {
+	InsertHeadingAtCurrentLevel,
+	InsertHeadingAtDeeperLevel,
+	InsertHeadingAtHigherLevel,
+} from "./operation";
