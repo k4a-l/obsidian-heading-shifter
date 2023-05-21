@@ -5,11 +5,13 @@ import { HEADINGS } from "types/type";
 export interface HeadingShifterSettings {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
+	styleToRemove: { ul: boolean; ol: boolean };
 }
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	limitHeadingFrom: 1,
 	overrideTab: false,
+	styleToRemove: { ul: true, ol: true },
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -57,6 +59,32 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.overrideTab)
 					.onChange(async (value) => {
 						this.plugin.settings.overrideTab = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		containerEl.createEl("h3", { text: "Style to remove" });
+		containerEl.createEl('p', { text: "If this style is at the beginning of a line, remove it and make it Heading" });
+
+		new Setting(containerEl)
+			.setName("unordered list")
+			.setDesc("-")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.styleToRemove.ul)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.ul = value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("orderd list")
+			.setDesc("1., 2. ,3. ,...")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.styleToRemove.ol)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.ol = value;
 						await this.plugin.saveSettings();
 					})
 			);

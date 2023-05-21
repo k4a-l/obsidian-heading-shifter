@@ -85,6 +85,12 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 | Insert Heading at one level deeper | Change current line headings to current level + 1 |        |
 | Insert Heading at one level higher | Change current line headings to current level - 1 |        |
 
+## Common Settings
+
+| Setting         | Description                                                               | Value(Default)    |
+| --------------- | ------------------------------------------------------------------------- | ----------------- |
+| Style to remove | If this style is at the beginning of a line, remove it and make it Headin | boolean(All true) |
+
 #### Use Case
 
 Operate headings like an outliner like the following,
