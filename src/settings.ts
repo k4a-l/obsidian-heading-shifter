@@ -64,7 +64,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			);
 
 		containerEl.createEl("h3", { text: "Style to remove" });
-		containerEl.createEl('p', { text: "If this style is at the beginning of a line, remove it and make it a Heading instead:" });
+		containerEl.createEl('p', { text: "If this style is at the beginning of a line, replace it by a Heading:" });
 
 		new Setting(containerEl)
 			.setName("Unordered list")
