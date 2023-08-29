@@ -64,10 +64,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			);
 
 		containerEl.createEl("h3", { text: "Style to remove" });
-		containerEl.createEl('p', { text: "If this style is at the beginning of a line, remove it and make it Heading" });
+		containerEl.createEl('p', { text: "If this style is at the beginning of a line, remove it and make it a Heading instead:" });
 
 		new Setting(containerEl)
-			.setName("unordered list")
+			.setName("Unordered list")
 			.setDesc("-")
 			.addToggle((toggle) =>
 				toggle
@@ -78,7 +78,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					})
 			);
 		new Setting(containerEl)
-			.setName("orderd list")
+			.setName("Ordered list")
 			.setDesc("1., 2. ,3. ,...")
 			.addToggle((toggle) =>
 				toggle
