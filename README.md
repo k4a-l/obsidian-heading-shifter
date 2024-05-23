@@ -89,7 +89,28 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Setting         | Description                                                               | Value(Default)    |
 | --------------- | ------------------------------------------------------------------------- | ----------------- |
-| Style to remove | If this style is at the beginning of a line, remove it and make it Headin | boolean(All true) |
+| Style to remove | If this style is at the beginning of a line, remove it and make it Heading | boolean(All true) |
+
+### Detailed Description
+#### Style to remove
+
+This is the toggle between removing or retaining the leading `-` or `1.`,`2.`,... when applying Heading in a "single" row.
+
+before
+```
+- line
+```
+
+after (`True`)
+```
+## line
+```
+
+after (`False`)
+```
+## - line
+```
+
 
 #### Use Case
 
