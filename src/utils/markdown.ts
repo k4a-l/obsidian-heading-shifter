@@ -41,7 +41,8 @@ export const getHeadingLines = (
 		getLine: (number: number) => string;
 	},
 	from: number,
-	to: number
+	to: number,
+	options?: { includesNoHeadingsLine?: boolean }
 ) => {
 	const headingLines: number[] = [];
 	let minHeading: undefined | number = undefined;
@@ -54,7 +55,9 @@ export const getHeadingLines = (
 
 		const heading = checkHeading(editor.getLine(line));
 
-		if (heading > 0) {
+		// Although it is called “forced”, it is affected by pre-processing↑ such as fence.
+		// Whether to ignore even this needs to be considered.
+		if (options?.includesNoHeadingsLine || heading > 0) {
 			headingLines.push(line);
 			minHeading = setMin(minHeading, heading);
 			maxHeading = setMax(maxHeading, heading);
