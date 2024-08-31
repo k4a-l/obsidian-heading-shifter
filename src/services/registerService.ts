@@ -23,7 +23,14 @@ export class RegisterService {
 	}
 
 	addCommands() {
-		const increaseHeading = new IncreaseHeading(this.plugin.settings);
+		const increaseHeading = new IncreaseHeading(
+			this.plugin.settings,
+			false
+		);
+		const increaseHeadingForced = new IncreaseHeading(
+			this.plugin.settings,
+			true
+		);
 		const decreaseHeading = new DecreaseHeading(this.plugin.settings);
 		const insertHeadingAtCurrentLebel = new InsertHeadingAtCurrentLevel(
 			this.plugin.settings
@@ -43,6 +50,7 @@ export class RegisterService {
 			this.plugin.addCommand(applyHeading.createCommand());
 		});
 		this.plugin.addCommand(increaseHeading.createCommand());
+		this.plugin.addCommand(increaseHeadingForced.createCommand());
 		this.plugin.addCommand(decreaseHeading.createCommand());
 		this.plugin.addCommand(insertHeadingAtCurrentLebel.createCommand());
 		this.plugin.addCommand(insertHeadingAtDeeperLevel.createCommand());

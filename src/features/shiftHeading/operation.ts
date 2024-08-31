@@ -6,11 +6,15 @@ import { getHeadingLines } from "utils/markdown";
 import { increaseHeading, decreaseHeading } from "./module";
 import { EditorOperation } from "types/editorOperation";
 
-
 export class IncreaseHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
-	constructor(settings: HeadingShifterSettings) {
+	includesNoHeadingsLine: boolean;
+	constructor(
+		settings: HeadingShifterSettings,
+		includesNoHeadingsLine: boolean
+	) {
 		this.settings = settings;
+		this.includesNoHeadingsLine = includesNoHeadingsLine;
 	}
 
 	editorCallback = (editor: Editor): StopPropagation => {
@@ -18,7 +22,10 @@ export class IncreaseHeading implements EditorOperation {
 		const { headingLines, maxHeading } = getHeadingLines(
 			editor,
 			editor.getCursor("from").line,
-			editor.getCursor("to").line
+			editor.getCursor("to").line,
+			{
+				includesNoHeadingsLine: this.includesNoHeadingsLine,
+			}
 		);
 
 		// Do not increase If it contains more than heading 6 .
@@ -42,8 +49,12 @@ export class IncreaseHeading implements EditorOperation {
 
 	createCommand = (): Command => {
 		return {
-			id: "increase-heading",
-			name: "Increase Headings",
+			id: `increase-heading${
+				this.includesNoHeadingsLine ? "-forced" : ""
+			}`,
+			name: `Increase Headings${
+				this.includesNoHeadingsLine ? "(forced)" : ""
+			}`,
 			icon: "headingShifter_increaseIcon",
 			editorCallback: this.editorCallback,
 		};

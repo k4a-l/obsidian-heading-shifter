@@ -1,13 +1,13 @@
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { Editor, editorViewField } from "obsidian";
+import { Editor, editorInfoField } from "obsidian";
 import { StopPropagation } from "types/type";
 
 export class ObsidianService {
 	constructor() {}
 
 	getEditorFromState(state: EditorState) {
-		return state.field(editorViewField).editor;
+		return state.field(editorInfoField).editor;
 	}
 
 	createKeymapRunCallback(config: {
@@ -19,6 +19,10 @@ export class ObsidianService {
 
 		return (view: EditorView): boolean => {
 			const editor = this.getEditorFromState(view.state);
+
+			if (!editor) {
+				return false;
+			}
 
 			if (!check(editor)) {
 				return false;

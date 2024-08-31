@@ -41,9 +41,10 @@ export const getHeadingLines = (
 		getLine: (number: number) => string;
 	},
 	from: number,
-	to: number
+	to: number,
+	options?: { includesNoHeadingsLine?: boolean }
 ) => {
-	let headingLines: number[] = [];
+	const headingLines: number[] = [];
 	let minHeading: undefined | number = undefined;
 	let maxHeading: undefined | number = undefined;
 	let fence: FenceType = null;
@@ -54,7 +55,9 @@ export const getHeadingLines = (
 
 		const heading = checkHeading(editor.getLine(line));
 
-		if (heading > 0) {
+		// Although it is called “forced”, it is affected by pre-processing↑ such as fence.
+		// Whether to ignore even this needs to be considered.
+		if (options?.includesNoHeadingsLine || heading > 0) {
 			headingLines.push(line);
 			minHeading = setMin(minHeading, heading);
 			maxHeading = setMax(maxHeading, heading);
@@ -67,22 +70,21 @@ export const getHeadingLines = (
 export const getPreviousHeading = (
 	editor: {
 		getLine: (number: number) => string;
-	}, 
-	from: number 
+	},
+	from: number
 ) => {
-
 	let fence: FenceType = null;
-	let start = from > 0 ? from - 1 : 0
+	const start = from > 0 ? from - 1 : 0;
 
 	for (let line = start; line >= 0; line--) {
 		fence = getFenceStatus(fence, checkFence(editor.getLine(line)));
 		if (fence) continue;
 
 		if (checkHeading(editor.getLine(line)) > 0) {
-			return line
+			return line;
 		}
 	}
 
 	// no heading found
-	return undefined
+	return undefined;
 };

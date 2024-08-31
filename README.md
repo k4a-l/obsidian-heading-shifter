@@ -65,14 +65,15 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 #### Commands
 
-| Command           | Description                                      | Hotkey |
-| ----------------- | ------------------------------------------------ | ------ |
-| Increase Headings | Increase heading of selected lines(with heading) |        |
-| Decrease Headings | Decrease heading of selected lines(with heading) |        |
+| Command                   | Description                                                     | Hotkey |
+| ------------------------- | --------------------------------------------------------------- | ------ |
+| Increase Headings         | Increase heading of selected lines(with heading)                |        |
+| Increase Headings(forced) | Increase heading of selected lines(Even if there is no heading) |        |
+| Decrease Headings         | Decrease heading of selected lines(with heading)                |        |
 
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
--   `Increase Headings` is ineffective if selected lines contains less than `Lower limit of Heading`.
+-   `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
 -   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
 
 ### Insert Headings
