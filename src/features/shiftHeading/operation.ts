@@ -99,6 +99,9 @@ export class DecreaseHeading implements EditorOperation {
 			return true;
 		}
 
+		const isOneline =
+			editor.getCursor("from").line === editor.getCursor("to").line;
+
 		// Dispatch Transaction
 		const editorChange = composeLineChanges(
 			editor,
@@ -109,6 +112,11 @@ export class DecreaseHeading implements EditorOperation {
 		editor.transaction({
 			changes: editorChange,
 		});
+
+		// If only one line is targeted, move the cursor to the end of the line.
+		if (isOneline) {
+			editor.setCursor(editor.getCursor("anchor").line);
+		}
 		return editorChange.length ? true : false;
 	};
 
