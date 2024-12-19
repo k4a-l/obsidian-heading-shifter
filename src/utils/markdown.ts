@@ -89,19 +89,44 @@ export const getPreviousHeading = (
 	return undefined;
 };
 
-export const removeFromRegExpStrings = (
-	str: string,
-	regExpStrings: string[]
-): string => {
-	const remove = regExpStrings
-		.reduce((acc, cur) => {
-			try {
-				return acc.replace(new RegExp(cur), "$1");
-			} catch (error) {
-				return acc;
-			}
-		}, str)
-		.replace(/^#+ /, "");
+/** Returns the result of the substitution only when the substitution is performed, otherwise undefined */
+const replaceFunc = (str: string, regExp: RegExp): string | undefined => {
+	try {
+		const replaced = str.replace(regExp, "$1");
+		if (replaced !== str) {
+			return replaced;
+		}
+	} catch (error) {
+		console.error(error);
+	}
+	return undefined;
+};
 
-	return remove;
+export const removeUsingRegexpStrings = (
+	str: string,
+	regExpStrings: { beginning?: string[]; surround?: string[] }
+): string => {
+	let removed = str;
+
+	// beginning
+	for (const regExpStr of regExpStrings.beginning ?? []) {
+		const regExp = new RegExp(`^${regExpStr} (.*)`);
+		const result = replaceFunc(removed, regExp);
+		if (result !== undefined) {
+			removed = result;
+			break;
+		}
+	}
+
+	// surround
+	for (const regExpStr of regExpStrings.surround ?? []) {
+		const regExp = new RegExp(`${regExpStr}(.*)${regExpStr}`);
+		const result = replaceFunc(removed, regExp);
+		if (result !== undefined) {
+			removed = result;
+			break;
+		}
+	}
+
+	return removed;
 };

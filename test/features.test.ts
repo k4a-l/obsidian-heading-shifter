@@ -1,4 +1,3 @@
-import { RegExpExample } from "constant/regExp";
 import { applyHeading } from "features/applyHeading";
 import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
 
@@ -25,12 +24,43 @@ describe("apply heading", () => {
 		expect(applyHeading(content, 10)).toBe(`########## ${content}`);
 	});
 
-	test("With Replace", () => {
-		expect(
-			applyHeading(`# **${content}**`, 0, {
-				stylesToRemove: [RegExpExample.ul, RegExpExample.bold],
-			})
-		).toBe(`${content}`);
+	describe("With Replace", () => {
+		test("default regexp", () => {
+			expect(
+				applyHeading(`**${content}**`, 0, {
+					styleToRemove: {
+						beginning: { ol: true, ul: false, others: [] },
+						surround: { bold: true, italic: false, others: [] },
+					},
+				})
+			).toBe(`${content}`);
+		});
+
+		test("input regexp", () => {
+			expect(
+				applyHeading(`+ &&${content}&&`, 0, {
+					styleToRemove: {
+						beginning: {
+							ol: true,
+							ul: true,
+							others: [String.raw`\+`],
+						},
+						surround: { bold: true, italic: true, others: ["&&"] },
+					},
+				})
+			).toBe(`${content}`);
+		});
+
+		test("Not applicable when there is heading", () => {
+			expect(
+				applyHeading(`# **${content}**`, 0, {
+					styleToRemove: {
+						beginning: { ol: true, ul: false, others: [] },
+						surround: { bold: true, italic: false, others: [] },
+					},
+				})
+			).toBe(`**${content}**`);
+		});
 	});
 });
 

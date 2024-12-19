@@ -2,18 +2,22 @@ import HeadingShifter from "main";
 import { PluginSettingTab, App, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
-export interface HeadingShifterSettings {
+export type HeadingShifterSettings = {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
-	styleToRemove: { ul: boolean; ol: boolean };
-	stylesToRemove: string[];
-}
+	styleToRemove: {
+		beginning: { ul: boolean; ol: boolean; others: string[] };
+		surround: { bold: boolean; italic: boolean; others: string[] };
+	};
+};
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	limitHeadingFrom: 1,
 	overrideTab: false,
-	styleToRemove: { ul: true, ol: true },
-	stylesToRemove: [],
+	styleToRemove: {
+		beginning: { ul: true, ol: true, others: [] },
+		surround: { bold: false, italic: false, others: [] },
+	},
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -67,17 +71,18 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 
 		containerEl.createEl("h3", { text: "Style to remove" });
 		containerEl.createEl("p", {
-			text: "If this style is at the beginning of a line, replace it by a Heading:",
+			text: "If this style is at the <position> of a line, remove it",
 		});
 
+		containerEl.createEl("b", { text: "Beggining" });
 		new Setting(containerEl)
 			.setName("Unordered list")
 			.setDesc("-")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.styleToRemove.ul)
+					.setValue(this.plugin.settings.styleToRemove?.beginning?.ul)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.ul = value;
+						this.plugin.settings.styleToRemove.beginning.ul = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -86,26 +91,71 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.setDesc("1., 2. ,3. ,...")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.styleToRemove.ol)
+					.setValue(this.plugin.settings.styleToRemove?.beginning?.ol)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.ol = value;
+						this.plugin.settings.styleToRemove.beginning.ol = value;
 						await this.plugin.saveSettings();
 					})
 			);
-
-		containerEl.createEl("h3", { text: "Styles to remove" });
-		containerEl.createEl("p", {
-			text: "If this style is at the beginning of a line, replace it by a Heading:",
-		});
-
-		new Setting(containerEl).setName("RegExp list").addTextArea((str) => {
-			str.setValue(
-				this.plugin.settings.stylesToRemove.join("\n")
-			).onChange(async (str) => {
-				this.plugin.settings.stylesToRemove = str.split("\n");
-				console.log(this.plugin.settings.stylesToRemove);
-				await this.plugin.saveSettings();
+		new Setting(containerEl)
+			.setName("Others")
+			.setDesc("Arbitrary string (regular expression)")
+			.addTextArea((str) => {
+				str.setValue(
+					this.plugin.settings.styleToRemove.beginning?.others?.join(
+						"\n"
+					)
+				).onChange(async (str) => {
+					this.plugin.settings.styleToRemove.beginning.others =
+						str.split("\n");
+					await this.plugin.saveSettings();
+				});
 			});
+
+		containerEl.createEl("b", {
+			text: "Surround",
 		});
+		new Setting(containerEl)
+			.setName("Bold")
+			.setDesc("**|__")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settings.styleToRemove?.surround?.bold
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.surround.bold =
+							value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("Italic")
+			.setDesc("*|_")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settings.styleToRemove?.surround?.italic
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.surround.italic =
+							value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("Others")
+			.setDesc("Arbitrary string (regular expression)")
+			.addTextArea((str) => {
+				str.setValue(
+					this.plugin.settings.styleToRemove?.surround?.others?.join(
+						"\n"
+					)
+				).onChange(async (str) => {
+					this.plugin.settings.styleToRemove.surround.others =
+						str.split("\n");
+					await this.plugin.saveSettings();
+				});
+			});
 	}
 }
