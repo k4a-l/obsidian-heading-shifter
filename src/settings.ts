@@ -6,12 +6,14 @@ export interface HeadingShifterSettings {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
 	styleToRemove: { ul: boolean; ol: boolean };
+	stylesToRemove: string[];
 }
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	limitHeadingFrom: 1,
 	overrideTab: false,
 	styleToRemove: { ul: true, ol: true },
+	stylesToRemove: [],
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -64,7 +66,9 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			);
 
 		containerEl.createEl("h3", { text: "Style to remove" });
-		containerEl.createEl('p', { text: "If this style is at the beginning of a line, replace it by a Heading:" });
+		containerEl.createEl("p", {
+			text: "If this style is at the beginning of a line, replace it by a Heading:",
+		});
 
 		new Setting(containerEl)
 			.setName("Unordered list")
@@ -88,5 +92,20 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		containerEl.createEl("h3", { text: "Styles to remove" });
+		containerEl.createEl("p", {
+			text: "If this style is at the beginning of a line, replace it by a Heading:",
+		});
+
+		new Setting(containerEl).setName("RegExp list").addTextArea((str) => {
+			str.setValue(
+				this.plugin.settings.stylesToRemove.join("\n")
+			).onChange(async (str) => {
+				this.plugin.settings.stylesToRemove = str.split("\n");
+				console.log(this.plugin.settings.stylesToRemove);
+				await this.plugin.saveSettings();
+			});
+		});
 	}
 }

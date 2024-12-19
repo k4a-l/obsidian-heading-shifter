@@ -1,3 +1,4 @@
+import { RegExpExample } from "constant/regExp";
 import { applyHeading } from "features/applyHeading";
 import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
 
@@ -22,6 +23,14 @@ describe("apply heading", () => {
 
 	test("Heading 10", () => {
 		expect(applyHeading(content, 10)).toBe(`########## ${content}`);
+	});
+
+	test("With Replace", () => {
+		expect(
+			applyHeading(`# **${content}**`, 0, {
+				stylesToRemove: [RegExpExample.ul, RegExpExample.bold],
+			})
+		).toBe(`${content}`);
 	});
 });
 

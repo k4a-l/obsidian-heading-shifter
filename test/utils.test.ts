@@ -1,3 +1,4 @@
+import { RegExpExample } from "constant/regExp";
 import { composeLineChanges } from "utils/editorChange";
 import {
 	checkFence,
@@ -5,7 +6,8 @@ import {
 	FenceType,
 	getFenceStatus,
 	getHeadingLines,
-	getPreviousHeading
+	getPreviousHeading,
+	removeFromRegExpStrings,
 } from "utils/markdown";
 
 import { createRange } from "utils/range";
@@ -214,5 +216,64 @@ f`;
 describe("range", () => {
 	test("createRange", () => {
 		expect(createRange(0, 3)).toStrictEqual([0, 1, 2]);
+	});
+});
+
+describe("regExp Example", () => {
+	const content = "EXAMPLE";
+
+	test("bold(**)", () => {
+		expect(
+			removeFromRegExpStrings(`**${content}**`, [RegExpExample.bold])
+		).toBe(content);
+	});
+	test("bold(__)", () => {
+		expect(
+			removeFromRegExpStrings(`__${content}__`, [RegExpExample.bold])
+		).toBe(content);
+	});
+
+	test("italic(*)", () => {
+		expect(
+			removeFromRegExpStrings(`*${content}*`, [RegExpExample.italic])
+		).toBe(content);
+	});
+	test("italic(__)", () => {
+		expect(
+			removeFromRegExpStrings(`_${content}_`, [RegExpExample.italic])
+		).toBe(content);
+	});
+
+	test("ol(1)", () => {
+		expect(
+			removeFromRegExpStrings(`1. ${content}`, [RegExpExample.ol])
+		).toBe(content);
+	});
+	test("ol(1234567890)", () => {
+		expect(
+			removeFromRegExpStrings(`1234567890. ${content}`, [
+				RegExpExample.ol,
+			])
+		).toBe(content);
+	});
+
+	test("ul(-)", () => {
+		expect(
+			removeFromRegExpStrings(`- ${content}`, [RegExpExample.ul])
+		).toBe(content);
+	});
+	test("ul(*)", () => {
+		expect(
+			removeFromRegExpStrings(`* ${content}`, [RegExpExample.ul])
+		).toBe(content);
+	});
+
+	test("all", () => {
+		expect(
+			removeFromRegExpStrings(`- 1. ${content}`, [
+				RegExpExample.ul,
+				RegExpExample.ol,
+			])
+		).toBe(content);
 	});
 });

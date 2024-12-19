@@ -1,7 +1,10 @@
 import { HeadingShifterSettings } from "settings";
+import { removeFromRegExpStrings } from "utils/markdown";
 
-const regExp: Record<keyof HeadingShifterSettings["styleToRemove"], RegExp> =
-	{ ol: new RegExp("\\d+\\."), ul: new RegExp("\\-|\\*") };
+const regExp: Record<keyof HeadingShifterSettings["styleToRemove"], RegExp> = {
+	ol: new RegExp("\\d+\\. (.*)"),
+	ul: new RegExp("\\-|\\* (.*)"),
+};
 
 /**Return heading applied string from chunk
  * @return heading applied string
@@ -11,25 +14,24 @@ const regExp: Record<keyof HeadingShifterSettings["styleToRemove"], RegExp> =
 export const applyHeading = (
 	chunk: string,
 	headingSize: number,
-	settings?: HeadingShifterSettings
+	settings?: Partial<HeadingShifterSettings>
 ): string => {
-	const replacer = Object.entries(settings?.styleToRemove ?? {}).flatMap(
-		([k, v]: [
-			keyof HeadingShifterSettings["styleToRemove"],
-			boolean
-		]) => {
-			return v ? regExp[k].source : [];
-		}
-	);
+	const removed = removeFromRegExpStrings(chunk, [
+		...Object.entries(settings?.styleToRemove ?? {}).flatMap(
+			([k, v]: [
+				keyof HeadingShifterSettings["styleToRemove"],
+				boolean
+			]) => {
+				return v ? regExp[k].source : [];
+			}
+		),
+		...(settings?.stylesToRemove ?? []),
+	]);
 
-	const replaceStyleRegExp = new RegExp(`^(${replacer.join("|")}) `, "");
-
-	const remove = chunk.replace(replaceStyleRegExp, "").replace(/^#+ /, "");
-
-	if (headingSize <= 0) return remove;
+	if (headingSize <= 0) return removed;
 	return (
 		new Array(headingSize).fill("#").reduce((prev, cur) => {
 			return cur + prev;
-		}, " ") + remove
+		}, " ") + removed
 	);
 };

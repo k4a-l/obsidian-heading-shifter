@@ -88,3 +88,20 @@ export const getPreviousHeading = (
 	// no heading found
 	return undefined;
 };
+
+export const removeFromRegExpStrings = (
+	str: string,
+	regExpStrings: string[]
+): string => {
+	const remove = regExpStrings
+		.reduce((acc, cur) => {
+			try {
+				return acc.replace(new RegExp(cur), "$1");
+			} catch (error) {
+				return acc;
+			}
+		}, str)
+		.replace(/^#+ /, "");
+
+	return remove;
+};
