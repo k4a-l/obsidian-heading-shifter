@@ -1,4 +1,3 @@
-
 ![github release](https://img.shields.io/github/v/release/k4a-dev/obsidian-heading-shifter?style=for-the-badge)
 
 [![PayPal](https://github.com/user-attachments/assets/022d3ada-7995-4a27-b680-5ab6cfc117e1)](https://paypal.me/k4al)
@@ -88,30 +87,34 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Common Settings
 
-| Setting         | Description                                                               | Value(Default)    |
-| --------------- | ------------------------------------------------------------------------- | ----------------- |
-| Style to remove | If this style is at the beginning of a line, remove it and make it Heading | boolean(All true) |
+| Setting                                                       | Description                                             | Value(Default)    |
+| ------------------------------------------------------------- | ------------------------------------------------------- | ----------------- |
+| Style to remove(default)                                      | If this style is at the <position> of a line, remove it | boolean(All true) |
+| Style to remove(Other arbitrary group of regular expressions) | If this style is at the <position> of a line, remove it | string[]([])      |
 
 ### Detailed Description
+
 #### Style to remove
 
 This is the toggle between removing or retaining the leading `-` or `1.`,`2.`,... when applying Heading in a "single" row.
 
 before
+
 ```
 - line
 ```
 
 after (`True`)
+
 ```
 ## line
 ```
 
 after (`False`)
+
 ```
 ## - line
 ```
-
 
 #### Use Case
 
