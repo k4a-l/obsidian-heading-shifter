@@ -1,9 +1,9 @@
 export const RegExpExample = {
-	head: {
+	beginning: {
 		ol: String.raw`\d+\.`,
 		ul: String.raw`(?:\-|\*)`,
 	},
-	surround: {
+	surrounding: {
 		// Only one match
 		italic: String.raw`(?:(?<!\*)\*(?!\*)|(?<!_)_(?!_))`,
 		// Same

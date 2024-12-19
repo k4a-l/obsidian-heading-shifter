@@ -104,7 +104,7 @@ const replaceFunc = (str: string, regExp: RegExp): string | undefined => {
 
 export const removeUsingRegexpStrings = (
 	str: string,
-	regExpStrings: { beginning?: string[]; surround?: string[] }
+	regExpStrings: { beginning?: string[]; surrounding?: string[] }
 ): string => {
 	let removed = str;
 
@@ -118,8 +118,8 @@ export const removeUsingRegexpStrings = (
 		}
 	}
 
-	// surround
-	for (const regExpStr of regExpStrings.surround ?? []) {
+	// surrounding
+	for (const regExpStr of regExpStrings.surrounding ?? []) {
 		const regExp = new RegExp(`${regExpStr}(.*)${regExpStr}`);
 		const result = replaceFunc(removed, regExp);
 		if (result !== undefined) {

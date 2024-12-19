@@ -34,7 +34,7 @@ export class IncreaseHeading implements EditorOperation {
 			return true;
 		}
 
-		const isOneline =
+		const isOneLine =
 			editor.getCursor("from").line === editor.getCursor("to").line;
 
 		// Dispatch Transaction
@@ -49,7 +49,7 @@ export class IncreaseHeading implements EditorOperation {
 		});
 
 		// If only one line is targeted, move the cursor to the end of the line.
-		if (isOneline) {
+		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
 		return editorChange.length ? true : false;
@@ -99,7 +99,7 @@ export class DecreaseHeading implements EditorOperation {
 			return true;
 		}
 
-		const isOneline =
+		const isOneLine =
 			editor.getCursor("from").line === editor.getCursor("to").line;
 
 		// Dispatch Transaction
@@ -114,7 +114,7 @@ export class DecreaseHeading implements EditorOperation {
 		});
 
 		// If only one line is targeted, move the cursor to the end of the line.
-		if (isOneline) {
+		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
 		return editorChange.length ? true : false;

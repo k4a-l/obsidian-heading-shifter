@@ -6,8 +6,8 @@ export type HeadingShifterSettings = {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
 	styleToRemove: {
-		beginning: { ul: boolean; ol: boolean; others: string[] };
-		surround: { bold: boolean; italic: boolean; others: string[] };
+		beginning: { ul: boolean; ol: boolean; userDefined: string[] };
+		surrounding: { bold: boolean; italic: boolean; userDefined: string[] };
 	};
 };
 
@@ -15,8 +15,8 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	limitHeadingFrom: 1,
 	overrideTab: false,
 	styleToRemove: {
-		beginning: { ul: true, ol: true, others: [] },
-		surround: { bold: false, italic: false, others: [] },
+		beginning: { ul: true, ol: true, userDefined: [] },
+		surrounding: { bold: false, italic: false, userDefined: [] },
 	},
 };
 
@@ -102,11 +102,11 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
 				str.setValue(
-					this.plugin.settings.styleToRemove.beginning?.others?.join(
+					this.plugin.settings.styleToRemove.beginning?.userDefined?.join(
 						"\n"
 					)
 				).onChange(async (str) => {
-					this.plugin.settings.styleToRemove.beginning.others =
+					this.plugin.settings.styleToRemove.beginning.userDefined =
 						str.split("\n");
 					await this.plugin.saveSettings();
 				});
@@ -121,10 +121,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle
 					.setValue(
-						this.plugin.settings.styleToRemove?.surround?.bold
+						this.plugin.settings.styleToRemove?.surrounding?.bold
 					)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.surround.bold =
+						this.plugin.settings.styleToRemove.surrounding.bold =
 							value;
 						await this.plugin.saveSettings();
 					})
@@ -135,10 +135,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle
 					.setValue(
-						this.plugin.settings.styleToRemove?.surround?.italic
+						this.plugin.settings.styleToRemove?.surrounding?.italic
 					)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.surround.italic =
+						this.plugin.settings.styleToRemove.surrounding.italic =
 							value;
 						await this.plugin.saveSettings();
 					})
@@ -148,11 +148,11 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
 				str.setValue(
-					this.plugin.settings.styleToRemove?.surround?.others?.join(
+					this.plugin.settings.styleToRemove?.surrounding?.userDefined?.join(
 						"\n"
 					)
 				).onChange(async (str) => {
-					this.plugin.settings.styleToRemove.surround.others =
+					this.plugin.settings.styleToRemove.surrounding.userDefined =
 						str.split("\n");
 					await this.plugin.saveSettings();
 				});

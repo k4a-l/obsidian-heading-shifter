@@ -9,7 +9,7 @@ import {
 	getPreviousHeading,
 	removeUsingRegexpStrings,
 } from "utils/markdown";
-import { assingUnknownObjectFromDefaultObject } from "utils/object";
+import { assignUnknownObjectFromDefaultObject as assignUnknownObjectFromDefaultObject } from "utils/object";
 
 import { createRange } from "utils/range";
 
@@ -20,7 +20,7 @@ describe("checkHeading", () => {
 		expect(checkHeading("########## content")).toBe(10);
 	});
 
-	test("unmatch", () => {
+	test("unMatch", () => {
 		expect(checkHeading("content")).toBe(0);
 		expect(checkHeading("#content")).toBe(0);
 		expect(checkHeading(" # content")).toBe(0);
@@ -48,7 +48,7 @@ describe("checkFence", () => {
 		expect(checkFence("~~~~~~~~~~")).toEqual(result);
 	});
 
-	test("unmatch", () => {
+	test("unMatch", () => {
 		expect(checkFence("``")).toBeNull();
 		expect(checkFence("~~")).toBeNull();
 		expect(checkFence(" ```")).toBeNull();
@@ -115,7 +115,7 @@ Normal
 
 ~~~~
 
-### Heaging3`;
+### Heading3`;
 
 		const editor = new Editor(input);
 
@@ -226,14 +226,14 @@ describe("regExp Example", () => {
 	test("bold(**)", () => {
 		expect(
 			removeUsingRegexpStrings(`**${content}**`, {
-				surround: [RegExpExample.surround.bold],
+				surrounding: [RegExpExample.surrounding.bold],
 			})
 		).toBe(content);
 	});
 	test("bold(__)", () => {
 		expect(
 			removeUsingRegexpStrings(`__${content}__`, {
-				surround: [RegExpExample.surround.bold],
+				surrounding: [RegExpExample.surrounding.bold],
 			})
 		).toBe(content);
 	});
@@ -241,14 +241,14 @@ describe("regExp Example", () => {
 	test("italic(*)", () => {
 		expect(
 			removeUsingRegexpStrings(`*${content}*`, {
-				surround: [RegExpExample.surround.italic],
+				surrounding: [RegExpExample.surrounding.italic],
 			})
 		).toBe(content);
 	});
 	test("italic(__)", () => {
 		expect(
 			removeUsingRegexpStrings(`_${content}_`, {
-				surround: [RegExpExample.surround.italic],
+				surrounding: [RegExpExample.surrounding.italic],
 			})
 		).toBe(content);
 	});
@@ -256,14 +256,14 @@ describe("regExp Example", () => {
 	test("ol(1)", () => {
 		expect(
 			removeUsingRegexpStrings(`1. ${content}`, {
-				beginning: [RegExpExample.head.ol],
+				beginning: [RegExpExample.beginning.ol],
 			})
 		).toBe(content);
 	});
 	test("ol(1234567890)", () => {
 		expect(
 			removeUsingRegexpStrings(`1234567890. ${content}`, {
-				beginning: [RegExpExample.head.ol],
+				beginning: [RegExpExample.beginning.ol],
 			})
 		).toBe(content);
 	});
@@ -271,20 +271,20 @@ describe("regExp Example", () => {
 	test("ul(-)", () => {
 		expect(
 			removeUsingRegexpStrings(`- ${content}`, {
-				beginning: [RegExpExample.head.ul],
+				beginning: [RegExpExample.beginning.ul],
 			})
 		).toBe(content);
 	});
 	test("ul(*)", () => {
 		expect(
 			removeUsingRegexpStrings(`* ${content}`, {
-				beginning: [RegExpExample.head.ul],
+				beginning: [RegExpExample.beginning.ul],
 			})
 		).toBe(content);
 	});
 });
 
-describe("assingUnknownObjectFromDefaultObject", () => {
+describe("assignUnknownObjectFromDefaultObject", () => {
 	const defaultObj = {
 		str: "string",
 		num: 1,
@@ -293,13 +293,13 @@ describe("assingUnknownObjectFromDefaultObject", () => {
 	};
 	test("all properties are null", () => {
 		const UnknownObj = {};
-		assingUnknownObjectFromDefaultObject(defaultObj, UnknownObj);
+		assignUnknownObjectFromDefaultObject(defaultObj, UnknownObj);
 		expect(UnknownObj).toStrictEqual(defaultObj);
 	});
 
 	test("some properties are null", () => {
 		const UnknownObj = { str: "other string", obj: { num: 2 } };
-		assingUnknownObjectFromDefaultObject(defaultObj, UnknownObj);
+		assignUnknownObjectFromDefaultObject(defaultObj, UnknownObj);
 		expect(UnknownObj).toStrictEqual({
 			str: UnknownObj.str,
 			num: defaultObj.num,

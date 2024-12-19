@@ -36,11 +36,11 @@ export const applyHeading = (
 			? removeUsingRegexpStrings(chunk, {
 					beginning: extractRegExp(
 						settings.styleToRemove.beginning,
-						RegExpExample.head
+						RegExpExample.beginning
 					),
-					surround: extractRegExp(
-						settings.styleToRemove.surround,
-						RegExpExample.surround
+					surrounding: extractRegExp(
+						settings.styleToRemove.surrounding,
+						RegExpExample.surrounding
 					),
 			  })
 			: chunk;

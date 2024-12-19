@@ -1,4 +1,4 @@
-export const assingUnknownObjectFromDefaultObject = (
+export const assignUnknownObjectFromDefaultObject = (
 	defaultObject: Record<string, unknown>,
 	targetObject: Record<string, unknown>
 ) => {
@@ -10,7 +10,7 @@ export const assingUnknownObjectFromDefaultObject = (
 		if (isPlainRecord(v)) {
 			const newTargetObject = targetObject[k];
 			if (isPlainRecord(newTargetObject)) {
-				assingUnknownObjectFromDefaultObject(v, newTargetObject);
+				assignUnknownObjectFromDefaultObject(v, newTargetObject);
 			} else {
 				targetObject[k] = v;
 			}

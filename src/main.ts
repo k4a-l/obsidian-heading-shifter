@@ -8,7 +8,7 @@ import {
 import { ObsidianService } from "services/obsidianService";
 import { InterfaceService } from "services/interfaceService";
 import { RegisterService } from "services/registerService";
-import { assingUnknownObjectFromDefaultObject } from "utils/object";
+import { assignUnknownObjectFromDefaultObject } from "utils/object";
 
 export default class HeadingShifter extends Plugin {
 	settings: HeadingShifterSettings;
@@ -30,7 +30,7 @@ export default class HeadingShifter extends Plugin {
 
 		// Setting
         // There is a possibility of undefined access when the structure of setting is changed (should be done more carefully, but it is handled by corrective default override).
-		assingUnknownObjectFromDefaultObject(DEFAULT_SETTINGS, this.settings);
+		assignUnknownObjectFromDefaultObject(DEFAULT_SETTINGS, this.settings);
 		this.addSettingTab(new HeadingShifterSettingTab(this.app, this));
 	}
 

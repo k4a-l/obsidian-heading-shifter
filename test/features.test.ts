@@ -29,8 +29,12 @@ describe("apply heading", () => {
 			expect(
 				applyHeading(`**${content}**`, 0, {
 					styleToRemove: {
-						beginning: { ol: true, ul: false, others: [] },
-						surround: { bold: true, italic: false, others: [] },
+						beginning: { ol: true, ul: false, userDefined: [] },
+						surrounding: {
+							bold: true,
+							italic: false,
+							userDefined: [],
+						},
 					},
 				})
 			).toBe(`${content}`);
@@ -43,9 +47,13 @@ describe("apply heading", () => {
 						beginning: {
 							ol: true,
 							ul: true,
-							others: [String.raw`\+`],
+							userDefined: [String.raw`\+`],
 						},
-						surround: { bold: true, italic: true, others: ["&&"] },
+						surrounding: {
+							bold: true,
+							italic: true,
+							userDefined: ["&&"],
+						},
 					},
 				})
 			).toBe(`${content}`);
@@ -55,8 +63,12 @@ describe("apply heading", () => {
 			expect(
 				applyHeading(`# **${content}**`, 0, {
 					styleToRemove: {
-						beginning: { ol: true, ul: false, others: [] },
-						surround: { bold: true, italic: false, others: [] },
+						beginning: { ol: true, ul: false, userDefined: [] },
+						surrounding: {
+							bold: true,
+							italic: false,
+							userDefined: [],
+						},
 					},
 				})
 			).toBe(`**${content}**`);
