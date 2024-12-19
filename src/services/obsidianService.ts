@@ -10,7 +10,7 @@ export class ObsidianService {
 		return state.field(editorInfoField).editor;
 	}
 
-	createKeymapRunCallback(config: {
+	createKeyMapRunCallback(config: {
 		check?: (editor: Editor) => boolean;
 		run: (editor: Editor) => StopPropagation;
 	}) {

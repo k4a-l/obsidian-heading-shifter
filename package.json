@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.6.1",
+	"version": "1.7.0",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
@@ -11,13 +11,15 @@
 		"version": "node version-bump.mjs && git add manifest.json versions.json package.json",
 		"test": "jest --config config/jest.config.ts",
 		"test-action": "jest --config config/jest.action.config.ts",
-		"test-watch": "jest --watchAll --config config/jest.config.ts"
+		"test-watch": "jest --watchAll --config config/jest.config.ts",
+		"lint": "eslint . --ext .ts"
 	},
 	"keywords": [],
 	"author": "kasahala",
 	"url": "https://github.com/k4a-l/obsidian-heading-shifter",
 	"license": "MIT",
 	"devDependencies": {
+		"@cspell/eslint-plugin": "^8.17.1",
 		"@types/jest": "^28.1.6",
 		"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "5.29.0",

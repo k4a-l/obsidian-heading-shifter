@@ -2,16 +2,22 @@ import HeadingShifter from "main";
 import { PluginSettingTab, App, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
-export interface HeadingShifterSettings {
+export type HeadingShifterSettings = {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
-	styleToRemove: { ul: boolean; ol: boolean };
-}
+	styleToRemove: {
+		beginning: { ul: boolean; ol: boolean; userDefined: string[] };
+		surrounding: { bold: boolean; italic: boolean; userDefined: string[] };
+	};
+};
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	limitHeadingFrom: 1,
 	overrideTab: false,
-	styleToRemove: { ul: true, ol: true },
+	styleToRemove: {
+		beginning: { ul: true, ol: true, userDefined: [] },
+		surrounding: { bold: false, italic: false, userDefined: [] },
+	},
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -64,16 +70,19 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			);
 
 		containerEl.createEl("h3", { text: "Style to remove" });
-		containerEl.createEl('p', { text: "If this style is at the beginning of a line, replace it by a Heading:" });
+		containerEl.createEl("p", {
+			text: "If this style is at the <position> of a line, remove it",
+		});
 
+		containerEl.createEl("b", { text: "Beginning" });
 		new Setting(containerEl)
 			.setName("Unordered list")
 			.setDesc("-")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.styleToRemove.ul)
+					.setValue(this.plugin.settings.styleToRemove?.beginning?.ul)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.ul = value;
+						this.plugin.settings.styleToRemove.beginning.ul = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -82,11 +91,71 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.setDesc("1., 2. ,3. ,...")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.styleToRemove.ol)
+					.setValue(this.plugin.settings.styleToRemove?.beginning?.ol)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.ol = value;
+						this.plugin.settings.styleToRemove.beginning.ol = value;
 						await this.plugin.saveSettings();
 					})
 			);
+		new Setting(containerEl)
+			.setName("User defined")
+			.setDesc("Arbitrary string (regular expression)")
+			.addTextArea((str) => {
+				str.setValue(
+					this.plugin.settings.styleToRemove.beginning?.userDefined?.join(
+						"\n"
+					)
+				).onChange(async (str) => {
+					this.plugin.settings.styleToRemove.beginning.userDefined =
+						str.split("\n");
+					await this.plugin.saveSettings();
+				});
+			});
+
+		containerEl.createEl("b", {
+			text: "Surrounding",
+		});
+		new Setting(containerEl)
+			.setName("Bold")
+			.setDesc("**|__")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settings.styleToRemove?.surrounding?.bold
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.surrounding.bold =
+							value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("Italic")
+			.setDesc("*|_")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(
+						this.plugin.settings.styleToRemove?.surrounding?.italic
+					)
+					.onChange(async (value) => {
+						this.plugin.settings.styleToRemove.surrounding.italic =
+							value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("User defined")
+			.setDesc("Arbitrary string (regular expression)")
+			.addTextArea((str) => {
+				str.setValue(
+					this.plugin.settings.styleToRemove?.surrounding?.userDefined?.join(
+						"\n"
+					)
+				).onChange(async (str) => {
+					this.plugin.settings.styleToRemove.surrounding.userDefined =
+						str.split("\n");
+					await this.plugin.saveSettings();
+				});
+			});
 	}
 }

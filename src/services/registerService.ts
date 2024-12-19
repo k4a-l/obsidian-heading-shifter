@@ -32,7 +32,7 @@ export class RegisterService {
 			true
 		);
 		const decreaseHeading = new DecreaseHeading(this.plugin.settings);
-		const insertHeadingAtCurrentLebel = new InsertHeadingAtCurrentLevel(
+		const insertHeadingAtCurrentLabel = new InsertHeadingAtCurrentLevel(
 			this.plugin.settings
 		);
 		const insertHeadingAtDeeperLevel = new InsertHeadingAtDeeperLevel(
@@ -52,7 +52,7 @@ export class RegisterService {
 		this.plugin.addCommand(increaseHeading.createCommand());
 		this.plugin.addCommand(increaseHeadingForced.createCommand());
 		this.plugin.addCommand(decreaseHeading.createCommand());
-		this.plugin.addCommand(insertHeadingAtCurrentLebel.createCommand());
+		this.plugin.addCommand(insertHeadingAtCurrentLabel.createCommand());
 		this.plugin.addCommand(insertHeadingAtDeeperLevel.createCommand());
 		this.plugin.addCommand(insertHeadingAtHigherLevel.createCommand());
 
@@ -61,7 +61,7 @@ export class RegisterService {
 				keymap.of([
 					{
 						key: "Tab",
-						run: this.plugin.obsidianService.createKeymapRunCallback(
+						run: this.plugin.obsidianService.createKeyMapRunCallback(
 							{
 								check: increaseHeading.check,
 								run: increaseHeading.editorCallback,
@@ -77,7 +77,7 @@ export class RegisterService {
 				keymap.of([
 					{
 						key: "s-Tab",
-						run: this.plugin.obsidianService.createKeymapRunCallback(
+						run: this.plugin.obsidianService.createKeyMapRunCallback(
 							{
 								check: decreaseHeading.check,
 								run: decreaseHeading.editorCallback,

@@ -1,23 +1,45 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "env": { "node": true },
+    "env": {
+        "node": true
+    },
     "plugins": [
-      "@typescript-eslint"
+        "@typescript-eslint"
     ],
     "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
-    ], 
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@cspell/recommended"
+    ],
     "parserOptions": {
         "sourceType": "module"
     },
     "rules": {
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
-      "@typescript-eslint/ban-ts-comment": "off",
-      "no-prototype-builtins": "off",
-      "@typescript-eslint/no-empty-function": "off"
-    } 
-  }
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "args": "none"
+            }
+        ],
+        "@typescript-eslint/ban-ts-comment": "off",
+        "no-prototype-builtins": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@cspell/spellchecker": [
+            "warn",
+            {
+                "cspell": {
+                    "language": "en",
+                    "ignoreRegExpList": [
+                        // 日本語を無視
+                        "[０-９Ａ-Ｚａ-ｚぁ-んァ-ヶ亜-熙纊-黑]+",
+                        "keymap",
+                        "Prec"
+                    ]
+                }
+            }
+        ]
+    }
+}

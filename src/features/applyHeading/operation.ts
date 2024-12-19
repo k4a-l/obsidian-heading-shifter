@@ -16,7 +16,7 @@ export class ApplyHeading implements EditorOperation {
 	}
 
 	/** Return obsidian command object : apply heading
-	 * @params setting - plugin settins(Not in use now)
+	 * @params setting - plugin settings(Not in use now)
 	 * @params headingSize - The Heading Size to be applied
 	 */
 	editorCallback = (editor: Editor): StopPropagation => {
@@ -25,7 +25,7 @@ export class ApplyHeading implements EditorOperation {
 			editor.getCursor("to").line - editor.getCursor("from").line + 1
 		);
 
-		const isOneline =
+		const isOneLine =
 			editor.getCursor("from").line === editor.getCursor("to").line;
 
 		// Dispatch Transaction
@@ -36,7 +36,7 @@ export class ApplyHeading implements EditorOperation {
 		});
 
 		// If only one line is targeted, move the cursor to the end of the line.
-		if (isOneline) {
+		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
 		return true;

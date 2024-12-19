@@ -88,3 +88,45 @@ export const getPreviousHeading = (
 	// no heading found
 	return undefined;
 };
+
+/** Returns the result of the substitution only when the substitution is performed, otherwise undefined */
+const replaceFunc = (str: string, regExp: RegExp): string | undefined => {
+	try {
+		const replaced = str.replace(regExp, "$1");
+		if (replaced !== str) {
+			return replaced;
+		}
+	} catch (error) {
+		console.error(error);
+	}
+	return undefined;
+};
+
+export const removeUsingRegexpStrings = (
+	str: string,
+	regExpStrings: { beginning?: string[]; surrounding?: string[] }
+): string => {
+	let removed = str;
+
+	// beginning
+	for (const regExpStr of regExpStrings.beginning ?? []) {
+		const regExp = new RegExp(`^${regExpStr} (.*)`);
+		const result = replaceFunc(removed, regExp);
+		if (result !== undefined) {
+			removed = result;
+			break;
+		}
+	}
+
+	// surrounding
+	for (const regExpStr of regExpStrings.surrounding ?? []) {
+		const regExp = new RegExp(`${regExpStr}(.*)${regExpStr}`);
+		const result = replaceFunc(removed, regExp);
+		if (result !== undefined) {
+			removed = result;
+			break;
+		}
+	}
+
+	return removed;
+};

@@ -1,7 +1,7 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+import { RegExpExample } from "constant/regExp";
 import { HeadingShifterSettings } from "settings";
-
-const regExp: Record<keyof HeadingShifterSettings["styleToRemove"], RegExp> =
-	{ ol: new RegExp("\\d+\\."), ul: new RegExp("\\-|\\*") };
+import { checkHeading, removeUsingRegexpStrings } from "utils/markdown";
 
 /**Return heading applied string from chunk
  * @return heading applied string
@@ -11,25 +11,48 @@ const regExp: Record<keyof HeadingShifterSettings["styleToRemove"], RegExp> =
 export const applyHeading = (
 	chunk: string,
 	headingSize: number,
-	settings?: HeadingShifterSettings
+	settings?: Partial<HeadingShifterSettings>
 ): string => {
-	const replacer = Object.entries(settings?.styleToRemove ?? {}).flatMap(
-		([k, v]: [
-			keyof HeadingShifterSettings["styleToRemove"],
-			boolean
-		]) => {
-			return v ? regExp[k].source : [];
-		}
-	);
+	const extractRegExp = (
+		settingObj: Record<string, boolean | string[]>,
+		regExpObj: Record<string, string>
+	): string[] => {
+		return Object.entries(settingObj ?? {}).flatMap(([k, v]) => {
+			if (Array.isArray(v)) {
+				return v;
+			}
+			if (k in regExpObj && v == true) {
+				return regExpObj[k as keyof typeof regExpObj];
+			}
+			return [];
+		});
+	};
 
-	const replaceStyleRegExp = new RegExp(`^(${replacer.join("|")}) `, "");
+	let removed = chunk;
 
-	const remove = chunk.replace(replaceStyleRegExp, "").replace(/^#+ /, "");
+	// Remove any style only when it is not HEADING (because it may be daring to put it on when HEADING)
+	if (!checkHeading(chunk)) {
+		removed = settings?.styleToRemove
+			? removeUsingRegexpStrings(chunk, {
+					beginning: extractRegExp(
+						settings.styleToRemove.beginning,
+						RegExpExample.beginning
+					),
+					surrounding: extractRegExp(
+						settings.styleToRemove.surrounding,
+						RegExpExample.surrounding
+					),
+			  })
+			: chunk;
+	}
 
-	if (headingSize <= 0) return remove;
+	// Once all headings are set to 0
+	removed = removed.replace(/^#+ /, "");
+
+	if (headingSize <= 0) return removed;
 	return (
 		new Array(headingSize).fill("#").reduce((prev, cur) => {
 			return cur + prev;
-		}, " ") + remove
+		}, " ") + removed
 	);
 };
