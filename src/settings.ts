@@ -74,7 +74,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			text: "If this style is at the <position> of a line, remove it",
 		});
 
-		containerEl.createEl("b", { text: "Beggining" });
+		containerEl.createEl("b", { text: "Beginning" });
 		new Setting(containerEl)
 			.setName("Unordered list")
 			.setDesc("-")
@@ -98,7 +98,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					})
 			);
 		new Setting(containerEl)
-			.setName("Others")
+			.setName("User defined")
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
 				str.setValue(
@@ -113,7 +113,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			});
 
 		containerEl.createEl("b", {
-			text: "Surround",
+			text: "Surrounding",
 		});
 		new Setting(containerEl)
 			.setName("Bold")
@@ -144,7 +144,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					})
 			);
 		new Setting(containerEl)
-			.setName("Others")
+			.setName("User defined")
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
 				str.setValue(
