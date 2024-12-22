@@ -47,7 +47,7 @@ describe("apply heading", () => {
 						beginning: {
 							ol: true,
 							ul: true,
-							userDefined: [String.raw`\+`],
+							userDefined: [String.raw`\+ `],
 						},
 						surrounding: {
 							bold: true,
