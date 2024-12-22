@@ -110,7 +110,7 @@ export const removeUsingRegexpStrings = (
 
 	// beginning
 	for (const regExpStr of regExpStrings.beginning ?? []) {
-		const regExp = new RegExp(`^${regExpStr} (.*)`);
+		const regExp = new RegExp(`^${regExpStr}(.*)`);
 		const result = replaceFunc(removed, regExp);
 		if (result !== undefined) {
 			removed = result;
