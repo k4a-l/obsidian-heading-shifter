@@ -96,25 +96,27 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 #### Style to remove
 
-This is the toggle between removing or retaining the leading `-` or `1.`,`2.`,... when applying Heading in a "single" row.
+This is the toggle between removing or retaining `specific style` when applying Heading in a "single" row.
 
-before
+##### Beginning
 
-```
-- line
-```
+`-` or `1.`,`2.`,`n.` or `user defined string(RegExp)`
 
-after (`True`)
+|                    | Before    | After(True) | After(False) |
+| ------------------ | --------- | ----------- | ------------ |
+| `- `(ul)           | `- line`  | `## line`   | `## - line`  |
+| `1. `(ol)          | `1. line` | `## line`   | `## 1. line` |
+| `🤔`(user defined) | `🤔line`  | `## line`   | `## 🤔line`  |
 
-```
-## line
-```
+##### Surrounding
 
-after (`False`)
+`**`, `_` , etc... or `user defined string(RegExp)`
 
-```
-## - line
-```
+|                    | Before     | After(True) | After(False)  |
+| ------------------ | ---------- | ----------- | ------------- |
+| `**`(bold)         | `**line**` | `## line`   | `## **line**` |
+| `_`(italic)        | `_line_`   | `## line`   | `## _line_`   |
+| `🤔`(user defined) | `🤔line🤔` | `## line`   | `## 🤔line🤔` |
 
 #### Use Case
 
@@ -144,7 +146,7 @@ As the summer festival came to a close...
 
 If you want to make headings deeper or higher than 2, use "shift" or "apply".
 
-## Loadmap
+## LoadMap
 
 Nothing specific at this time.
 
