@@ -25,7 +25,7 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel)
+				applyHeading(chunk, headingLevel, this.settings)
 			),
 		});
 
