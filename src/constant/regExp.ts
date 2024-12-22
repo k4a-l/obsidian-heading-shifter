@@ -1,7 +1,7 @@
 export const RegExpExample = {
 	beginning: {
-		ol: String.raw`\d+\.`,
-		ul: String.raw`(?:\-|\*)`,
+		ol: String.raw`\d+\. `,
+		ul: String.raw`(?:\-|\*) `,
 	},
 	surrounding: {
 		// Only one match
