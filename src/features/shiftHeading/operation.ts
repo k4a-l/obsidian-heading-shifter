@@ -68,7 +68,15 @@ export class IncreaseHeading implements EditorOperation {
 		};
 	};
 
-	check = (): boolean => {
+	check = (editor: Editor): boolean => {
+		// Disable if there are no headings so as not to interfere with table or other operations.
+		const { maxHeading } = getHeadingLines(
+			editor,
+			editor.getCursor("from").line,
+			editor.getCursor("to").line
+		);
+		if (maxHeading === undefined) return false;
+
 		return this.settings.overrideTab;
 	};
 }
@@ -129,7 +137,15 @@ export class DecreaseHeading implements EditorOperation {
 		};
 	};
 
-	check = (): boolean => {
+	check = (editor: Editor): boolean => {
+		// Disable if there are no headings so as not to interfere with table or other operations.
+		const { maxHeading } = getHeadingLines(
+			editor,
+			editor.getCursor("from").line,
+			editor.getCursor("to").line
+		);
+		if (maxHeading === undefined) return false;
+
 		return this.settings.overrideTab;
 	};
 }
