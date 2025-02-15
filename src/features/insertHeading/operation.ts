@@ -66,7 +66,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel + 1)
+				applyHeading(chunk, headingLevel + 1, this.settings)
 			),
 		});
 
