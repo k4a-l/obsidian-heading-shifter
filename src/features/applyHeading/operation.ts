@@ -1,6 +1,6 @@
 import { Command, Editor } from "obsidian";
 import { HeadingShifterSettings } from "settings";
-import { composeLineChanges } from "utils/editorChange";
+import { composeLineChanges, execOutdent } from "utils/editorChange";
 import { createRange } from "utils/range";
 import { applyHeading } from "./module";
 import { EditorOperation } from "types/editorOperation";
@@ -34,6 +34,8 @@ export class ApplyHeading implements EditorOperation {
 				applyHeading(chunk, this.headingSize, this.settings)
 			),
 		});
+
+		execOutdent(Math.max(...lines) + 1, editor, this.settings);
 
 		// If only one line is targeted, move the cursor to the end of the line.
 		if (isOneLine) {

@@ -9,6 +9,15 @@ export type HeadingShifterSettings = {
 		beginning: { ul: boolean; ol: boolean; userDefined: string[] };
 		surrounding: { bold: boolean; italic: boolean; userDefined: string[] };
 	};
+	autoOutdent: {
+		enable: boolean;
+		hotKey: {
+			key: string;
+			shift: boolean;
+			ctrl: boolean;
+			alt: boolean;
+		};
+	};
 };
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
@@ -17,6 +26,15 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 	styleToRemove: {
 		beginning: { ul: true, ol: true, userDefined: [] },
 		surrounding: { bold: false, italic: false, userDefined: [] },
+	},
+	autoOutdent: {
+		enable: true,
+		hotKey: {
+			key: "Tab",
+			shift: true,
+			ctrl: false,
+			alt: false,
+		},
 	},
 };
 
@@ -157,5 +175,58 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			});
+
+		containerEl.createEl("h3", { text: "Auto Outdent" });
+		containerEl.createEl("p", {
+			text: "When heading is applied to a list, if outdent is needed for lists after that line, execute it.",
+		});
+		new Setting(containerEl).setName("Enable").addToggle((toggle) => {
+			toggle
+				.setValue(this.plugin.settings.autoOutdent.enable)
+				.onChange((v) => {
+					this.plugin.settings.autoOutdent.enable = v;
+					this.plugin.saveSettings();
+				});
+		});
+
+		containerEl.createEl("b", {
+			text: "Hotkey",
+		});
+		containerEl.createEl("p", {
+			text: "Basically, we expect you to apply `Shift + Tab` from https://github.com/vslinko/obsidian-outliner, but if you want to use something else, apply a hotkey with equivalent functionality.",
+			cls: "setting-item-description",
+		});
+		new Setting(containerEl).setName("Key").addText((toggle) => {
+			toggle
+				.setValue(this.plugin.settings.autoOutdent.hotKey.key)
+				.onChange((v) => {
+					this.plugin.settings.autoOutdent.hotKey.key = v;
+					this.plugin.saveSettings();
+				});
+		});
+		new Setting(containerEl).setName("Shift").addToggle((toggle) => {
+			toggle
+				.setValue(this.plugin.settings.autoOutdent.hotKey.shift)
+				.onChange((v) => {
+					this.plugin.settings.autoOutdent.hotKey.shift = v;
+					this.plugin.saveSettings();
+				});
+		});
+		new Setting(containerEl).setName("Ctrl").addToggle((toggle) => {
+			toggle
+				.setValue(this.plugin.settings.autoOutdent.hotKey.ctrl)
+				.onChange((v) => {
+					this.plugin.settings.autoOutdent.hotKey.ctrl = v;
+					this.plugin.saveSettings();
+				});
+		});
+		new Setting(containerEl).setName("Alt").addToggle((toggle) => {
+			toggle
+				.setValue(this.plugin.settings.autoOutdent.hotKey.alt)
+				.onChange((v) => {
+					this.plugin.settings.autoOutdent.hotKey.alt = v;
+					this.plugin.saveSettings();
+				});
+		});
 	}
 }

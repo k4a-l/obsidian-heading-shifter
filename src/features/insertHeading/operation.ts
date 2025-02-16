@@ -3,7 +3,7 @@ import { Command, Editor, Notice } from "obsidian";
 import { HeadingShifterSettings } from "settings";
 import { EditorOperation } from "types/editorOperation";
 import { StopPropagation } from "types/type";
-import { composeLineChanges } from "utils/editorChange";
+import { composeLineChanges, execOutdent } from "utils/editorChange";
 import { checkHeading, getPreviousHeading } from "utils/markdown";
 
 export class InsertHeadingAtCurrentLevel implements EditorOperation {
@@ -28,6 +28,8 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 				applyHeading(chunk, headingLevel, this.settings)
 			),
 		});
+
+		execOutdent(cursorLine + 1, editor, this.settings);
 
 		editor.setCursor(editor.getCursor().line);
 		return true;
@@ -66,9 +68,11 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel + 1)
+				applyHeading(chunk, headingLevel + 1, this.settings)
 			),
 		});
+
+		execOutdent(cursorLine + 1, editor, this.settings);
 
 		editor.setCursor(editor.getCursor().line);
 		return true;
@@ -105,6 +109,8 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 				applyHeading(chunk, headingLevel - 1, this.settings)
 			),
 		});
+
+		execOutdent(cursorLine + 1, editor, this.settings);
 
 		editor.setCursor(editor.getCursor().line);
 		return true;

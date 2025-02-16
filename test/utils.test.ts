@@ -1,4 +1,5 @@
 import { RegExpExample } from "constant/regExp";
+import { EditorPosition } from "obsidian";
 import { composeLineChanges } from "utils/editorChange";
 import {
 	checkFence,
@@ -6,7 +7,9 @@ import {
 	FenceType,
 	getFenceStatus,
 	getHeadingLines,
+	getNeedsOutdentLines,
 	getPreviousHeading,
+	isNeedsOutdent,
 	removeUsingRegexpStrings,
 } from "utils/markdown";
 import { assignUnknownObjectFromDefaultObject as assignUnknownObjectFromDefaultObject } from "utils/object";
@@ -90,6 +93,13 @@ class Editor {
 	}
 	getLine(number: number) {
 		return this.lines[number];
+	}
+	lineCount() {
+		return this.lines.length;
+	}
+	setSelection() {}
+	getCursor(): EditorPosition {
+		return { ch: 0, line: 0 };
 	}
 }
 
@@ -306,5 +316,52 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 			obj: { str: defaultObj.obj.str, num: UnknownObj.obj.num },
 			arr: defaultObj.arr,
 		});
+	});
+});
+
+describe("isNeedsOutdent", () => {
+	test("true", () => {
+		expect(isNeedsOutdent("    - a")).toBe(4);
+		expect(isNeedsOutdent(" * a")).toBe(1);
+		expect(isNeedsOutdent("\t- a")).toBe(1);
+	});
+
+	test("false", () => {
+		expect(isNeedsOutdent("- a")).toBeFalsy();
+		expect(isNeedsOutdent("a")).toBeFalsy();
+        expect(isNeedsOutdent("  -a")).toBeFalsy();
+	});
+});
+
+describe("getNeedsOutdentLines", () => {
+	test("0", () => {
+		const str = String.raw` first line(not target)
+    - a
+        * b
+    - c
+- d `;
+		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([
+			1, 2, 3,
+		]);
+	});
+
+	test("1", () => {
+		const str = String.raw` first line(not target)
+- a
+        - b
+    - c
+- d `;
+		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([]);
+	});
+
+	test("2", () => {
+		const str = String.raw` first line(not target)
+ - a
+        - b
+    - c
+    - d `;
+		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([
+			1, 2, 3, 4,
+		]);
 	});
 });

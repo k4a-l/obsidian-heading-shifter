@@ -48,6 +48,8 @@ export class IncreaseHeading implements EditorOperation {
 			changes: editorChange,
 		});
 
+		// Since SHIFT is for items that already have a HEADING, it does not do `execOutdent`.
+
 		// If only one line is targeted, move the cursor to the end of the line.
 		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);

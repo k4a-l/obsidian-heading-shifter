@@ -87,12 +87,11 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Common Settings
 
-| Setting                                                       | Description                                             | Value(Default)    |
-| ------------------------------------------------------------- | ------------------------------------------------------- | ----------------- |
-| Style to remove(default)                                      | If this style is at the <position> of a line, remove it | boolean(All true) |
-| Style to remove(Other arbitrary group of regular expressions) | If this style is at the <position> of a line, remove it | string[]([])      |
-
-### Detailed Description
+| Setting                                                       | Description                                                                                    | Value(Default)    |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
+| Style to remove(default)                                      | If this style is at the <position> of a line, remove it                                        | boolean(All true) |
+| Style to remove(Other arbitrary group of regular expressions) | If this style is at the <position> of a line, remove it                                        | string[]([])      |
+| Auto Outdent                                                  | When heading is applied to a list, if outdent is needed for lists after that line, execute it. | true, Shift+Tab   |
 
 #### Style to remove
 
@@ -118,7 +117,38 @@ This is the toggle between removing or retaining `specific style` when applying 
 | `_`(italic)        | `_line_`   | `## line`   | `## _line_`   |
 | `🤔`(user defined) | `🤔line🤔` | `## line`   | `## 🤔line🤔` |
 
-#### Use Case
+### Auto Outdent
+
+```markdown
+-   heading target
+    -   other listA
+        -   other listB
+```
+
+If you call 'Apply Heading 2',
+
+#### Auto Outdent = False
+```markdown
+## heading target
+    -   other listA
+        -   other listB
+```
+Subsequent listings will remain in depth and will not have the correct markdown structure.
+
+
+#### Auto Outdent = True
+
+```markdown
+## heading target
+-   other listA
+    -   other listB
+```
+
+Subsequent listings will be outdent and have the correct markdown structure.
+
+※Two editor histories will be created to invoke the two processes of “apply heading -> outdent. Therefore, undo is required twice.
+
+## Use Case
 
 Operate headings like an outliner like the following,
 
