@@ -28,6 +28,9 @@ export const applyHeading = (
 		});
 	};
 
+	// Check if the original chunk is a bulleted list
+	const isBulleted = settings?.autoIndentBulletedHeader ? /^\s*[-] /.test(chunk) : false;
+
 	let removed = chunk;
 
 	// Remove any style only when it is not HEADING (because it may be daring to put it on when HEADING)
@@ -49,10 +52,17 @@ export const applyHeading = (
 	// Once all headings are set to 0
 	removed = removed.replace(/^#+ /, "");
 
-	if (headingSize <= 0) return removed;
-	return (
-		new Array(headingSize).fill("#").reduce((prev, cur) => {
-			return cur + prev;
-		}, " ") + removed
-	);
+	if (headingSize <= 0) {
+		return settings?.autoIndentBulletedHeader ? removed.replace(/^\s*[-] #*\s*/, "- ") : removed;
+	}
+	const headingMarkers = new Array(headingSize).fill("#").reduce((prev, cur) => {
+		return cur + prev;
+	}, " ");
+
+	// If auto indenting bulleted headers is enabled and chunk was bulleted, prepend tabs equal to headingSize
+	if (isBulleted) {
+		return "\t".repeat(Math.max(headingSize - 1, 0)) + "- " + headingMarkers + removed.replace(/^\s*[-] #*\s*/, "");
+	}
+
+	return headingMarkers + removed;
 };

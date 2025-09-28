@@ -18,6 +18,7 @@ export type HeadingShifterSettings = {
 			alt: boolean;
 		};
 	};
+	autoIndentBulletedHeader: boolean;
 };
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
@@ -36,6 +37,7 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 			alt: false,
 		},
 	},
+	autoIndentBulletedHeader: false,
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -227,6 +229,19 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					this.plugin.settings.autoOutdent.hotKey.alt = v;
 					this.plugin.saveSettings();
 				});
+		});
+
+		containerEl.createEl("h3", { text: "Auto Indent Bulleted Headers" });
+		containerEl.createEl("p", {
+			text: "When a header is applied to bulleted list, indent the line according to the header level."
+		});
+		new Setting(containerEl).setName("Enable auto indented bulleted headers").addToggle((toggle) => {
+		toggle
+			.setValue(this.plugin.settings.autoIndentBulletedHeader)
+			.onChange((v) => {
+				this.plugin.settings.autoIndentBulletedHeader = v;
+				this.plugin.saveSettings();
+		});
 		});
 	}
 }
