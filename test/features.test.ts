@@ -74,6 +74,51 @@ describe("apply heading", () => {
 			).toBe(`**${content}**`);
 		});
 	});
+
+	describe("With Auto Indent", () => {
+		test("Heading 0", () => {
+			expect(applyHeading(content, 0, { autoIndentBulletedHeader: true })).toBe(
+				`- ${content}`,
+			);
+		});
+		test("Heading 1", () => {
+			expect(applyHeading(content, 1, { autoIndentBulletedHeader: true })).toBe(
+				// indent0 + #1
+				`- # ${content}`,
+			);
+		});
+		test("Heading 2", () => {
+			expect(applyHeading(content, 2, { autoIndentBulletedHeader: true })).toBe(
+				// indent1 + #2
+				`\t- ## ${content}`,
+			);
+		});
+		test("Heading 3 from 2", () => {
+			expect(
+				applyHeading(`\t- ## ${content}`, 3, {
+					autoIndentBulletedHeader: true,
+				}),
+			).toBe(
+				// regardless of the original number
+				`\t\t- ### ${content}`,
+			);
+		});
+
+		test("Heading 0 from 3", () => {
+			expect(
+				applyHeading(`\t\t- ### ${content}`, 0, {
+					autoIndentBulletedHeader: true,
+				}),
+			).toBe(
+				// regardless of the original number(Invert)
+				`- ${content}`,
+			);
+		});
+
+		test("Remove indent(without auto indent setting)", () => {
+			expect(applyHeading(`\t- ## ${content}`, 0)).toBe(content);
+		});
+	});
 });
 
 describe("increase heading", () => {
