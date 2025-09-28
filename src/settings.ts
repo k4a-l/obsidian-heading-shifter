@@ -229,15 +229,17 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 
 		containerEl.createEl("h3", { text: "Auto Indent Bulleted Headers" });
 		containerEl.createEl("p", {
-			text: "When a header is applied to bulleted list, indent the line according to the header level."
+			text: "When a header is applied to bulleted list, indent the line according to the header level.",
 		});
-		new Setting(containerEl).setName("Enable auto indented bulleted headers").addToggle((toggle) => {
-		toggle
-			.setValue(this.plugin.settings.autoIndentBulletedHeader)
-			.onChange((v) => {
-				this.plugin.settings.autoIndentBulletedHeader = v;
-				this.plugin.saveSettings();
-		});
-		});
+		new Setting(containerEl)
+			.setName("Enable auto indented bulleted headers")
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.autoIndentBulletedHeader)
+					.onChange((v) => {
+						this.plugin.settings.autoIndentBulletedHeader = v;
+						this.plugin.saveSettings();
+					});
+			});
 	}
 }
