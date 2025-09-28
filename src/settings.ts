@@ -89,6 +89,20 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					}),
 			);
 
+		new Setting(containerEl)
+			.setName("Synchronization `Heading` and `Bulleted list indentation`")
+			.setDesc(
+				"When a header is applied to bulleted list, indent the line according to the header level.",
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.autoIndentBulletedHeader)
+					.onChange((v) => {
+						this.plugin.settings.autoIndentBulletedHeader = v;
+						this.plugin.saveSettings();
+					});
+			});
+
 		containerEl.createEl("h3", { text: "Style to remove" });
 		containerEl.createEl("p", {
 			text: "If this style is at the <position> of a line, remove it",
@@ -226,20 +240,5 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					this.plugin.saveSettings();
 				});
 		});
-
-		containerEl.createEl("h3", { text: "Auto Indent Bulleted Headers" });
-		containerEl.createEl("p", {
-			text: "When a header is applied to bulleted list, indent the line according to the header level.",
-		});
-		new Setting(containerEl)
-			.setName("Enable auto indented bulleted headers")
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.autoIndentBulletedHeader)
-					.onChange((v) => {
-						this.plugin.settings.autoIndentBulletedHeader = v;
-						this.plugin.saveSettings();
-					});
-			});
 	}
 }

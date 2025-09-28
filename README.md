@@ -24,11 +24,11 @@ With this plugin, you can change the Heading size (the number of `#`) in a batch
 
 You can activate this plugin within Obsidian by doing the following:
 
-- Open Settings > Community plugin
-- Make sure `Restricted mode` is off
-- Click Browse `community plugins`
-- Search for `Heading Shifter`
-- Click `Install` -> `Enable`
+-   Open Settings > Community plugin
+-   Make sure `Restricted mode` is off
+-   Click Browse `community plugins`
+-   Search for `Heading Shifter`
+-   Click `Install` -> `Enable`
 
 ### Manual installation
 
@@ -55,12 +55,13 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 #### Settings
 
-| Setting                      | Description                                                                             | Value(Default) |
-| ---------------------------- | --------------------------------------------------------------------------------------- | -------------- |
-| Lower limit of Heading       | The lower Heading Size that will be decreased by the Heading Shift                      | 0~6(1)         |
-| Enable override tab behavior | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" [^2] | boolean(false) |
+| Setting                                                   | Description                                                                               | Value(Default) |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------- |
+| Lower limit of Heading                                    | The lower Heading Size that will be decreased by the Heading Shift                        | 0~6(1)         |
+| Enable override tab behavior                              | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" \[^2]  | boolean(false) |
+| Synchronization `Heading` and `Bulleted list indentation` | When a header is applied to bulleted list, indent the line according to the header level. | boolean(false) |
 
-[^2]: May conflict with other plugin behavior
+\[^2]: May conflict with other plugin behavior
 
 #### Commands
 
@@ -72,8 +73,8 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
-- `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
-- `Decrease Headings` is ineffective if selected lines contains more than heading 6.
+-   `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
+-   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
 
 ### Insert Headings
 
@@ -120,9 +121,9 @@ This is the toggle between removing or retaining `specific style` when applying 
 ### Auto Outdent
 
 ```markdown
-- heading target
-    - other listA
-        - other listB
+-   heading target
+    -   other listA
+        -   other listB
 ```
 
 If you call 'Apply Heading 2',
@@ -143,8 +144,8 @@ Subsequent listings will remain in depth and will not have the correct markdown 
 ```markdown
 ## heading target
 
-- other listA
-    - other listB
+-   other listA
+    -   other listB
 ```
 
 Subsequent listings will be outdent and have the correct markdown structure.
