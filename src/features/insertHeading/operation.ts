@@ -1,8 +1,8 @@
 import { applyHeading } from "features/applyHeading";
-import { Command, Editor, Notice } from "obsidian";
-import { HeadingShifterSettings } from "settings";
-import { EditorOperation } from "types/editorOperation";
-import { StopPropagation } from "types/type";
+import { type Command, type Editor, Notice } from "obsidian";
+import type { HeadingShifterSettings } from "settings";
+import type { EditorOperation } from "types/editorOperation";
+import type { StopPropagation } from "types/type";
 import { composeLineChanges, execOutdent } from "utils/editorChange";
 import { checkHeading, getPreviousHeading } from "utils/markdown";
 
@@ -19,13 +19,13 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 		// current heading level == most recently added heading
 		// 0 if no heading exists yet
 		const headingLevel =
-			lastHeadingLine != undefined
+			lastHeadingLine !== undefined
 				? checkHeading(editor.getLine(lastHeadingLine))
 				: 0;
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel, this.settings)
+				applyHeading(chunk, headingLevel, this.settings),
 			),
 		});
 
@@ -68,7 +68,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel + 1, this.settings)
+				applyHeading(chunk, headingLevel + 1, this.settings),
 			),
 		});
 
@@ -106,7 +106,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 
 		editor.transaction({
 			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel - 1, this.settings)
+				applyHeading(chunk, headingLevel - 1, this.settings),
 			),
 		});
 

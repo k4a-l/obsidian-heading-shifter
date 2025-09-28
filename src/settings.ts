@@ -1,5 +1,5 @@
-import HeadingShifter from "main";
-import { PluginSettingTab, App, Setting } from "obsidian";
+import type HeadingShifter from "main";
+import { type App, PluginSettingTab, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
 export type HeadingShifterSettings = {
@@ -53,7 +53,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Lower limit of Heading")
 			.setDesc(
-				"The lower Heading Size that will be decreased by the Heading Shift "
+				"The lower Heading Size that will be decreased by the Heading Shift ",
 			)
 			.addDropdown((dropdown) => {
 				// Create options from heading array like {'0':'0','1':'1',.......}
@@ -61,7 +61,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					(prev, heading) => {
 						return { ...prev, [heading]: String(heading) };
 					},
-					{}
+					{},
 				);
 
 				dropdown
@@ -76,7 +76,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Enable override tab behavior")
 			.setDesc(
-				'Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings"'
+				'Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings"',
 			)
 			.addToggle((toggle) =>
 				toggle
@@ -84,7 +84,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.overrideTab = value;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 
 		containerEl.createEl("h3", { text: "Style to remove" });
@@ -102,7 +102,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.styleToRemove.beginning.ul = value;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 		new Setting(containerEl)
 			.setName("Ordered list")
@@ -113,21 +113,23 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.styleToRemove.beginning.ol = value;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 		new Setting(containerEl)
 			.setName("User defined")
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
-				str.setValue(
-					this.plugin.settings.styleToRemove.beginning?.userDefined?.join(
-						"\n"
+				str
+					.setValue(
+						this.plugin.settings.styleToRemove.beginning?.userDefined?.join(
+							"\n",
+						),
 					)
-				).onChange(async (str) => {
-					this.plugin.settings.styleToRemove.beginning.userDefined =
-						str.split("\n");
-					await this.plugin.saveSettings();
-				});
+					.onChange(async (str) => {
+						this.plugin.settings.styleToRemove.beginning.userDefined =
+							str.split("\n");
+						await this.plugin.saveSettings();
+					});
 			});
 
 		containerEl.createEl("b", {
@@ -138,42 +140,38 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			.setDesc("**|__")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(
-						this.plugin.settings.styleToRemove?.surrounding?.bold
-					)
+					.setValue(this.plugin.settings.styleToRemove?.surrounding?.bold)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.surrounding.bold =
-							value;
+						this.plugin.settings.styleToRemove.surrounding.bold = value;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 		new Setting(containerEl)
 			.setName("Italic")
 			.setDesc("*|_")
 			.addToggle((toggle) =>
 				toggle
-					.setValue(
-						this.plugin.settings.styleToRemove?.surrounding?.italic
-					)
+					.setValue(this.plugin.settings.styleToRemove?.surrounding?.italic)
 					.onChange(async (value) => {
-						this.plugin.settings.styleToRemove.surrounding.italic =
-							value;
+						this.plugin.settings.styleToRemove.surrounding.italic = value;
 						await this.plugin.saveSettings();
-					})
+					}),
 			);
 		new Setting(containerEl)
 			.setName("User defined")
 			.setDesc("Arbitrary string (regular expression)")
 			.addTextArea((str) => {
-				str.setValue(
-					this.plugin.settings.styleToRemove?.surrounding?.userDefined?.join(
-						"\n"
+				str
+					.setValue(
+						this.plugin.settings.styleToRemove?.surrounding?.userDefined?.join(
+							"\n",
+						),
 					)
-				).onChange(async (str) => {
-					this.plugin.settings.styleToRemove.surrounding.userDefined =
-						str.split("\n");
-					await this.plugin.saveSettings();
-				});
+					.onChange(async (str) => {
+						this.plugin.settings.styleToRemove.surrounding.userDefined =
+							str.split("\n");
+						await this.plugin.saveSettings();
+					});
 			});
 
 		containerEl.createEl("h3", { text: "Auto Outdent" });
@@ -181,12 +179,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			text: "When heading is applied to a list, if outdent is needed for lists after that line, execute it.",
 		});
 		new Setting(containerEl).setName("Enable").addToggle((toggle) => {
-			toggle
-				.setValue(this.plugin.settings.autoOutdent.enable)
-				.onChange((v) => {
-					this.plugin.settings.autoOutdent.enable = v;
-					this.plugin.saveSettings();
-				});
+			toggle.setValue(this.plugin.settings.autoOutdent.enable).onChange((v) => {
+				this.plugin.settings.autoOutdent.enable = v;
+				this.plugin.saveSettings();
+			});
 		});
 
 		containerEl.createEl("b", {

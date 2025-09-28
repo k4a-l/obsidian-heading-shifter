@@ -36,7 +36,7 @@ describe("apply heading", () => {
 							userDefined: [],
 						},
 					},
-				})
+				}),
 			).toBe(`${content}`);
 		});
 
@@ -55,7 +55,7 @@ describe("apply heading", () => {
 							userDefined: ["&&"],
 						},
 					},
-				})
+				}),
 			).toBe(`${content}`);
 		});
 
@@ -70,7 +70,7 @@ describe("apply heading", () => {
 							userDefined: [],
 						},
 					},
-				})
+				}),
 			).toBe(`**${content}**`);
 		});
 	});
@@ -95,7 +95,7 @@ describe("increase heading", () => {
 
 	test("Heading 10", () => {
 		expect(increaseHeading(`########## ${content}`)).toBe(
-			`########### ${content}`
+			`########### ${content}`,
 		);
 	});
 });
@@ -119,7 +119,7 @@ describe("decrease heading", () => {
 
 	test("Heading 10", () => {
 		expect(decreaseHeading(`########## ${content}`)).toBe(
-			`######### ${content}`
+			`######### ${content}`,
 		);
 	});
 });

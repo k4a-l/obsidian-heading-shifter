@@ -1,7 +1,7 @@
-import { EditorState } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
-import { Editor, editorInfoField } from "obsidian";
-import { StopPropagation } from "types/type";
+import type { EditorState } from "@codemirror/state";
+import type { EditorView } from "@codemirror/view";
+import { type Editor, editorInfoField } from "obsidian";
+import type { StopPropagation } from "types/type";
 
 export class ObsidianService {
 	constructor() {}

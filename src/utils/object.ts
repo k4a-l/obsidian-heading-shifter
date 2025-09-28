@@ -1,8 +1,8 @@
 export const assignUnknownObjectFromDefaultObject = (
 	defaultObject: Record<string, unknown>,
-	targetObject: Record<string, unknown>
+	targetObject: Record<string, unknown>,
 ) => {
-	Object.entries(defaultObject).map(([k, v]) => {
+	Object.entries(defaultObject).forEach(([k, v]) => {
 		if (v === null) {
 			return;
 		}
