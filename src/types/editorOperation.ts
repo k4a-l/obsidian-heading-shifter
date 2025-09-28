@@ -1,6 +1,6 @@
-import { Editor, Command } from "obsidian";
-import { HeadingShifterSettings } from "settings";
-import { StopPropagation } from "./type";
+import type { Command, Editor } from "obsidian";
+import type { HeadingShifterSettings } from "settings";
+import type { StopPropagation } from "./type";
 
 export interface EditorOperation {
 	settings: HeadingShifterSettings;

@@ -1,10 +1,10 @@
 import { RegExpExample } from "constant/regExp";
-import { EditorPosition } from "obsidian";
+import type { EditorPosition } from "obsidian";
 import { composeLineChanges } from "utils/editorChange";
 import {
 	checkFence,
 	checkHeading,
-	FenceType,
+	type FenceType,
 	getFenceStatus,
 	getHeadingLines,
 	getNeedsOutdentLines,
@@ -12,7 +12,7 @@ import {
 	isNeedsOutdent,
 	removeUsingRegexpStrings,
 } from "utils/markdown";
-import { assignUnknownObjectFromDefaultObject as assignUnknownObjectFromDefaultObject } from "utils/object";
+import { assignUnknownObjectFromDefaultObject } from "utils/object";
 
 import { createRange } from "utils/range";
 
@@ -237,14 +237,14 @@ describe("regExp Example", () => {
 		expect(
 			removeUsingRegexpStrings(`**${content}**`, {
 				surrounding: [RegExpExample.surrounding.bold],
-			})
+			}),
 		).toBe(content);
 	});
 	test("bold(__)", () => {
 		expect(
 			removeUsingRegexpStrings(`__${content}__`, {
 				surrounding: [RegExpExample.surrounding.bold],
-			})
+			}),
 		).toBe(content);
 	});
 
@@ -252,14 +252,14 @@ describe("regExp Example", () => {
 		expect(
 			removeUsingRegexpStrings(`*${content}*`, {
 				surrounding: [RegExpExample.surrounding.italic],
-			})
+			}),
 		).toBe(content);
 	});
 	test("italic(__)", () => {
 		expect(
 			removeUsingRegexpStrings(`_${content}_`, {
 				surrounding: [RegExpExample.surrounding.italic],
-			})
+			}),
 		).toBe(content);
 	});
 
@@ -267,14 +267,14 @@ describe("regExp Example", () => {
 		expect(
 			removeUsingRegexpStrings(`1. ${content}`, {
 				beginning: [RegExpExample.beginning.ol],
-			})
+			}),
 		).toBe(content);
 	});
 	test("ol(1234567890)", () => {
 		expect(
 			removeUsingRegexpStrings(`1234567890. ${content}`, {
 				beginning: [RegExpExample.beginning.ol],
-			})
+			}),
 		).toBe(content);
 	});
 
@@ -282,14 +282,14 @@ describe("regExp Example", () => {
 		expect(
 			removeUsingRegexpStrings(`- ${content}`, {
 				beginning: [RegExpExample.beginning.ul],
-			})
+			}),
 		).toBe(content);
 	});
 	test("ul(*)", () => {
 		expect(
 			removeUsingRegexpStrings(`* ${content}`, {
 				beginning: [RegExpExample.beginning.ul],
-			})
+			}),
 		).toBe(content);
 	});
 });
@@ -329,7 +329,7 @@ describe("isNeedsOutdent", () => {
 	test("false", () => {
 		expect(isNeedsOutdent("- a")).toBeFalsy();
 		expect(isNeedsOutdent("a")).toBeFalsy();
-        expect(isNeedsOutdent("  -a")).toBeFalsy();
+		expect(isNeedsOutdent("  -a")).toBeFalsy();
 	});
 });
 
@@ -340,9 +340,7 @@ describe("getNeedsOutdentLines", () => {
         * b
     - c
 - d `;
-		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([
-			1, 2, 3,
-		]);
+		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([1, 2, 3]);
 	});
 
 	test("1", () => {

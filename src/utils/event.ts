@@ -1,7 +1,7 @@
 export type ModifierKey = "Ctrl" | "Shift" | "Alt" | "Meta";
 export const simulateHotkey = (
 	key: KeyboardEventInit["key"],
-	modifiers: ModifierKey[] = []
+	modifiers: ModifierKey[] = [],
 ) => {
 	const event = new KeyboardEvent("keydown", {
 		key: key,
