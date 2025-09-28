@@ -56,9 +56,9 @@ export const applyHeading = (
 	const principleText = removed.replace(leadingMarkersRegExp, "");
 
 	// Make makers
+	const bulletMarkers = `${"\t".repeat(Math.max(headingSize - 1, 0))}- `;
 	const headingMarkers =
 		"#".repeat(Math.max(headingSize, 0)) + (headingSize > 0 ? " " : "");
-	const bulletMarkers = `${"\t".repeat(Math.max(headingSize - 1, 0))}- `;
 
 	// Make marker to apply
 	const leadingMarkers = settings?.autoIndentBulletedHeader
