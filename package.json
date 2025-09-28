@@ -14,7 +14,8 @@
 		"test-watch": "jest --watchAll --config config/jest.config.ts",
 		"lint": "biome lint --write",
 		"format": "biome format --write",
-		"check": "biome check --write  --diagnostic-level=error"
+		"check": "biome check --write  --diagnostic-level=error",
+		"prepare": "husky"
 	},
 	"keywords": [],
 	"author": "kasahala",
@@ -32,7 +33,8 @@
 		"jest": "^28.1.3",
 		"obsidian": "latest",
 		"tslib": "2.4.0",
-		"typescript": "4.7.4"
+		"typescript": "4.7.4",
+		"husky": "^9.0.11"
 	},
 	"dependencies": {
 		"@codemirror/state": "^6.1.1",
