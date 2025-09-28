@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { RegExpExample } from "constant/regExp";
-import { HeadingShifterSettings } from "settings";
+import type { HeadingShifterSettings } from "settings";
 import { checkHeading, removeUsingRegexpStrings } from "utils/markdown";
 
 /**Return heading applied string from chunk
@@ -11,17 +11,17 @@ import { checkHeading, removeUsingRegexpStrings } from "utils/markdown";
 export const applyHeading = (
 	chunk: string,
 	headingSize: number,
-	settings?: Partial<HeadingShifterSettings>
+	settings?: Partial<HeadingShifterSettings>,
 ): string => {
 	const extractRegExp = (
 		settingObj: Record<string, boolean | string[]>,
-		regExpObj: Record<string, string>
+		regExpObj: Record<string, string>,
 	): string[] => {
 		return Object.entries(settingObj ?? {}).flatMap(([k, v]) => {
 			if (Array.isArray(v)) {
 				return v;
 			}
-			if (k in regExpObj && v == true) {
+			if (k in regExpObj && v === true) {
 				return regExpObj[k as keyof typeof regExpObj];
 			}
 			return [];
@@ -39,13 +39,13 @@ export const applyHeading = (
 			? removeUsingRegexpStrings(chunk, {
 					beginning: extractRegExp(
 						settings.styleToRemove.beginning,
-						RegExpExample.beginning
+						RegExpExample.beginning,
 					),
 					surrounding: extractRegExp(
 						settings.styleToRemove.surrounding,
-						RegExpExample.surrounding
+						RegExpExample.surrounding,
 					),
-			  })
+				})
 			: chunk;
 	}
 

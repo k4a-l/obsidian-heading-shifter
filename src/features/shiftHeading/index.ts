@@ -1,1 +1,1 @@
-export { IncreaseHeading, DecreaseHeading } from "./operation";
+export { DecreaseHeading, IncreaseHeading } from "./operation";

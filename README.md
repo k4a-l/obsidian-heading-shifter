@@ -24,11 +24,11 @@ With this plugin, you can change the Heading size (the number of `#`) in a batch
 
 You can activate this plugin within Obsidian by doing the following:
 
--   Open Settings > Community plugin
--   Make sure `Restricted mode` is off
--   Click Browse `community plugins`
--   Search for `Heading Shifter`
--   Click `Install` -> `Enable`
+- Open Settings > Community plugin
+- Make sure `Restricted mode` is off
+- Click Browse `community plugins`
+- Search for `Heading Shifter`
+- Click `Install` -> `Enable`
 
 ### Manual installation
 
@@ -72,8 +72,8 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
--   `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
--   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
+- `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
+- `Decrease Headings` is ineffective if selected lines contains more than heading 6.
 
 ### Insert Headings
 
@@ -120,28 +120,31 @@ This is the toggle between removing or retaining `specific style` when applying 
 ### Auto Outdent
 
 ```markdown
--   heading target
-    -   other listA
-        -   other listB
+- heading target
+    - other listA
+        - other listB
 ```
 
 If you call 'Apply Heading 2',
 
 #### Auto Outdent = False
+
 ```markdown
 ## heading target
+
     -   other listA
         -   other listB
 ```
-Subsequent listings will remain in depth and will not have the correct markdown structure.
 
+Subsequent listings will remain in depth and will not have the correct markdown structure.
 
 #### Auto Outdent = True
 
 ```markdown
 ## heading target
--   other listA
-    -   other listB
+
+- other listA
+    - other listB
 ```
 
 Subsequent listings will be outdent and have the correct markdown structure.

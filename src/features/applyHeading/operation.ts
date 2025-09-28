@@ -1,10 +1,10 @@
-import { Command, Editor } from "obsidian";
-import { HeadingShifterSettings } from "settings";
+import type { Command, Editor } from "obsidian";
+import type { HeadingShifterSettings } from "settings";
+import type { EditorOperation } from "types/editorOperation";
+import type { StopPropagation } from "types/type";
 import { composeLineChanges, execOutdent } from "utils/editorChange";
 import { createRange } from "utils/range";
 import { applyHeading } from "./module";
-import { EditorOperation } from "types/editorOperation";
-import { StopPropagation } from "types/type";
 
 export class ApplyHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
@@ -22,7 +22,7 @@ export class ApplyHeading implements EditorOperation {
 	editorCallback = (editor: Editor): StopPropagation => {
 		const lines = createRange(
 			editor.getCursor("from").line,
-			editor.getCursor("to").line - editor.getCursor("from").line + 1
+			editor.getCursor("to").line - editor.getCursor("from").line + 1,
 		);
 
 		const isOneLine =
@@ -31,7 +31,7 @@ export class ApplyHeading implements EditorOperation {
 		// Dispatch Transaction
 		editor.transaction({
 			changes: composeLineChanges(editor, lines, (chunk: string) =>
-				applyHeading(chunk, this.headingSize, this.settings)
+				applyHeading(chunk, this.headingSize, this.settings),
 			),
 		});
 

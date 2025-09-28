@@ -1,5 +1,5 @@
-import { MinimumEditor } from "./editorChange";
-import { setMin, setMax } from "./range";
+import type { MinimumEditor } from "./editorChange";
+import { setMax, setMin } from "./range";
 
 export const checkHeading = (content: string): number => {
 	const match = content.match(/^(#+) /);
@@ -22,13 +22,13 @@ export const checkFence = (content: string): FenceType => {
 
 export const getFenceStatus = (
 	prev: FenceType,
-	current: FenceType
+	current: FenceType,
 ): FenceType => {
 	if (!current) return prev;
 	if (!prev) return current;
 
 	if (
-		current.fenceType == prev.fenceType &&
+		current.fenceType === prev.fenceType &&
 		current.fenceNum >= prev.fenceNum
 	) {
 		return null;
@@ -43,11 +43,11 @@ export const getHeadingLines = (
 	},
 	from: number,
 	to: number,
-	options?: { includesNoHeadingsLine?: boolean }
+	options?: { includesNoHeadingsLine?: boolean },
 ) => {
 	const headingLines: number[] = [];
-	let minHeading: undefined | number = undefined;
-	let maxHeading: undefined | number = undefined;
+	let minHeading: undefined | number;
+	let maxHeading: undefined | number;
 	let fence: FenceType = null;
 
 	for (let line = Math.min(from, to); line <= Math.max(from, to); line++) {
@@ -72,7 +72,7 @@ export const getPreviousHeading = (
 	editor: {
 		getLine: (number: number) => string;
 	},
-	from: number
+	from: number,
 ) => {
 	let fence: FenceType = null;
 	const start = from > 0 ? from - 1 : 0;
@@ -105,7 +105,7 @@ const replaceFunc = (str: string, regExp: RegExp): string | undefined => {
 
 export const removeUsingRegexpStrings = (
 	str: string,
-	regExpStrings: { beginning?: string[]; surrounding?: string[] }
+	regExpStrings: { beginning?: string[]; surrounding?: string[] },
 ): string => {
 	let removed = str;
 
@@ -134,7 +134,7 @@ export const removeUsingRegexpStrings = (
 
 export const getNeedsOutdentLines = (
 	startLineNumber: number,
-	editor: MinimumEditor
+	editor: MinimumEditor,
 ): number[] => {
 	let currentLineNumber = startLineNumber;
 	// let currentIndentLevel: number | undefined = undefined;

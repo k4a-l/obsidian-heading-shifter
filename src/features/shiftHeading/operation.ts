@@ -1,17 +1,17 @@
-import { Editor, Notice, Command } from "obsidian";
-import { HeadingShifterSettings } from "settings";
-import { StopPropagation } from "types/type";
+import { type Command, type Editor, Notice } from "obsidian";
+import type { HeadingShifterSettings } from "settings";
+import type { EditorOperation } from "types/editorOperation";
+import type { StopPropagation } from "types/type";
 import { composeLineChanges } from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
-import { increaseHeading, decreaseHeading } from "./module";
-import { EditorOperation } from "types/editorOperation";
+import { decreaseHeading, increaseHeading } from "./module";
 
 export class IncreaseHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
 	includesNoHeadingsLine: boolean;
 	constructor(
 		settings: HeadingShifterSettings,
-		includesNoHeadingsLine: boolean
+		includesNoHeadingsLine: boolean,
 	) {
 		this.settings = settings;
 		this.includesNoHeadingsLine = includesNoHeadingsLine;
@@ -25,7 +25,7 @@ export class IncreaseHeading implements EditorOperation {
 			editor.getCursor("to").line,
 			{
 				includesNoHeadingsLine: this.includesNoHeadingsLine,
-			}
+			},
 		);
 
 		// Do not increase If it contains more than heading 6 .
@@ -42,7 +42,7 @@ export class IncreaseHeading implements EditorOperation {
 			editor,
 			headingLines,
 			increaseHeading,
-			this.settings
+			this.settings,
 		);
 		editor.transaction({
 			changes: editorChange,
@@ -59,12 +59,8 @@ export class IncreaseHeading implements EditorOperation {
 
 	createCommand = (): Command => {
 		return {
-			id: `increase-heading${
-				this.includesNoHeadingsLine ? "-forced" : ""
-			}`,
-			name: `Increase Headings${
-				this.includesNoHeadingsLine ? "(forced)" : ""
-			}`,
+			id: `increase-heading${this.includesNoHeadingsLine ? "-forced" : ""}`,
+			name: `Increase Headings${this.includesNoHeadingsLine ? "(forced)" : ""}`,
 			icon: "headingShifter_increaseIcon",
 			editorCallback: this.editorCallback,
 		};
@@ -75,7 +71,7 @@ export class IncreaseHeading implements EditorOperation {
 		const { maxHeading } = getHeadingLines(
 			editor,
 			editor.getCursor("from").line,
-			editor.getCursor("to").line
+			editor.getCursor("to").line,
 		);
 		if (maxHeading === undefined) return false;
 
@@ -93,7 +89,7 @@ export class DecreaseHeading implements EditorOperation {
 		const { headingLines, minHeading } = getHeadingLines(
 			editor,
 			editor.getCursor("from").line,
-			editor.getCursor("to").line
+			editor.getCursor("to").line,
 		);
 
 		// Do not decrease If it contains less than specified in the configuration heading.
@@ -103,8 +99,8 @@ export class DecreaseHeading implements EditorOperation {
 		) {
 			new Notice(
 				`Cannot Decrease (contains less than Heading${Number(
-					this.settings.limitHeadingFrom
-				)})`
+					this.settings.limitHeadingFrom,
+				)})`,
 			);
 			return true;
 		}
@@ -117,7 +113,7 @@ export class DecreaseHeading implements EditorOperation {
 			editor,
 			headingLines,
 			decreaseHeading,
-			this.settings
+			this.settings,
 		);
 		editor.transaction({
 			changes: editorChange,
@@ -144,7 +140,7 @@ export class DecreaseHeading implements EditorOperation {
 		const { maxHeading } = getHeadingLines(
 			editor,
 			editor.getCursor("from").line,
-			editor.getCursor("to").line
+			editor.getCursor("to").line,
 		);
 		if (maxHeading === undefined) return false;
 

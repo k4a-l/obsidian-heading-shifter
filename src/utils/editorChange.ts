@@ -1,7 +1,7 @@
-import { EditorChange, EditorPosition } from "obsidian";
-import { HeadingShifterSettings } from "settings";
+import type { EditorChange, EditorPosition } from "obsidian";
+import type { HeadingShifterSettings } from "settings";
+import { type ModifierKey, simulateHotkey } from "./event";
 import { getNeedsOutdentLines } from "./markdown";
-import { ModifierKey, simulateHotkey } from "./event";
 
 export type MinimumEditor = {
 	getLine: (number: number) => string;
@@ -13,11 +13,8 @@ export type MinimumEditor = {
 export const composeLineChanges = (
 	editor: MinimumEditor,
 	lineNumbers: number[],
-	changeCallback: (
-		chunk: string,
-		settings?: HeadingShifterSettings
-	) => string,
-	settings?: HeadingShifterSettings
+	changeCallback: (chunk: string, settings?: HeadingShifterSettings) => string,
+	settings?: HeadingShifterSettings,
 ) => {
 	const editorChange: EditorChange[] = [];
 
@@ -40,7 +37,7 @@ export const composeLineChanges = (
 export const execOutdent = (
 	startLineNumber: number,
 	editor: MinimumEditor,
-	settings: HeadingShifterSettings
+	settings: HeadingShifterSettings,
 ) => {
 	if (!settings.autoOutdent.enable) return;
 
@@ -60,7 +57,7 @@ export const execOutdent = (
 		{
 			line: Math.max(...lineNumbers),
 			ch: editor.getLine(Math.max(...lineNumbers)).length,
-		}
+		},
 	);
 
 	// execute outdent

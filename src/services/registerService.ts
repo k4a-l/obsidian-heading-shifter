@@ -1,15 +1,14 @@
-import { IncreaseHeading, DecreaseHeading } from "features/shiftHeading";
+import { Prec } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
+import { ApplyHeading } from "features/applyHeading";
 import {
 	InsertHeadingAtCurrentLevel,
 	InsertHeadingAtDeeperLevel,
 	InsertHeadingAtHigherLevel,
 } from "features/insertHeading";
-import HeadingShifter from "main";
+import { DecreaseHeading, IncreaseHeading } from "features/shiftHeading";
+import type HeadingShifter from "main";
 import { HEADINGS } from "types/type";
-
-import { Prec } from "@codemirror/state";
-import { keymap } from "@codemirror/view";
-import { ApplyHeading } from "features/applyHeading";
 
 export class RegisterService {
 	plugin: HeadingShifter;
@@ -23,30 +22,24 @@ export class RegisterService {
 	}
 
 	addCommands() {
-		const increaseHeading = new IncreaseHeading(
-			this.plugin.settings,
-			false
-		);
+		const increaseHeading = new IncreaseHeading(this.plugin.settings, false);
 		const increaseHeadingForced = new IncreaseHeading(
 			this.plugin.settings,
-			true
+			true,
 		);
 		const decreaseHeading = new DecreaseHeading(this.plugin.settings);
 		const insertHeadingAtCurrentLabel = new InsertHeadingAtCurrentLevel(
-			this.plugin.settings
+			this.plugin.settings,
 		);
 		const insertHeadingAtDeeperLevel = new InsertHeadingAtDeeperLevel(
-			this.plugin.settings
+			this.plugin.settings,
 		);
 		const insertHeadingAtHigherLevel = new InsertHeadingAtHigherLevel(
-			this.plugin.settings
+			this.plugin.settings,
 		);
 
 		HEADINGS.forEach((heading) => {
-			const applyHeading = new ApplyHeading(
-				this.plugin.settings,
-				heading
-			);
+			const applyHeading = new ApplyHeading(this.plugin.settings, heading);
 			this.plugin.addCommand(applyHeading.createCommand());
 		});
 		this.plugin.addCommand(increaseHeading.createCommand());
@@ -61,15 +54,13 @@ export class RegisterService {
 				keymap.of([
 					{
 						key: "Tab",
-						run: this.plugin.obsidianService.createKeyMapRunCallback(
-							{
-								check: increaseHeading.check,
-								run: increaseHeading.editorCallback,
-							}
-						),
+						run: this.plugin.obsidianService.createKeyMapRunCallback({
+							check: increaseHeading.check,
+							run: increaseHeading.editorCallback,
+						}),
 					},
-				])
-			)
+				]),
+			),
 		);
 
 		this.plugin.registerEditorExtension(
@@ -77,15 +68,13 @@ export class RegisterService {
 				keymap.of([
 					{
 						key: "s-Tab",
-						run: this.plugin.obsidianService.createKeyMapRunCallback(
-							{
-								check: decreaseHeading.check,
-								run: decreaseHeading.editorCallback,
-							}
-						),
+						run: this.plugin.obsidianService.createKeyMapRunCallback({
+							check: decreaseHeading.check,
+							run: decreaseHeading.editorCallback,
+						}),
 					},
-				])
-			)
+				]),
+			),
 		);
 	}
 }
