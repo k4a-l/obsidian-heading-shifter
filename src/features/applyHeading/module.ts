@@ -28,6 +28,8 @@ export const applyHeading = (
 		});
 	};
 
+	const isBullet = settings?.autoIndentBulletedHeader && /^\s*[-] /.test(chunk);
+
 	let removed = chunk;
 
 	// Remove any style only when it is not HEADING (because it may be daring to put it on when HEADING)
@@ -48,9 +50,11 @@ export const applyHeading = (
 
 	const bulletRegExp = /\s*(?:-|\*)\s+/;
 	const headingRegExp = /#+\s+/;
-	const leadingMarkersRegExp = new RegExp(
-		`^(?:${bulletRegExp.source}${headingRegExp.source}|${headingRegExp.source})`,
-	);
+	const leadingMarkersRegExp = isBullet
+		? new RegExp(
+				`^(?:${bulletRegExp.source}${headingRegExp.source}|${bulletRegExp.source})`,
+			)
+		: new RegExp(`^${headingRegExp.source}`);
 
 	// Remove current leading markers
 	const principleText = removed.replace(leadingMarkersRegExp, "");
@@ -61,7 +65,7 @@ export const applyHeading = (
 		"#".repeat(Math.max(headingSize, 0)) + (headingSize > 0 ? " " : "");
 
 	// Make marker to apply
-	const leadingMarkers = settings?.autoIndentBulletedHeader
+	const leadingMarkers = isBullet
 		? `${bulletMarkers}${headingMarkers}`
 		: headingMarkers;
 
