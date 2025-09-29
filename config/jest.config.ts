@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
 	silent: true,
 	collectCoverage: true,
 	moduleNameMapper: {
+		"^obsidian$": "<rootDir>/test/__mock__/obsidian.ts",
 		"^@src(.*)$": "<rootDir>/src/$1",
 	},
 	moduleDirectories: ["node_modules", "src"],

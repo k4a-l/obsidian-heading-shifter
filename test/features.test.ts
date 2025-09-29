@@ -1,6 +1,7 @@
 import { applyHeading } from "features/applyHeading";
 import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
-import type { HeadingShifterSettings } from "settings";
+import { produce } from "immer";
+import { DEFAULT_SETTINGS, type HeadingShifterSettings } from "settings";
 
 const content = "headingShifter";
 
@@ -110,6 +111,25 @@ describe("apply heading", () => {
 			const input = `#### ${content}`;
 			const output = `## ${content}`; // only #2
 			expect(applyHeading(input, 2, autoIndentSettings)).toBe(output);
+		});
+
+		test("with style to remove", () => {
+			const input = `- # a`;
+			const output = `\t- ## a`; // skip remove
+			expect(
+				applyHeading(
+					input,
+					2,
+					produce(autoIndentSettings, (draft) => {
+						draft.styleToRemove = produce(
+							DEFAULT_SETTINGS.styleToRemove,
+							(draft) => {
+								draft.beginning.ul = true;
+							},
+						);
+					}),
+				),
+			).toBe(output);
 		});
 
 		describe("Without auto indent setting", () => {
