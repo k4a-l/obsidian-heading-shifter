@@ -37,7 +37,10 @@ export const applyHeading = (
 		removed = settings?.styleToRemove
 			? removeUsingRegexpStrings(chunk, {
 					beginning: extractRegExp(
-						settings.styleToRemove.beginning,
+						{
+							...settings.styleToRemove.beginning,
+							ul: !isBullet && settings.styleToRemove.beginning.ul,
+						},
 						RegExpExample.beginning,
 					),
 					surrounding: extractRegExp(
@@ -68,6 +71,14 @@ export const applyHeading = (
 	const leadingMarkers = isBullet
 		? `${bulletMarkers}${headingMarkers}`
 		: headingMarkers;
+
+	console.log({
+		principleText,
+		leadingMarkersRegExp,
+		chunk,
+		m: removed.match(leadingMarkersRegExp),
+		removed,
+	});
 
 	return leadingMarkers + principleText;
 };

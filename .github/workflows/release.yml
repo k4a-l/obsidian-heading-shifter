@@ -12,12 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "14.x" # You might need to adjust this value to your own version
+          node-version: 22
+          cache: "npm"
     
       - name: install
         run: npm i
@@ -58,3 +57,6 @@ jobs:
           asset_path: ./manifest.json
           asset_name: manifest.json
           asset_content_type: application/json
+env:
+  # https://typicode.github.io/husky/guide.html#with-env-variables
+  HUSKY: '0'
