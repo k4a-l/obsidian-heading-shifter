@@ -18,6 +18,7 @@ export type HeadingShifterSettings = {
 			alt: boolean;
 		};
 	};
+	autoIndentBulletedHeader: boolean;
 };
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
@@ -36,6 +37,7 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 			alt: false,
 		},
 	},
+	autoIndentBulletedHeader: false,
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -86,6 +88,20 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+
+		new Setting(containerEl)
+			.setName("Synchronization `Heading` and `Bulleted list indentation`")
+			.setDesc(
+				"When a header is applied to bulleted list, indent the line according to the header level.",
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.autoIndentBulletedHeader)
+					.onChange((v) => {
+						this.plugin.settings.autoIndentBulletedHeader = v;
+						this.plugin.saveSettings();
+					});
+			});
 
 		containerEl.createEl("h3", { text: "Style to remove" });
 		containerEl.createEl("p", {

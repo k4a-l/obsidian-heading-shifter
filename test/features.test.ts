@@ -1,5 +1,6 @@
 import { applyHeading } from "features/applyHeading";
 import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
+import type { HeadingShifterSettings } from "settings";
 
 const content = "headingShifter";
 
@@ -72,6 +73,57 @@ describe("apply heading", () => {
 					},
 				}),
 			).toBe(`**${content}**`);
+		});
+	});
+
+	describe("With Auto Indent", () => {
+		const autoIndentSettings: Partial<HeadingShifterSettings> = {
+			autoIndentBulletedHeader: true,
+		};
+
+		test("list to 0", () => {
+			const input = `- ${content}`;
+			const output = input; // only bullet(not changed)
+			expect(applyHeading(input, 0, autoIndentSettings)).toBe(output);
+		});
+
+		test("list to 5", () => {
+			const input = `\t\t\t\t\t- ${content}`;
+			const output = `\t\t\t\t- ##### ${content}`; // indent4 + #5
+			expect(applyHeading(input, 5, autoIndentSettings)).toBe(output);
+		});
+
+		test("multiple to 3", () => {
+			const input = `\t\t\t- ##### ${content}`;
+			const output = `\t\t- ### ${content}`; // indent2 + #3
+			expect(applyHeading(input, 3, autoIndentSettings)).toBe(output);
+		});
+
+		test("multiple to 0", () => {
+			const input = `\t\t- ### ${content}`;
+			const output = `- ${content}`; // only bullet
+			expect(applyHeading(input, 0, autoIndentSettings)).toBe(output);
+		});
+
+		// It overlaps with other tests, but just in case
+		test("Without bullet", () => {
+			const input = `#### ${content}`;
+			const output = `## ${content}`; // only #2
+			expect(applyHeading(input, 2, autoIndentSettings)).toBe(output);
+		});
+
+		describe("Without auto indent setting", () => {
+			test("Applied without being removed(Not recognized as a valid heading)", () => {
+				const input = `\t- ## ${content}`;
+				const output = `#### ${input}`; // h4 ${input}
+				expect(applyHeading(input, 4)).toBe(output);
+			});
+
+			test("Applied after removal", () => {
+				const input = `## ${content}`;
+				const output = `#### ${content}`; // indent4 + #5
+				expect(applyHeading(input, 4)).toBe(output);
+			});
 		});
 	});
 });
