@@ -158,3 +158,35 @@ export const isNeedsOutdent = (line: string): number | undefined => {
 	if (!space) return undefined;
 	return space.length;
 };
+
+export const countLeadingTabs = (line: string): number => {
+	let count = 0;
+	for (let i = 0; i < line.length; i++) {
+		if (line[i] === '\t') count++;
+		else break;
+	}
+	return count;
+}
+
+export const getBulletedNeedsOutdentLines = (
+	startLineNumber: number,
+	startIndentLevel: number,
+	editor: MinimumEditor
+): number[] => {
+	let lineNumber = startLineNumber + 1;
+	let line = editor.getLine(lineNumber);
+	let indentLevel = countLeadingTabs(line);
+	let isBulleted = /^\s*[-*]\s+/.test(line);
+
+	const needsOutdentLines = [];
+	while (indentLevel > startIndentLevel && isBulleted) { // Loop until bulleted indent levels match (only adjust nested levels)
+		needsOutdentLines.push(lineNumber);
+
+		lineNumber++;
+		line = editor.getLine(lineNumber);
+		indentLevel = countLeadingTabs(line);
+		isBulleted = /^\s*[-*]\s+/.test(line);
+	}
+
+	return needsOutdentLines;
+};
