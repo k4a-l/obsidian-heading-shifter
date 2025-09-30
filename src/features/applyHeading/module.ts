@@ -72,13 +72,5 @@ export const applyHeading = (
 		? `${bulletMarkers}${headingMarkers}`
 		: headingMarkers;
 
-	console.log({
-		principleText,
-		leadingMarkersRegExp,
-		chunk,
-		m: removed.match(leadingMarkersRegExp),
-		removed,
-	});
-
 	return leadingMarkers + principleText;
 };
