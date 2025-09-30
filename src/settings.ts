@@ -18,7 +18,7 @@ export type HeadingShifterSettings = {
 			alt: boolean;
 		};
 	};
-	autoIndentBulletedHeader: boolean;
+	syncHeadingsAndListsLevel: boolean;
 };
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
@@ -37,7 +37,7 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 			alt: false,
 		},
 	},
-	autoIndentBulletedHeader: false,
+	syncHeadingsAndListsLevel: false,
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -92,13 +92,13 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Synchronization `Heading` and `Bulleted list indentation`")
 			.setDesc(
-				"When a header is applied to bulleted list, indent the line according to the header level.",
+				"When a headings is applied to bulleted list, indent the line according to the headings level.",
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.autoIndentBulletedHeader)
+					.setValue(this.plugin.settings.syncHeadingsAndListsLevel)
 					.onChange((v) => {
-						this.plugin.settings.autoIndentBulletedHeader = v;
+						this.plugin.settings.syncHeadingsAndListsLevel = v;
 						this.plugin.saveSettings();
 					});
 			});

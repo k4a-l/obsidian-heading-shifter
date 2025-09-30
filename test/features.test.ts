@@ -79,7 +79,7 @@ describe("apply heading", () => {
 
 	describe("With Auto Indent", () => {
 		const autoIndentSettings: Partial<HeadingShifterSettings> = {
-			autoIndentBulletedHeader: true,
+			syncHeadingsAndListsLevel: true,
 		};
 
 		test("list to 0", () => {

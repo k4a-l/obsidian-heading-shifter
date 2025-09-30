@@ -28,7 +28,8 @@ export const applyHeading = (
 		});
 	};
 
-	const isBullet = settings?.autoIndentBulletedHeader && /^\s*[-] /.test(chunk);
+	const isBullet =
+		settings?.syncHeadingsAndListsLevel && /^\s*[-] /.test(chunk);
 
 	let removed = chunk;
 

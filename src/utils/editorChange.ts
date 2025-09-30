@@ -39,7 +39,8 @@ export const execOutdent = (
 	editor: MinimumEditor,
 	settings: HeadingShifterSettings,
 ) => {
-	if (!settings.autoOutdent.enable || settings.autoIndentBulletedHeader) return;
+	if (!settings.autoOutdent.enable || settings.syncHeadingsAndListsLevel)
+		return;
 
 	// save current selection
 	const currentSelection = {
