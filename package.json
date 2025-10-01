@@ -14,7 +14,8 @@
 		"test-watch": "jest --watchAll --config config/jest.config.ts",
 		"lint": "biome lint --write",
 		"format": "biome format --write",
-		"check": "biome check --write  --diagnostic-level=error",
+		"check": "biome check --write  --diagnostic-level=warn",
+		"ci": "biome ci --diagnostic-level=warn",
 		"prepare": "husky"
 	},
 	"keywords": [],
