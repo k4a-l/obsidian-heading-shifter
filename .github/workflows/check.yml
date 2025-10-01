@@ -1,4 +1,4 @@
-name: jest
+name: check
 on: 
   push:
     tags-ignore:
