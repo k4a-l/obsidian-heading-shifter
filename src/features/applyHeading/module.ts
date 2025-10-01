@@ -28,8 +28,11 @@ export const applyHeading = (
 		});
 	};
 
+	const bulletRegExp = /\s*(- \[.+\]|-|\*|[0-9]+)\s+/;
+	const headingRegExp = /#+\s+/;
+
 	const isBullet =
-		settings?.syncHeadingsAndListsLevel && /^\s*[-] /.test(chunk);
+		settings?.syncHeadingsAndListsLevel && bulletRegExp.test(chunk);
 
 	let removed = chunk;
 
@@ -52,19 +55,24 @@ export const applyHeading = (
 			: chunk;
 	}
 
-	const bulletRegExp = /\s*(?:-|\*)\s+/;
-	const headingRegExp = /#+\s+/;
 	const leadingMarkersRegExp = isBullet
 		? new RegExp(
 				`^(?:${bulletRegExp.source}${headingRegExp.source}|${bulletRegExp.source})`,
 			)
 		: new RegExp(`^${headingRegExp.source}`);
 
+	let capturedBullet = "-";
 	// Remove current leading markers
-	const principleText = removed.replace(leadingMarkersRegExp, "");
+	const principleText = removed.replace(leadingMarkersRegExp, (match, p1) => {
+		// Capture the bullet part if it exists
+		if (isBullet && p1) {
+			capturedBullet = p1;
+		}
+		return "";
+	});
 
 	// Make makers
-	const bulletMarkers = `${"\t".repeat(Math.max(headingSize - 1, 0))}- `;
+	const bulletMarkers = `${"\t".repeat(Math.max(headingSize - 1, 0))}${capturedBullet} `;
 	const headingMarkers =
 		"#".repeat(Math.max(headingSize, 0)) + (headingSize > 0 ? " " : "");
 
