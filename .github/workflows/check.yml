@@ -1,10 +1,5 @@
-name: jest
-on: 
-  push:
-    tags-ignore:
-      - '[0-9]+.[0-9]+.[0-9]+'
-    branches: 
-      - '*'  
+name: check
+on: pull_request
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,10 +9,14 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
-      - name: npm install
+      - name: install
         run: npm install
-      - name: npm run test
-        run: npm run test-action
+      - name: test
+        run: npm run coverage
+      - name: tsc
+        run: npm run tsc
+      - name: check
+        run: npm run ci
 env:
   # https://typicode.github.io/husky/guide.html#with-env-variables
   HUSKY: '0'

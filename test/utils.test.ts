@@ -13,8 +13,8 @@ import {
 	removeUsingRegexpStrings,
 } from "utils/markdown";
 import { assignUnknownObjectFromDefaultObject } from "utils/object";
-
 import { createRange } from "utils/range";
+import { describe, expect, test } from "vitest";
 
 describe("checkHeading", () => {
 	test("match", () => {
