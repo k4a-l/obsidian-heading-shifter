@@ -10,12 +10,10 @@ export const checkHeading = (content: string): number => {
 export type FenceType = { fenceType: "`" | "~"; fenceNum: number } | null;
 export const checkFence = (content: string): FenceType => {
 	const backticks = content.match(/^(`{3,})/);
-	if (backticks && backticks[1])
-		return { fenceType: "`", fenceNum: backticks[1].length };
+	if (backticks?.[1]) return { fenceType: "`", fenceNum: backticks[1].length };
 
 	const tildes = content.match(/^(~{3,})/);
-	if (tildes && tildes[1])
-		return { fenceType: "~", fenceNum: tildes[1].length };
+	if (tildes?.[1]) return { fenceType: "~", fenceNum: tildes[1].length };
 
 	return null;
 };

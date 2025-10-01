@@ -61,9 +61,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 				// Create options from heading array like {'0':'0','1':'1',.......}
 				const headingOptions: Record<string, string> = HEADINGS.reduce(
 					(prev, heading) => {
-						return { ...prev, [heading]: String(heading) };
+						prev[heading] = String(heading);
+						return prev;
 					},
-					{},
+					{} as Record<string, string>,
 				);
 
 				dropdown

@@ -2,6 +2,7 @@ import { applyHeading } from "features/applyHeading";
 import { decreaseHeading, increaseHeading } from "features/shiftHeading/module";
 import { produce } from "immer";
 import { DEFAULT_SETTINGS, type HeadingShifterSettings } from "settings";
+import { describe, expect, test } from "vitest";
 
 const content = "headingShifter";
 

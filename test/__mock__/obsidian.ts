@@ -13,16 +13,16 @@ export class Setting {
 	setDesc(desc: string) {
 		return this;
 	}
-	addText(cb: (component: any) => any) {
+	addText(cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addToggle(cb: (component: any) => any) {
+	addToggle(cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addDropdown(cb: (component: any) => any) {
+	addDropdown(cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addTextArea(cb: (component: any) => any) {
+	addTextArea(cb: (component: unknown) => unknown) {
 		return this;
 	}
 }
@@ -31,12 +31,12 @@ export class Setting {
  * PluginSettingTab
  */
 export class PluginSettingTab {
-	constructor(app: App, plugin: any) {}
+	constructor(app: App, plugin: unknown) {}
 	display() {}
 }
 
 /**
  * App, Plugin などの型定義のモック
  */
-export type App = {};
+export type App = unknown;
 export class Plugin {}
