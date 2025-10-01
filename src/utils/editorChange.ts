@@ -39,7 +39,8 @@ export const execOutdent = (
 	editor: MinimumEditor,
 	settings: HeadingShifterSettings,
 ) => {
-	if (!settings.autoOutdent.enable) return;
+	if (!settings.autoOutdent.enable || settings.syncHeadingsAndListsLevel)
+		return;
 
 	// save current selection
 	const currentSelection = {
@@ -69,10 +70,6 @@ export const execOutdent = (
 
 	// check need again
 	const lineNumbersAfter = getNeedsOutdentLines(startLineNumber, editor);
-	if (JSON.stringify(lineNumbers) === JSON.stringify(lineNumbersAfter)) {
-		editor.setSelection(currentSelection.anchor, currentSelection.head);
-		return;
-	}
 	if (lineNumbersAfter.length === 0) {
 		editor.setSelection(currentSelection.anchor, currentSelection.head);
 		return;

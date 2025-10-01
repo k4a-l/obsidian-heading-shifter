@@ -28,7 +28,8 @@ export const applyHeading = (
 		});
 	};
 
-	const isBullet = settings?.autoIndentBulletedHeader && /^\s*[-] /.test(chunk);
+	const isBullet =
+		settings?.syncHeadingsAndListsLevel && /^\s*[-] /.test(chunk);
 
 	let removed = chunk;
 
@@ -71,14 +72,6 @@ export const applyHeading = (
 	const leadingMarkers = isBullet
 		? `${bulletMarkers}${headingMarkers}`
 		: headingMarkers;
-
-	console.log({
-		principleText,
-		leadingMarkersRegExp,
-		chunk,
-		m: removed.match(leadingMarkersRegExp),
-		removed,
-	});
 
 	return leadingMarkers + principleText;
 };
