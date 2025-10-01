@@ -12,11 +12,11 @@ jobs:
       - name: install
         run: npm install
       - name: test
-        run: npm run test-action
+        run: npm run coverage
       - name: tsc
         run: npm run tsc
       - name: check
-        run: npm run check
+        run: npm run ci
 env:
   # https://typicode.github.io/husky/guide.html#with-env-variables
   HUSKY: '0'
