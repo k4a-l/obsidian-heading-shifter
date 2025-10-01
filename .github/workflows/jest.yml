@@ -14,10 +14,14 @@ jobs:
         with:
           node-version: 22
           cache: "npm"
-      - name: npm install
+      - name: install
         run: npm install
-      - name: npm run test
+      - name: test
         run: npm run test-action
+      - name: tsc
+        run: npm run tsc
+      - name: check
+        run: npm run check
 env:
   # https://typicode.github.io/husky/guide.html#with-env-variables
   HUSKY: '0'
