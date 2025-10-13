@@ -2,7 +2,7 @@ import type { Command, Editor } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
-import { composeLineChanges, execOutdent, execBulletedOutdent } from "utils/editorChange";
+import { composeLineChanges, execOutdent, execSyncBulletIndent } from "utils/editorChange";
 import { createRange } from "utils/range";
 import { applyHeading } from "./module";
 import { countLeadingTabs } from "utils/markdown";
@@ -44,11 +44,14 @@ export class ApplyHeading implements EditorOperation {
 		if (this.settings.autoOutdent.enable && this.settings.syncHeadingsAndListsLevel && isBulleted) {
 			// Apply outdent to the bulleted lines to match the new heading level
 			// Start from the last line headers are applied to and check from there
-			execBulletedOutdent(lastHeaderLineNumber, lastHeaderPrevIndentLevel, this.headingSize, editor);
-			return true;
-		}
+			const bulletedChanges = execSyncBulletIndent(lastHeaderLineNumber, lastHeaderPrevIndentLevel, this.headingSize, editor);
 
-		execOutdent(Math.max(...lines) + 1, editor, this.settings);
+			editor.transaction({
+				changes: bulletedChanges
+			});
+		} else {
+			execOutdent(Math.max(...lines) + 1, editor, this.settings);
+		}
 
 		// If only one line is targeted, move the cursor to the end of the line.
 		if (isOneLine) {
