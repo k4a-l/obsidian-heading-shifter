@@ -160,7 +160,7 @@ export const isNeedsOutdent = (line: string): number | undefined => {
 export const countLeadingTabs = (line: string): number => {
 	let count = 0;
 	for (let i = 0; i < line.length; i++) {
-		if (line[i] === '\t') count++;
+		if (line[i] === "\t") count++;
 		else break;
 	}
 	return count;

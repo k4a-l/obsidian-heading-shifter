@@ -5,7 +5,7 @@ import type { StopPropagation } from "types/type";
 import {
 	composeLineChanges,
 	execOutdent,
-	execSyncBulletIndent
+	execSyncBulletIndent,
 } from "utils/editorChange";
 import { countLeadingTabs } from "utils/markdown";
 import { createRange } from "utils/range";
@@ -56,7 +56,7 @@ export class ApplyHeading implements EditorOperation {
 				lastHeaderLineNumber,
 				lastHeaderPrevIndentLevel,
 				this.headingSize,
-				editor
+				editor,
 			);
 
 			editor.transaction({

@@ -4,7 +4,7 @@ import { type ModifierKey, simulateHotkey } from "./event";
 import {
 	countLeadingTabs,
 	getBulletedNeedsOutdentLines as getBulletedNeedsSyncLines,
-	getNeedsOutdentLines
+	getNeedsOutdentLines,
 } from "./markdown";
 
 export type MinimumEditor = {
@@ -89,38 +89,38 @@ export const execSyncBulletIndent = (
 	headingSize: number,
 	editor: Editor,
 ): EditorChange[] => {
-  const lineNumbers = getBulletedNeedsSyncLines(
+	const lineNumbers = getBulletedNeedsSyncLines(
 		startLineNumber,
 		startPrevIndentLevel,
-		editor
+		editor,
 	);
 
-  const indentDelta = headingSize - 1 - startPrevIndentLevel; // How much to change indent by
-  const changes: EditorChange[] = [];
+	const indentDelta = headingSize - 1 - startPrevIndentLevel; // How much to change indent by
+	const changes: EditorChange[] = [];
 
-  lineNumbers.forEach(lineNumber => {
-    const line = editor.getLine(lineNumber);
-    const newIndentLevel = Math.max(countLeadingTabs(line) + indentDelta, 0);
-    
+	lineNumbers.forEach((lineNumber) => {
+		const line = editor.getLine(lineNumber);
+		const newIndentLevel = Math.max(countLeadingTabs(line) + indentDelta, 0);
+
 		const match = line.match(
-			/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/
+			/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/,
 		);
 
-    const tabsMarkers = "\t".repeat(newIndentLevel);
-    const bulletMarkers = match?.groups?.bullet || "";
-    const headingMarkers = match?.groups?.heading
+		const tabsMarkers = "\t".repeat(newIndentLevel);
+		const bulletMarkers = match?.groups?.bullet || "";
+		const headingMarkers = match?.groups?.heading
 			? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " "
 			: "";
-    const content = match?.groups?.content || "";
+		const content = match?.groups?.content || "";
 
-    const newLine = `${tabsMarkers}${bulletMarkers}${headingMarkers}${content}`;
+		const newLine = `${tabsMarkers}${bulletMarkers}${headingMarkers}${content}`;
 
-    changes.push({
-      text: newLine,
-      from: { line: lineNumber, ch: 0 },
-      to: { line: lineNumber, ch: line.length }
-    });
-  });
-  
+		changes.push({
+			text: newLine,
+			from: { line: lineNumber, ch: 0 },
+			to: { line: lineNumber, ch: line.length },
+		});
+	});
+
 	return changes;
-}
+};
