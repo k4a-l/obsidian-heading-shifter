@@ -1,7 +1,11 @@
-import type { EditorChange, EditorPosition, Editor } from "obsidian";
+import type { Editor, EditorChange, EditorPosition } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import { type ModifierKey, simulateHotkey } from "./event";
-import { getNeedsOutdentLines, countLeadingTabs, getBulletedNeedsOutdentLines as getBulletedNeedsSyncLines } from "./markdown";
+import {
+	countLeadingTabs,
+	getBulletedNeedsOutdentLines as getBulletedNeedsSyncLines,
+	getNeedsOutdentLines
+} from "./markdown";
 
 export type MinimumEditor = {
 	getLine: (number: number) => string;
@@ -79,25 +83,34 @@ export const execOutdent = (
 	execOutdent(startLineNumber, editor, settings);
 };
 
-export const execSyncBulletIndent = (startLineNumber: number,
+export const execSyncBulletIndent = (
+	startLineNumber: number,
 	startPrevIndentLevel: number,
 	headingSize: number,
-	editor: Editor
+	editor: Editor,
 ): EditorChange[] => {
-  const lineNumbers = getBulletedNeedsSyncLines(startLineNumber, startPrevIndentLevel, editor);
+  const lineNumbers = getBulletedNeedsSyncLines(
+		startLineNumber,
+		startPrevIndentLevel,
+		editor
+	);
 
-  const indentDelta = (headingSize - 1) - startPrevIndentLevel; // How much to change indent by
+  const indentDelta = headingSize - 1 - startPrevIndentLevel; // How much to change indent by
   const changes: EditorChange[] = [];
 
   lineNumbers.forEach(lineNumber => {
     const line = editor.getLine(lineNumber);
     const newIndentLevel = Math.max(countLeadingTabs(line) + indentDelta, 0);
     
-		const match = line.match(/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/);
+		const match = line.match(
+			/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/
+		);
 
     const tabsMarkers = "\t".repeat(newIndentLevel);
     const bulletMarkers = match?.groups?.bullet || "";
-    const headingMarkers = match?.groups?.heading ? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " " : "";
+    const headingMarkers = match?.groups?.heading
+			? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " "
+			: "";
     const content = match?.groups?.content || "";
 
     const newLine = `${tabsMarkers}${bulletMarkers}${headingMarkers}${content}`;
