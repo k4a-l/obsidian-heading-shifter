@@ -1,9 +1,10 @@
 import { applyHeading } from "features/applyHeading";
+import { createListIndentChangesByListBehavior } from "features/applyHeading/module";
 import { type Command, type Editor, Notice } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
-import { composeLineChanges, execOutdent } from "utils/editorChange";
+import { composeLineChanges } from "utils/editorChange";
 import { checkHeading, getPreviousHeading } from "utils/markdown";
 
 export class InsertHeadingAtCurrentLevel implements EditorOperation {
@@ -22,14 +23,22 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 			lastHeadingLine !== undefined
 				? checkHeading(editor.getLine(lastHeadingLine))
 				: 0;
+		const targetHeadingLevel = headingLevel;
 
-		editor.transaction({
-			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel, this.settings),
-			),
+		const headingChanges = composeLineChanges(editor, [cursorLine], (chunk) =>
+			applyHeading(chunk, targetHeadingLevel, this.settings),
+		);
+
+		const indentChanges = createListIndentChangesByListBehavior(editor, {
+			parentIndentLevel: targetHeadingLevel - 1,
+			tabSize: this.settings.editor.tabSize,
+			listBehavior: this.settings.list.childrenBehavior,
+			parentLineNumber: cursorLine,
 		});
 
-		execOutdent(cursorLine + 1, editor, this.settings);
+		editor.transaction({
+			changes: [...headingChanges, ...indentChanges],
+		});
 
 		editor.setCursor(editor.getCursor().line);
 		return true;
@@ -66,13 +75,24 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 			return true;
 		}
 
-		editor.transaction({
-			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel + 1, this.settings),
-			),
+		const targetHeadingLevel = headingLevel + 1;
+
+		const headingChanges = composeLineChanges(
+			editor,
+			[cursorLine],
+			(chunk: string) => applyHeading(chunk, targetHeadingLevel, this.settings),
+		);
+
+		const indentChanges = createListIndentChangesByListBehavior(editor, {
+			parentIndentLevel: targetHeadingLevel - 1,
+			tabSize: this.settings.editor.tabSize,
+			listBehavior: this.settings.list.childrenBehavior,
+			parentLineNumber: cursorLine,
 		});
 
-		execOutdent(cursorLine + 1, editor, this.settings);
+		editor.transaction({
+			changes: [...headingChanges, ...indentChanges],
+		});
 
 		editor.setCursor(editor.getCursor().line);
 		return true;
@@ -104,13 +124,24 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 			? checkHeading(editor.getLine(lastHeadingLine))
 			: 0;
 
-		editor.transaction({
-			changes: composeLineChanges(editor, [cursorLine], (chunk: string) =>
-				applyHeading(chunk, headingLevel - 1, this.settings),
-			),
+		const targetHeadingLevel = headingLevel - 1;
+
+		const headingChanges = composeLineChanges(
+			editor,
+			[cursorLine],
+			(chunk: string) => applyHeading(chunk, targetHeadingLevel, this.settings),
+		);
+
+		const indentChanges = createListIndentChangesByListBehavior(editor, {
+			parentIndentLevel: targetHeadingLevel,
+			tabSize: this.settings.editor.tabSize,
+			listBehavior: this.settings.list.childrenBehavior,
+			parentLineNumber: cursorLine,
 		});
 
-		execOutdent(cursorLine + 1, editor, this.settings);
+		editor.transaction({
+			changes: [...headingChanges, ...indentChanges],
+		});
 
 		editor.setCursor(editor.getCursor().line);
 		return true;

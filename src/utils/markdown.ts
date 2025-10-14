@@ -1,3 +1,4 @@
+import { TABSIZE } from "constant/editor";
 import type { MinimumEditor } from "./editorChange";
 import { setMax, setMin } from "./range";
 
@@ -130,35 +131,40 @@ export const removeUsingRegexpStrings = (
 	return removed;
 };
 
-export const countLeadingTabs = (line: string): number => {
-	let count = 0;
-	for (let i = 0; i < line.length; i++) {
-		if (line[i] === "\t") count++;
-		else break;
-	}
-	return count;
+export const countIndentLevel = (line: string, tabSize = TABSIZE): number => {
+	const leadingContent = line.match(/^(\s*)/)?.[0];
+	if (!leadingContent) return 0;
+
+	const tabCount = (leadingContent.match(/\t/g) || []).length;
+	const spaceCount = (leadingContent.match(/ /g) || []).length;
+
+	return tabCount + Math.floor(spaceCount / tabSize);
 };
 
 export const getListChildrenLines = (
-	startLineNumber: number,
-	startIndentLevel: number,
 	editor: MinimumEditor,
+	{
+		parentLineNumber,
+		tabSize,
+	}: {
+		parentLineNumber: number;
+		tabSize?: number;
+	},
 ): number[] => {
-	let lineNumber = startLineNumber + 1;
-	let line = editor.getLine(lineNumber);
-	let indentLevel = countLeadingTabs(line);
-	let isBulleted = /^\s*[-*]\s+/.test(line);
+	const lineNumbers: number[] = [];
 
-	const needsOutdentLines = [];
-	while (indentLevel > startIndentLevel && isBulleted) {
-		// Loop until bulleted indent levels match (only adjust nested levels)
-		needsOutdentLines.push(lineNumber);
+	const startLine = editor.getLine(parentLineNumber);
+	const prevParentIndentLevel = countIndentLevel(startLine, tabSize);
 
-		lineNumber++;
-		line = editor.getLine(lineNumber);
-		indentLevel = countLeadingTabs(line);
-		isBulleted = /^\s*[-*]\s+/.test(line);
+	for (let lineN = parentLineNumber + 1; lineN < editor.lineCount(); lineN++) {
+		const line = editor.getLine(lineN);
+		const indentLevel = countIndentLevel(line, tabSize);
+		const isBulleted = /^\s*[-*]\s+/.test(line);
+
+		if (!isBulleted) break;
+		if (indentLevel <= prevParentIndentLevel) break;
+
+		lineNumbers.push(lineN);
 	}
-
-	return needsOutdentLines;
+	return lineNumbers;
 };

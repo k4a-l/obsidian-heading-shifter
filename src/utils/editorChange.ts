@@ -1,11 +1,7 @@
-import type { Editor, EditorChange, EditorPosition } from "obsidian";
+import { TABSIZE } from "constant/editor";
+import type { EditorChange, EditorPosition } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
-import { type ModifierKey, simulateHotkey } from "./event";
-import {
-	countLeadingTabs,
-	getBulletedNeedsOutdentLines as getBulletedNeedsSyncLines,
-	getNeedsOutdentLines,
-} from "./markdown";
+import { countIndentLevel, getListChildrenLines } from "./markdown";
 
 export type MinimumEditor = {
 	getLine: (number: number) => string;
@@ -38,25 +34,31 @@ export const composeLineChanges = (
 	return editorChange;
 };
 
-
-export const execSyncBulletIndent = (
-	startLineNumber: number,
-	startPrevIndentLevel: number,
-	headingSize: number,
-	editor: Editor,
+export const createListIndentChanges = (
+	editor: MinimumEditor,
+	{
+		parentLineNumber,
+		parentIndentLevel,
+		tabSize = TABSIZE,
+	}: { parentLineNumber: number; parentIndentLevel: number; tabSize?: number },
 ): EditorChange[] => {
-	const lineNumbers = getBulletedNeedsSyncLines(
-		startLineNumber,
-		startPrevIndentLevel,
-		editor,
-	);
+	const parentLine = editor.getLine(parentLineNumber);
+	const prevParentIndentLevel = countIndentLevel(parentLine, tabSize);
 
-	const indentDelta = headingSize - 1 - startPrevIndentLevel; // How much to change indent by
+	const childrenNumbers = getListChildrenLines(editor, {
+		parentLineNumber,
+		tabSize,
+	});
+
+	const indentDelta = parentIndentLevel - prevParentIndentLevel; // How much to change indent by
 	const changes: EditorChange[] = [];
 
-	lineNumbers.forEach((lineNumber) => {
+	childrenNumbers.forEach((lineNumber) => {
 		const line = editor.getLine(lineNumber);
-		const newIndentLevel = Math.max(countLeadingTabs(line) + indentDelta, 0);
+		const newIndentLevel = Math.max(
+			countIndentLevel(line, tabSize) + indentDelta,
+			0,
+		);
 
 		const match = line.match(
 			/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/,

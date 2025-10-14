@@ -1,7 +1,17 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
+import { TABSIZE } from "constant/editor";
 import { RegExpExample } from "constant/regExp";
-import type { HeadingShifterSettings } from "settings";
-import { checkHeading, removeUsingRegexpStrings } from "utils/markdown";
+import type { EditorChange } from "obsidian";
+import type { HeadingShifterSettings, LIST_BEHAVIOR } from "settings";
+import {
+	createListIndentChanges,
+	type MinimumEditor,
+} from "utils/editorChange";
+import {
+	checkHeading,
+	countIndentLevel,
+	removeUsingRegexpStrings,
+} from "utils/markdown";
 
 /**Return heading applied string from chunk
  * @return heading applied string
@@ -83,4 +93,42 @@ export const applyHeading = (
 		: headingMarkers;
 
 	return leadingMarkers + principleText;
+};
+
+export const createListIndentChangesByListBehavior = (
+	editor: MinimumEditor,
+	{
+		listBehavior,
+		tabSize = TABSIZE,
+		parentIndentLevel,
+		parentLineNumber,
+	}: {
+		listBehavior: LIST_BEHAVIOR;
+		tabSize?: number;
+		parentIndentLevel: number;
+		parentLineNumber: number;
+	},
+): EditorChange[] => {
+	if (
+		listBehavior !== "outdent to zero" &&
+		listBehavior !== "sync with headings"
+	) {
+		return [];
+	}
+
+	const parentIndentLevelByBehavior =
+		listBehavior === "sync with headings"
+			? // follow parent
+				Math.max(0, parentIndentLevel)
+			: // Force the next line of parent to be 0
+				-countIndentLevel(editor.getLine(parentLineNumber + 1), tabSize) +
+				countIndentLevel(editor.getLine(parentLineNumber), tabSize);
+
+	const indentChanges = createListIndentChanges(editor, {
+		parentLineNumber,
+		parentIndentLevel: parentIndentLevelByBehavior,
+		tabSize,
+	});
+
+	return indentChanges;
 };
