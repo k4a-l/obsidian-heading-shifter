@@ -22,7 +22,7 @@ export const applyHeading = (
 				return v;
 			}
 			if (k in regExpObj && v === true) {
-				return regExpObj[k as keyof typeof regExpObj];
+				return regExpObj[k as keyof typeof regExpObj] ?? [];
 			}
 			return [];
 		});
@@ -32,7 +32,8 @@ export const applyHeading = (
 	const headingRegExp = /#+\s+/;
 
 	const isBullet =
-		settings?.syncHeadingsAndListsLevel && bulletRegExp.test(chunk);
+		settings?.list?.childrenBehavior === "sync with headings" &&
+		bulletRegExp.test(chunk);
 
 	let removed = chunk;
 

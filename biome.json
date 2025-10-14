@@ -19,21 +19,18 @@
 			"recommended": true,
 			"correctness": {
 				"noUnusedVariables": "info",
-				"noUnusedFunctionParameters": "info"
+				"noUnusedFunctionParameters": "info",
+				"noUnusedImports": {
+					"level": "warn",
+					"fix": "safe",
+					"options": {}
+				}
 			}
 		}
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
-		}
-	},
-	"assist": {
-		"enabled": true,
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
 		}
 	}
 }
