@@ -12,9 +12,9 @@ Obsidian links numerous markdown files to form knowledge. Daily rearrangement of
 The following situations often occur in this process.
 
 1. Cut out A part of File 1 to an independent File 2 and linked.
-    - Heading3 in file 1 is changed to Heading1 in file 2
+   - Heading3 in file 1 is changed to Heading1 in file 2
 2. Incorporated the content of File 3 into a part of File 4
-    - Heading2 in file 3 is changed to Heading4 in file 4
+   - Heading2 in file 3 is changed to Heading4 in file 4
 
 With this plugin, you can change the Heading size (the number of `#`) in a batch instead of changing it manually.
 
@@ -24,11 +24,11 @@ With this plugin, you can change the Heading size (the number of `#`) in a batch
 
 You can activate this plugin within Obsidian by doing the following:
 
--   Open Settings > Community plugin
--   Make sure `Restricted mode` is off
--   Click Browse `community plugins`
--   Search for `Heading Shifter`
--   Click `Install` -> `Enable`
+- Open Settings > Community plugin
+- Make sure `Restricted mode` is off
+- Click Browse `community plugins`
+- Search for `Heading Shifter`
+- Click `Install` -> `Enable`
 
 ### Manual installation
 
