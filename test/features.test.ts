@@ -78,9 +78,9 @@ describe("apply heading", () => {
 		});
 	});
 
-	describe("With Auto Indent", () => {
+	describe("Sync with heading", () => {
 		const autoIndentSettings: Partial<HeadingShifterSettings> = {
-			syncHeadingsAndListsLevel: true,
+			list: { childrenBehavior: "sync with headings" },
 		};
 
 		test("list to 0", () => {
