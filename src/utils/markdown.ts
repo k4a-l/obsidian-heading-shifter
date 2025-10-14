@@ -130,33 +130,6 @@ export const removeUsingRegexpStrings = (
 	return removed;
 };
 
-export const getNeedsOutdentLines = (
-	startLineNumber: number,
-	editor: MinimumEditor,
-): number[] => {
-	let currentLineNumber = startLineNumber;
-	// let currentIndentLevel: number | undefined = undefined;
-	const needsOutdentLines: number[] = [];
-	while (currentLineNumber < editor.lineCount()) {
-		const line = editor.getLine(currentLineNumber);
-		const indentLevel = isNeedsOutdent(line);
-		if (!indentLevel) return needsOutdentLines;
-		// if(indentLevel > currentIndentLevel)
-		needsOutdentLines.push(currentLineNumber);
-		currentLineNumber++;
-	}
-
-	return needsOutdentLines;
-};
-
-export const isNeedsOutdent = (line: string): number | undefined => {
-	const matched = line.match(/^(?<space>(\s|\S|\t)+)(?:-|\*)\s.+/);
-	if (!matched) return undefined;
-	const space = matched.groups?.["space"];
-	if (!space) return undefined;
-	return space.length;
-};
-
 export const countLeadingTabs = (line: string): number => {
 	let count = 0;
 	for (let i = 0; i < line.length; i++) {
@@ -166,7 +139,7 @@ export const countLeadingTabs = (line: string): number => {
 	return count;
 };
 
-export const getBulletedNeedsOutdentLines = (
+export const getListChildrenLines = (
 	startLineNumber: number,
 	startIndentLevel: number,
 	editor: MinimumEditor,

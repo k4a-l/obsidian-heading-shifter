@@ -7,9 +7,8 @@ import {
 	type FenceType,
 	getFenceStatus,
 	getHeadingLines,
-	getNeedsOutdentLines,
+	getListChildrenLines,
 	getPreviousHeading,
-	isNeedsOutdent,
 	removeUsingRegexpStrings,
 } from "utils/markdown";
 import { assignUnknownObjectFromDefaultObject } from "utils/object";
@@ -319,28 +318,18 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 	});
 });
 
-describe("isNeedsOutdent", () => {
-	test("true", () => {
-		expect(isNeedsOutdent("    - a")).toBe(4);
-		expect(isNeedsOutdent(" * a")).toBe(1);
-		expect(isNeedsOutdent("\t- a")).toBe(1);
-	});
-
-	test("false", () => {
-		expect(isNeedsOutdent("- a")).toBeFalsy();
-		expect(isNeedsOutdent("a")).toBeFalsy();
-		expect(isNeedsOutdent("  -a")).toBeFalsy();
-	});
-});
-
-describe("getNeedsOutdentLines", () => {
+describe("getListChildrenLines", () => {
 	test("0", () => {
 		const str = String.raw` first line(not target)
     - a
         * b
     - c
 - d `;
-		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([1, 2, 3]);
+		expect(
+			getListChildrenLines(new MockEditor(str), {
+				parentLineNumber: 0,
+			}),
+		).toStrictEqual([1, 2, 3]);
 	});
 
 	test("1", () => {
@@ -349,17 +338,23 @@ describe("getNeedsOutdentLines", () => {
         - b
     - c
 - d `;
-		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([]);
+		expect(
+			getListChildrenLines(new MockEditor(str), {
+				parentLineNumber: 0,
+			}),
+		).toStrictEqual([]);
 	});
 
 	test("2", () => {
 		const str = String.raw` first line(not target)
- - a
+        - a
         - b
     - c
     - d `;
-		expect(getNeedsOutdentLines(1, new Editor(str))).toStrictEqual([
-			1, 2, 3, 4,
-		]);
+		expect(
+			getListChildrenLines(new MockEditor(str), {
+				parentLineNumber: 0,
+			}),
+		).toStrictEqual([1, 2, 3, 4]);
 	});
 });
