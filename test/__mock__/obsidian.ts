@@ -1,5 +1,8 @@
 // __mocks__/obsidian.ts
 
+import type { EditorChange, EditorPosition } from "obsidian";
+import type { MinimumEditor } from "utils/editorChange";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
@@ -58,3 +61,16 @@ export class MockEditor implements MinimumEditor {
 	}
 }
 
+export const applyEditorChanges = (
+	content: string,
+	changes: EditorChange[],
+): string => {
+	const lines = content.split("\n");
+	const sortedChanges = [...changes].sort((a, b) => b.from.line - a.from.line);
+
+	for (const change of sortedChanges) {
+		lines[change.from.line] = change.text;
+	}
+
+	return lines.join("\n");
+};
