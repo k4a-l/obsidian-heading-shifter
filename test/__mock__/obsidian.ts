@@ -40,3 +40,21 @@ export class PluginSettingTab {
  */
 export type App = unknown;
 export class Plugin {}
+
+export class MockEditor implements MinimumEditor {
+	private lines: string[];
+	constructor(content: string) {
+		this.lines = content.split(`\n`);
+	}
+	getLine(number: number) {
+		return this.lines[number] ?? "";
+	}
+	lineCount() {
+		return this.lines.length;
+	}
+	setSelection() {}
+	getCursor(): EditorPosition {
+		return { ch: 0, line: 0 };
+	}
+}
+

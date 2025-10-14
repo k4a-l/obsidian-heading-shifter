@@ -1,5 +1,4 @@
 import { RegExpExample } from "constant/regExp";
-import type { EditorPosition } from "obsidian";
 import { composeLineChanges } from "utils/editorChange";
 import {
 	checkFence,
@@ -14,6 +13,7 @@ import {
 import { assignUnknownObjectFromDefaultObject } from "utils/object";
 import { createRange } from "utils/range";
 import { describe, expect, test } from "vitest";
+import { MockEditor } from "./__mock__/obsidian";
 
 describe("checkHeading", () => {
 	test("match", () => {
@@ -85,23 +85,6 @@ describe("fenceStatus", () => {
 	}
 });
 
-class Editor {
-	private lines: string[];
-	constructor(content: string) {
-		this.lines = content.split(`\n`);
-	}
-	getLine(number: number) {
-		return this.lines[number];
-	}
-	lineCount() {
-		return this.lines.length;
-	}
-	setSelection() {}
-	getCursor(): EditorPosition {
-		return { ch: 0, line: 0 };
-	}
-}
-
 describe("getHeadingLines", () => {
 	test("normal", () => {
 		const input = `# Heading1
@@ -126,7 +109,7 @@ Normal
 
 ### Heading3`;
 
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 
 		expect(getHeadingLines(editor, 0, 20)).toEqual({
 			headingLines: [0, 2, 20],
@@ -146,7 +129,7 @@ Normal
 
 `;
 
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 4)).toEqual(2);
 	});
 
@@ -157,7 +140,7 @@ Normal
 
 Normal
 `;
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 1)).toEqual(0);
 	});
 
@@ -176,7 +159,7 @@ Normal
 
 `;
 
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 10)).toEqual(undefined);
 	});
 
@@ -187,7 +170,7 @@ Normal
 
 Normal
 	`;
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 2)).toEqual(0);
 	});
 });
@@ -200,7 +183,7 @@ c
 d
 e
 f`;
-		const editor = new Editor(input);
+		const editor = new MockEditor(input);
 		const changeCallback = (chunk: string) =>
 			`==begin==${chunk.toUpperCase()}==end==`;
 		expect(composeLineChanges(editor, [0, 2, 4], changeCallback)).toEqual([
