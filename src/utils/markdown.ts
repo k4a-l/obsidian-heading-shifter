@@ -160,8 +160,9 @@ export const getListChildrenLines = (
 		const line = editor.getLine(lineN);
 		const indentLevel = countIndentLevel(line, tabSize);
 		const isBulleted = /^\s*[-*]\s+/.test(line);
+		const isNumbered = /^\s*\d+\.\s+/.test(line);
 
-		if (!isBulleted) break;
+		if (!isBulleted && !isNumbered) break;
 		if (indentLevel <= prevParentIndentLevel) break;
 
 		lineNumbers.push(lineN);

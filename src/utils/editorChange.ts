@@ -61,17 +61,19 @@ export const createListIndentChanges = (
 		);
 
 		const match = line.match(
-			/^(?<whitespace>\s*)(?<bullet>[-*]\s*)(?<heading>#+\s*)?(?<content>.*)$/,
+			/^(?<whitespace>\s*)(?<bullet>[-*]\s*|(?<numbered>\d+\.\s*))(?<heading>#+\s*)?(?<content>.*)$/
 		);
 
 		const tabsMarkers = "\t".repeat(newIndentLevel);
 		const bulletMarkers = match?.groups?.bullet || "";
+		const numberedMarkers = match?.groups?.numbered || "";
+		const listMarker = bulletMarkers || numberedMarkers;
 		const headingMarkers = match?.groups?.heading
 			? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " "
 			: "";
 		const content = match?.groups?.content || "";
 
-		const newLine = `${tabsMarkers}${bulletMarkers}${headingMarkers}${content}`;
+		const newLine = `${tabsMarkers}${listMarker}${headingMarkers}${content}`;
 
 		changes.push({
 			text: newLine,

@@ -340,4 +340,17 @@ describe("getListChildrenLines", () => {
 			}),
 		).toStrictEqual([1, 2, 3, 4]);
 	});
+
+	test("3", () => {
+		const str = String.raw` first line(not target)
+	- a
+		- b
+	1. 
+-d `;
+		expect(
+			getListChildrenLines(new MockEditor(str), {
+				parentLineNumber: 0,
+			}),
+		).toStrictEqual([1, 2, 3]);
+	});
 });
