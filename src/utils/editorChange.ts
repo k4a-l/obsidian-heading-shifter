@@ -61,7 +61,7 @@ export const createListIndentChanges = (
 		);
 
 		const match = line.match(
-			/^(?<whitespace>\s*)(?<bullet>[-*]\s*|(?<numbered>\d+\.\s*))(?<heading>#+\s*)?(?<content>.*)$/
+			/^(?<whitespace>\s*)(?<bullet>[-*]\s*|(?<numbered>\d+\.\s*))(?<heading>#+\s*)?(?<content>.*)$/,
 		);
 
 		const tabsMarkers = "\t".repeat(newIndentLevel);
