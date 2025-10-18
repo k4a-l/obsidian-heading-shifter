@@ -1,4 +1,5 @@
 import type { SettingsObject } from "migrations/type";
+import { carryOverCompatibleProps } from "../../utils/object";
 import { settings_1_9_0 } from "./1.9.0";
 
 type LIST_BEHAVIOR_1_10_0 = "outdent to zero" | "sync with headings" | "noting";
@@ -32,8 +33,14 @@ const DEFAULT_SETTINGS_1_10_0: HeadingShifterSettings_1_10_0 = {
 const migration_1_10_0 = (
 	oldSettings: typeof settings_1_9_0.defaultSettings,
 ): HeadingShifterSettings_1_10_0 => {
+	const compatibleSettings = carryOverCompatibleProps(
+		DEFAULT_SETTINGS_1_10_0,
+		oldSettings,
+	);
+
 	const newSettings: HeadingShifterSettings_1_10_0 = {
 		...DEFAULT_SETTINGS_1_10_0,
+		...compatibleSettings,
 		list: {
 			childrenBehavior: oldSettings.autoIndentBulletedHeader
 				? "sync with headings"
@@ -41,6 +48,7 @@ const migration_1_10_0 = (
 					? "outdent to zero"
 					: "noting",
 		},
+		version: "1.10.0",
 	};
 
 	return newSettings;

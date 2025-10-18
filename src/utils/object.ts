@@ -53,3 +53,25 @@ function isPlainRecord(value: unknown): value is Record<string, unknown> {
 export const isObject = (obj: unknown): obj is Record<string, unknown> => {
 	return typeof obj === "object" && obj !== null;
 };
+
+export const carryOverCompatibleProps = <
+	T_TARGET extends Record<string, unknown>,
+	T_SOURCE extends Record<string, unknown>,
+>(
+	target: T_TARGET,
+	source: T_SOURCE,
+): Partial<T_TARGET> => {
+	const result: Partial<T_TARGET> = {};
+
+	for (const key in target) {
+		if (Object.hasOwn(source, key)) {
+			const sourceValue = source[key];
+			if (typeof target[key] === typeof sourceValue) {
+				result[key as keyof T_TARGET] =
+					sourceValue as unknown as T_TARGET[keyof T_TARGET];
+			}
+		}
+	}
+
+	return result;
+};

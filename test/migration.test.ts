@@ -38,6 +38,7 @@ describe("migrateSettings", () => {
 
 	test("should migrate from 1.9.0 to 1.10.0", () => {
 		const oldSettings_1_9_0 = {
+			overrideTab: true,
 			autoIndentBulletedHeader: true,
 			autoOutdent: {
 				enable: true,
@@ -51,6 +52,7 @@ describe("migrateSettings", () => {
 		});
 
 		const expected = produce(DEFAULT_SETTINGS, (draft) => {
+			draft.overrideTab = true;
 			draft.version = "1.10.0";
 			draft.list.childrenBehavior = "sync with headings";
 		});
