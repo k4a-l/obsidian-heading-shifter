@@ -281,6 +281,7 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 		str: "string",
 		num: 1,
 		obj: { strInObj: "string", numInObj: 1 },
+		boolean: false,
 		arr: [1, 2, 3],
 	};
 	test("all properties are null", () => {
@@ -290,7 +291,11 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 	});
 
 	test("some properties are null", () => {
-		const UnknownObj = { str: "other string", obj: { numInObj: 2 } };
+		const UnknownObj = {
+			str: "other string",
+			obj: { numInObj: 2 },
+			boolean: true,
+		};
 		const result = assignUnknownObjectFromDefaultObject(defaultObj, UnknownObj);
 		expect(result).toStrictEqual({
 			str: UnknownObj.str,
@@ -299,6 +304,7 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 				strInObj: defaultObj.obj.strInObj,
 				numInObj: UnknownObj.obj.numInObj,
 			},
+			boolean: UnknownObj.boolean,
 			arr: defaultObj.arr,
 		});
 	});
