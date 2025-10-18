@@ -13,7 +13,7 @@
 		"isolatedModules": true,
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
-		"lib": ["es2022"]
+		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2022"]
 	},
 	"include": ["src", "test"]
 }
