@@ -1,32 +1,13 @@
 import type HeadingShifter from "main";
+import { settings_1_10_0 } from "migrations/versions/1.10.0";
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
-export type LIST_BEHAVIOR = "outdent to zero" | "sync with headings" | "noting";
+export type HeadingShifterSettings = typeof settings_1_10_0.defaultSettings;
+export type LIST_BEHAVIOR = HeadingShifterSettings["list"]["childrenBehavior"];
 
-export type HeadingShifterSettings = {
-	limitHeadingFrom: number;
-	overrideTab: boolean;
-	styleToRemove: {
-		beginning: { ul: boolean; ol: boolean; userDefined: string[] };
-		surrounding: { bold: boolean; italic: boolean; userDefined: string[] };
-	};
-	list: { childrenBehavior: LIST_BEHAVIOR };
-	editor: { tabSize: number };
-};
-
-export const DEFAULT_SETTINGS: HeadingShifterSettings = {
-	limitHeadingFrom: 1,
-	overrideTab: false,
-	styleToRemove: {
-		beginning: { ul: true, ol: true, userDefined: [] },
-		surrounding: { bold: false, italic: false, userDefined: [] },
-	},
-	list: { childrenBehavior: "outdent to zero" },
-	editor: {
-		tabSize: 4,
-	},
-};
+export const DEFAULT_SETTINGS: HeadingShifterSettings =
+	settings_1_10_0.defaultSettings;
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
 	plugin: HeadingShifter;
