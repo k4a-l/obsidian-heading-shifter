@@ -1,3 +1,4 @@
+import { TABSIZE } from "constant/editor";
 import type { MinimumEditor } from "./editorChange";
 import { setMax, setMin } from "./range";
 
@@ -130,29 +131,41 @@ export const removeUsingRegexpStrings = (
 	return removed;
 };
 
-export const getNeedsOutdentLines = (
-	startLineNumber: number,
-	editor: MinimumEditor,
-): number[] => {
-	let currentLineNumber = startLineNumber;
-	// let currentIndentLevel: number | undefined = undefined;
-	const needsOutdentLines: number[] = [];
-	while (currentLineNumber < editor.lineCount()) {
-		const line = editor.getLine(currentLineNumber);
-		const indentLevel = isNeedsOutdent(line);
-		if (!indentLevel) return needsOutdentLines;
-		// if(indentLevel > currentIndentLevel)
-		needsOutdentLines.push(currentLineNumber);
-		currentLineNumber++;
-	}
+export const countIndentLevel = (line: string, tabSize = TABSIZE): number => {
+	const leadingContent = line.match(/^(\s*)/)?.[0];
+	if (!leadingContent) return 0;
 
-	return needsOutdentLines;
+	const tabCount = (leadingContent.match(/\t/g) || []).length;
+	const spaceCount = (leadingContent.match(/ /g) || []).length;
+
+	return tabCount + Math.floor(spaceCount / tabSize);
 };
 
-export const isNeedsOutdent = (line: string): number | undefined => {
-	const matched = line.match(/^(?<space>(\s|\S|\t)+)(?:-|\*)\s.+/);
-	if (!matched) return undefined;
-	const space = matched.groups?.["space"];
-	if (!space) return undefined;
-	return space.length;
+export const getListChildrenLines = (
+	editor: MinimumEditor,
+	{
+		parentLineNumber,
+		tabSize,
+	}: {
+		parentLineNumber: number;
+		tabSize?: number;
+	},
+): number[] => {
+	const lineNumbers: number[] = [];
+
+	const startLine = editor.getLine(parentLineNumber);
+	const prevParentIndentLevel = countIndentLevel(startLine, tabSize);
+
+	for (let lineN = parentLineNumber + 1; lineN < editor.lineCount(); lineN++) {
+		const line = editor.getLine(lineN);
+		const indentLevel = countIndentLevel(line, tabSize);
+		const isBulleted = /^\s*[-*]\s+/.test(line);
+		const isNumbered = /^\s*\d+\.\s+/.test(line);
+
+		if (!isBulleted && !isNumbered) break;
+		if (indentLevel <= prevParentIndentLevel) break;
+
+		lineNumbers.push(lineN);
+	}
+	return lineNumbers;
 };

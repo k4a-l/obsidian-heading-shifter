@@ -2,6 +2,8 @@ import type HeadingShifter from "main";
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
+export type LIST_BEHAVIOR = "outdent to zero" | "sync with headings" | "noting";
+
 export type HeadingShifterSettings = {
 	limitHeadingFrom: number;
 	overrideTab: boolean;
@@ -9,16 +11,8 @@ export type HeadingShifterSettings = {
 		beginning: { ul: boolean; ol: boolean; userDefined: string[] };
 		surrounding: { bold: boolean; italic: boolean; userDefined: string[] };
 	};
-	autoOutdent: {
-		enable: boolean;
-		hotKey: {
-			key: string;
-			shift: boolean;
-			ctrl: boolean;
-			alt: boolean;
-		};
-	};
-	syncHeadingsAndListsLevel: boolean;
+	list: { childrenBehavior: LIST_BEHAVIOR };
+	editor: { tabSize: number };
 };
 
 export const DEFAULT_SETTINGS: HeadingShifterSettings = {
@@ -28,16 +22,10 @@ export const DEFAULT_SETTINGS: HeadingShifterSettings = {
 		beginning: { ul: true, ol: true, userDefined: [] },
 		surrounding: { bold: false, italic: false, userDefined: [] },
 	},
-	autoOutdent: {
-		enable: true,
-		hotKey: {
-			key: "Tab",
-			shift: true,
-			ctrl: false,
-			alt: false,
-		},
+	list: { childrenBehavior: "outdent to zero" },
+	editor: {
+		tabSize: 4,
 	},
-	syncHeadingsAndListsLevel: false,
 };
 
 export class HeadingShifterSettingTab extends PluginSettingTab {
@@ -89,20 +77,6 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
-
-		new Setting(containerEl)
-			.setName("Synchronization `Heading` and `Bulleted list indentation`")
-			.setDesc(
-				"When a headings is applied to bulleted list, indent the line according to the headings level.",
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.syncHeadingsAndListsLevel)
-					.onChange((v) => {
-						this.plugin.settings.syncHeadingsAndListsLevel = v;
-						this.plugin.saveSettings();
-					});
-			});
 
 		containerEl.createEl("h3", { text: "Style to remove" });
 		containerEl.createEl("p", {
@@ -191,53 +165,33 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl("h3", { text: "Auto Outdent" });
-		containerEl.createEl("p", {
-			text: "When heading is applied to a list, if outdent is needed for lists after that line, execute it.",
-		});
-		new Setting(containerEl).setName("Enable").addToggle((toggle) => {
-			toggle.setValue(this.plugin.settings.autoOutdent.enable).onChange((v) => {
-				this.plugin.settings.autoOutdent.enable = v;
-				this.plugin.saveSettings();
+		containerEl.createEl("h3", { text: "List" });
+		new Setting(containerEl)
+			.setName("Children behavior")
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("outdent to zero" satisfies LIST_BEHAVIOR, "Outdent to 0")
+					.addOption(
+						"sync with headings" satisfies LIST_BEHAVIOR,
+						"Sync with headings",
+					)
+					.addOption("noting" satisfies LIST_BEHAVIOR, "Noting")
+					.setValue(this.plugin.settings.list.childrenBehavior)
+					.onChange((v: LIST_BEHAVIOR) => {
+						this.plugin.settings.list.childrenBehavior = v;
+						this.plugin.saveSettings();
+					});
 			});
-		});
 
-		containerEl.createEl("b", {
-			text: "Hotkey",
+		containerEl.createEl("h3", {
+			text: "Editor",
 		});
-		containerEl.createEl("p", {
-			text: "Basically, we expect you to apply `Shift + Tab` from https://github.com/vslinko/obsidian-outliner, but if you want to use something else, apply a hotkey with equivalent functionality.",
-			cls: "setting-item-description",
-		});
-		new Setting(containerEl).setName("Key").addText((toggle) => {
-			toggle
-				.setValue(this.plugin.settings.autoOutdent.hotKey.key)
+		new Setting(containerEl).setName("Tab size").addSlider((cb) => {
+			cb.setDynamicTooltip()
+				.setLimits(2, 8, 2)
+				.setValue(this.plugin.settings.editor.tabSize)
 				.onChange((v) => {
-					this.plugin.settings.autoOutdent.hotKey.key = v;
-					this.plugin.saveSettings();
-				});
-		});
-		new Setting(containerEl).setName("Shift").addToggle((toggle) => {
-			toggle
-				.setValue(this.plugin.settings.autoOutdent.hotKey.shift)
-				.onChange((v) => {
-					this.plugin.settings.autoOutdent.hotKey.shift = v;
-					this.plugin.saveSettings();
-				});
-		});
-		new Setting(containerEl).setName("Ctrl").addToggle((toggle) => {
-			toggle
-				.setValue(this.plugin.settings.autoOutdent.hotKey.ctrl)
-				.onChange((v) => {
-					this.plugin.settings.autoOutdent.hotKey.ctrl = v;
-					this.plugin.saveSettings();
-				});
-		});
-		new Setting(containerEl).setName("Alt").addToggle((toggle) => {
-			toggle
-				.setValue(this.plugin.settings.autoOutdent.hotKey.alt)
-				.onChange((v) => {
-					this.plugin.settings.autoOutdent.hotKey.alt = v;
+					this.plugin.settings.editor.tabSize = v;
 					this.plugin.saveSettings();
 				});
 		});

@@ -2,9 +2,9 @@ import type { Command, Editor } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
-import { composeLineChanges, execOutdent } from "utils/editorChange";
+import { composeLineChanges } from "utils/editorChange";
 import { createRange } from "utils/range";
-import { applyHeading } from "./module";
+import { applyHeading, createListIndentChangesByListBehavior } from "./module";
 
 export class ApplyHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
@@ -28,14 +28,22 @@ export class ApplyHeading implements EditorOperation {
 		const isOneLine =
 			editor.getCursor("from").line === editor.getCursor("to").line;
 
-		// Dispatch Transaction
-		editor.transaction({
-			changes: composeLineChanges(editor, lines, (chunk: string) =>
-				applyHeading(chunk, this.headingSize, this.settings),
-			),
+		const lastHeaderLineNumber = lines[lines.length - 1] ?? 0;
+
+		const headingsChanges = composeLineChanges(editor, lines, (chunk) =>
+			applyHeading(chunk, this.headingSize, this.settings),
+		);
+
+		const indentChanges = createListIndentChangesByListBehavior(editor, {
+			parentIndentLevel: this.headingSize - 1,
+			tabSize: this.settings.editor.tabSize,
+			listBehavior: this.settings.list.childrenBehavior,
+			parentLineNumber: lastHeaderLineNumber,
 		});
 
-		execOutdent(Math.max(...lines) + 1, editor, this.settings);
+		editor.transaction({
+			changes: [...headingsChanges, ...indentChanges],
+		});
 
 		// If only one line is targeted, move the cursor to the end of the line.
 		if (isOneLine) {

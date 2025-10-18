@@ -1,7 +1,7 @@
+import { TABSIZE } from "constant/editor";
 import type { EditorChange, EditorPosition } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
-import { type ModifierKey, simulateHotkey } from "./event";
-import { getNeedsOutdentLines } from "./markdown";
+import { countIndentLevel, getListChildrenLines } from "./markdown";
 
 export type MinimumEditor = {
 	getLine: (number: number) => string;
@@ -34,47 +34,53 @@ export const composeLineChanges = (
 	return editorChange;
 };
 
-export const execOutdent = (
-	startLineNumber: number,
+export const createListIndentChanges = (
 	editor: MinimumEditor,
-	settings: HeadingShifterSettings,
-) => {
-	if (!settings.autoOutdent.enable || settings.syncHeadingsAndListsLevel)
-		return;
+	{
+		parentLineNumber,
+		parentIndentLevel,
+		tabSize = TABSIZE,
+	}: { parentLineNumber: number; parentIndentLevel: number; tabSize?: number },
+): EditorChange[] => {
+	const parentLine = editor.getLine(parentLineNumber);
+	const prevParentIndentLevel = countIndentLevel(parentLine, tabSize);
 
-	// save current selection
-	const currentSelection = {
-		head: editor.getCursor("head"),
-		anchor: editor.getCursor("anchor"),
-	};
+	const childrenNumbers = getListChildrenLines(editor, {
+		parentLineNumber,
+		tabSize,
+	});
 
-	// get lines that needs to be outdent
-	const lineNumbers = getNeedsOutdentLines(startLineNumber, editor);
-	if (lineNumbers.length === 0) return;
+	const indentDelta = parentIndentLevel - prevParentIndentLevel; // How much to change indent by
+	const changes: EditorChange[] = [];
 
-	// set target selection
-	editor.setSelection(
-		{ line: Math.min(...lineNumbers), ch: 0 },
-		{
-			line: Math.max(...lineNumbers),
-			ch: editor.getLine(Math.max(...lineNumbers)).length,
-		},
-	);
+	childrenNumbers.forEach((lineNumber) => {
+		const line = editor.getLine(lineNumber);
+		const newIndentLevel = Math.max(
+			countIndentLevel(line, tabSize) + indentDelta,
+			0,
+		);
 
-	// execute outdent
-	const modifiers: ModifierKey[] = [];
-	if (settings.autoOutdent.hotKey.shift) modifiers.push("Shift");
-	if (settings.autoOutdent.hotKey.ctrl) modifiers.push("Ctrl");
-	if (settings.autoOutdent.hotKey.alt) modifiers.push("Alt");
-	simulateHotkey(settings.autoOutdent.hotKey.key, modifiers);
+		const match = line.match(
+			/^(?<whitespace>\s*)(?<bullet>[-*]\s*|(?<numbered>\d+\.\s*))(?<heading>#+\s*)?(?<content>.*)$/,
+		);
 
-	// check need again
-	const lineNumbersAfter = getNeedsOutdentLines(startLineNumber, editor);
-	if (lineNumbersAfter.length === 0) {
-		editor.setSelection(currentSelection.anchor, currentSelection.head);
-		return;
-	}
+		const tabsMarkers = "\t".repeat(newIndentLevel);
+		const bulletMarkers = match?.groups?.bullet || "";
+		const numberedMarkers = match?.groups?.numbered || "";
+		const listMarker = bulletMarkers || numberedMarkers;
+		const headingMarkers = match?.groups?.heading
+			? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " "
+			: "";
+		const content = match?.groups?.content || "";
 
-	// execute again
-	execOutdent(startLineNumber, editor, settings);
+		const newLine = `${tabsMarkers}${listMarker}${headingMarkers}${content}`;
+
+		changes.push({
+			text: newLine,
+			from: { line: lineNumber, ch: 0 },
+			to: { line: lineNumber, ch: line.length },
+		});
+	});
+
+	return changes;
 };

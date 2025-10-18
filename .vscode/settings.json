@@ -1,7 +1,7 @@
 {
 	"editor.formatOnSave": true,
 	"[markdown]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "unifiedjs.vscode-remark"
 	},
 	"[javascript]": {
 		"editor.defaultFormatter": "biomejs.biome"

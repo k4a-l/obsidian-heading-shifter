@@ -12,9 +12,9 @@ Obsidian links numerous markdown files to form knowledge. Daily rearrangement of
 The following situations often occur in this process.
 
 1. Cut out A part of File 1 to an independent File 2 and linked.
-    - Heading3 in file 1 is changed to Heading1 in file 2
+   - Heading3 in file 1 is changed to Heading1 in file 2
 2. Incorporated the content of File 3 into a part of File 4
-    - Heading2 in file 3 is changed to Heading4 in file 4
+   - Heading2 in file 3 is changed to Heading4 in file 4
 
 With this plugin, you can change the Heading size (the number of `#`) in a batch instead of changing it manually.
 
@@ -24,11 +24,11 @@ With this plugin, you can change the Heading size (the number of `#`) in a batch
 
 You can activate this plugin within Obsidian by doing the following:
 
--   Open Settings > Community plugin
--   Make sure `Restricted mode` is off
--   Click Browse `community plugins`
--   Search for `Heading Shifter`
--   Click `Install` -> `Enable`
+- Open Settings > Community plugin
+- Make sure `Restricted mode` is off
+- Click Browse `community plugins`
+- Search for `Heading Shifter`
+- Click `Install` -> `Enable`
 
 ### Manual installation
 
@@ -55,11 +55,10 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 #### Settings
 
-| Setting                                                   | Description                                                                               | Value(Default) |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------- |
-| Lower limit of Heading                                    | The lower Heading Size that will be decreased by the Heading Shift                        | 0~6(1)         |
-| Enable override tab behavior                              | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" \[^2]  | boolean(false) |
-| Synchronization `Heading` and `Bulleted list indentation` | When a header is applied to bulleted list, indent the line according to the header level. | boolean(false) |
+| Setting                      | Description                                                                              | Value(Default) |
+| ---------------------------- | ---------------------------------------------------------------------------------------- | -------------- |
+| Lower limit of Heading       | The lower Heading Size that will be decreased by the Heading Shift                       | 0~6(1)         |
+| Enable override tab behavior | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" \[^2] | boolean(false) |
 
 \[^2]: May conflict with other plugin behavior
 
@@ -73,8 +72,8 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
--   `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
--   `Decrease Headings` is ineffective if selected lines contains more than heading 6.
+- `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
+- `Decrease Headings` is ineffective if selected lines contains more than heading 6.
 
 ### Insert Headings
 
@@ -88,11 +87,11 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 ## Common Settings
 
-| Setting                                                       | Description                                                                                    | Value(Default)    |
-| ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------- |
-| Style to remove(default)                                      | If this style is at the <position> of a line, remove it                                        | boolean(All true) |
-| Style to remove(Other arbitrary group of regular expressions) | If this style is at the <position> of a line, remove it                                        | string[]([])      |
-| Auto Outdent                                                  | When heading is applied to a list, if outdent is needed for lists after that line, execute it. | true, Shift+Tab   |
+| Setting                                                       | Description                                             | Value(Default)                                                     |
+| ------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
+| Style to remove(default)                                      | If this style is at the <position> of a line, remove it | boolean(All true)                                                  |
+| Style to remove(Other arbitrary group of regular expressions) | If this style is at the <position> of a line, remove it | string[]([])                                                       |
+| Children List behavior                                        | Behavior when the target row possesses a child list     | `"outdent to zero"(default)` / `"sync with headings"` / `"noting"` |
 
 #### Style to remove
 
@@ -102,55 +101,58 @@ This is the toggle between removing or retaining `specific style` when applying 
 
 `-` or `1.`,`2.`,`n.` or `user defined string(RegExp)`
 
-|                    | Before    | After(True) | After(False) |
-| ------------------ | --------- | ----------- | ------------ |
-| `- `(ul)           | `- line`  | `## line`   | `## - line`  |
-| `1. `(ol)          | `1. line` | `## line`   | `## 1. line` |
-| `🤔`(user defined) | `🤔line`  | `## line`   | `## 🤔line`  |
+|                   | Before    | After(True) | After(False) |
+| ----------------- | --------- | ----------- | ------------ |
+| `- `(ul)          | `- line`  | `## line`   | `## - line`  |
+| `1. `(ol)         | `1. line` | `## line`   | `## 1. line` |
+| `🤔`(user defined) | `🤔line`   | `## line`   | `## 🤔line`   |
 
 ##### Surrounding
 
 `**`, `_` , etc... or `user defined string(RegExp)`
 
-|                    | Before     | After(True) | After(False)  |
-| ------------------ | ---------- | ----------- | ------------- |
-| `**`(bold)         | `**line**` | `## line`   | `## **line**` |
-| `_`(italic)        | `_line_`   | `## line`   | `## _line_`   |
-| `🤔`(user defined) | `🤔line🤔` | `## line`   | `## 🤔line🤔` |
+|                   | Before     | After(True) | After(False)  |
+| ----------------- | ---------- | ----------- | ------------- |
+| `**`(bold)        | `**line**` | `## line`   | `## **line**` |
+| `_`(italic)       | `_line_`   | `## line`   | `## _line_`   |
+| `🤔`(user defined) | `🤔line🤔`   | `## line`   | `## 🤔line🤔`   |
 
-### Auto Outdent
+### List behavior
 
 ```markdown
--   heading target
-    -   other listA
-        -   other listB
+- heading target
+    - listA
+        - listB
 ```
 
 If you call 'Apply Heading 2',
 
-#### Auto Outdent = False
+#### Nothing
 
 ```markdown
 ## heading target
-
-    -   other listA
-        -   other listB
+    - listA
+        - listB
 ```
 
 Subsequent listings will remain in depth and will not have the correct markdown structure.
 
-#### Auto Outdent = True
+#### Outdent to zero
 
 ```markdown
 ## heading target
 
--   other listA
-    -   other listB
+- listA
+    - listB
 ```
 
-Subsequent listings will be outdent and have the correct markdown structure.
+#### Sync with headings
 
-※Two editor histories will be created to invoke the two processes of “apply heading -> outdent. Therefore, undo is required twice.
+```markdown
+\t\t- ## heading target
+\t\t\t- listA
+\t\t\t\t- listB
+```
 
 ## Use Case
 
