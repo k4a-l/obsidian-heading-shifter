@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.9.0",
+	"version": "1.10.0",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
