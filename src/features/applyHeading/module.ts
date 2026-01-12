@@ -130,6 +130,7 @@ export const createListIndentChangesByListBehavior = (
 		parentLineNumber,
 		parentIndentLevel: parentIndentLevelByBehavior,
 		tabSize,
+		changeHeadingLevel: listBehavior === "sync with headings",
 	});
 
 	return indentChanges;

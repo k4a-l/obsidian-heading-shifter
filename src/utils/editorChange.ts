@@ -41,10 +41,12 @@ export const createListIndentChanges = (
 		parentLineNumber,
 		parentIndentLevel,
 		tabSize = TABSIZE,
+		changeHeadingLevel,
 	}: {
 		parentLineNumber: number;
 		parentIndentLevel: number;
 		tabSize?: number;
+		changeHeadingLevel?: boolean;
 	},
 ): EditorChange[] => {
 	const parentLine = editor.getLine(parentLineNumber);
@@ -73,9 +75,19 @@ export const createListIndentChanges = (
 		const bulletMarkers = matchResult?.groups?.bullet || "";
 		const numberedMarkers = matchResult?.groups?.numbered || "";
 		const listMarker = bulletMarkers || numberedMarkers;
-		const headingMarkers = match(matchResult?.groups?.heading)
-			.with(undefined, () => "")
-			.with(P._, () => `${"#".repeat(Math.min(newIndentLevel + 1, 6))} `)
+		const headingMarkers = match({
+			heading: matchResult?.groups?.heading,
+			changeHeadingLevel,
+		})
+			.with({ heading: undefined, changeHeadingLevel: P._ }, () => "")
+			.with(
+				{ heading: P._, changeHeadingLevel: true },
+				() => `${"#".repeat(Math.min(newIndentLevel + 1, 6))} `,
+			)
+			.with(
+				{ heading: P._, changeHeadingLevel: P.not(true) },
+				({ heading }) => heading,
+			)
 			.exhaustive();
 		const content = matchResult?.groups?.content || "";
 
