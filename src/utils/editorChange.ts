@@ -1,6 +1,7 @@
 import { TABSIZE } from "constant/editor";
 import type { EditorChange, EditorPosition } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
+import { match, P } from "ts-pattern";
 import { countIndentLevel, getListChildrenLines } from "./markdown";
 
 export type MinimumEditor = {
@@ -40,7 +41,11 @@ export const createListIndentChanges = (
 		parentLineNumber,
 		parentIndentLevel,
 		tabSize = TABSIZE,
-	}: { parentLineNumber: number; parentIndentLevel: number; tabSize?: number },
+	}: {
+		parentLineNumber: number;
+		parentIndentLevel: number;
+		tabSize?: number;
+	},
 ): EditorChange[] => {
 	const parentLine = editor.getLine(parentLineNumber);
 	const prevParentIndentLevel = countIndentLevel(parentLine, tabSize);
@@ -60,18 +65,19 @@ export const createListIndentChanges = (
 			0,
 		);
 
-		const match = line.match(
+		const matchResult = line.match(
 			/^(?<whitespace>\s*)(?<bullet>[-*]\s*|(?<numbered>\d+\.\s*))(?<heading>#+\s*)?(?<content>.*)$/,
 		);
 
 		const tabsMarkers = "\t".repeat(newIndentLevel);
-		const bulletMarkers = match?.groups?.bullet || "";
-		const numberedMarkers = match?.groups?.numbered || "";
+		const bulletMarkers = matchResult?.groups?.bullet || "";
+		const numberedMarkers = matchResult?.groups?.numbered || "";
 		const listMarker = bulletMarkers || numberedMarkers;
-		const headingMarkers = match?.groups?.heading
-			? "#".repeat(Math.min(newIndentLevel + 1, 6)) + " "
-			: "";
-		const content = match?.groups?.content || "";
+		const headingMarkers = match(matchResult?.groups?.heading)
+			.with(undefined, () => "")
+			.with(P._, () => `${"#".repeat(Math.min(newIndentLevel + 1, 6))} `)
+			.exhaustive();
+		const content = matchResult?.groups?.content || "";
 
 		const newLine = `${tabsMarkers}${listMarker}${headingMarkers}${content}`;
 
