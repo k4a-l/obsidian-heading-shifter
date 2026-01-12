@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.10.1",
+	"version": "1.10.2",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
@@ -9,7 +9,7 @@
 		"tsc:watch": "tsc -noEmit --watch",
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json package.json",
+		"version": "node version-bump.mjs && git add manifest.json versions.json package.json && npm run check",
 		"test": "vitest",
 		"coverage": "vitest run --coverage",
 		"lint": "biome lint --write",
