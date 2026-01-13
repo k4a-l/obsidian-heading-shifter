@@ -3,6 +3,7 @@ import { TABSIZE } from "constant/editor";
 import { RegExpExample } from "constant/regExp";
 import type { EditorChange } from "obsidian";
 import type { HeadingShifterSettings, LIST_BEHAVIOR } from "settings";
+import { match } from "ts-pattern";
 import {
 	createListIndentChanges,
 	type MinimumEditor,
@@ -109,25 +110,27 @@ export const createListIndentChangesByListBehavior = (
 		parentLineNumber: number;
 	},
 ): EditorChange[] => {
-	if (
-		listBehavior !== "outdent to zero" &&
-		listBehavior !== "sync with headings"
-	) {
+	if (listBehavior === "noting") {
 		return [];
 	}
 
-	const parentIndentLevelByBehavior =
-		listBehavior === "sync with headings"
-			? // follow parent
-				Math.max(0, parentIndentLevel)
-			: // Force the next line of parent to be 0
+	const parentIndentLevelByBehavior = match(listBehavior)
+		// follow parent
+		.with("sync with headings", () => Math.max(0, parentIndentLevel))
+		// Force the next line of parent to be 0
+		.with(
+			"outdent to zero",
+			() =>
 				-countIndentLevel(editor.getLine(parentLineNumber + 1), tabSize) +
-				countIndentLevel(editor.getLine(parentLineNumber), tabSize);
+				countIndentLevel(editor.getLine(parentLineNumber), tabSize),
+		)
+		.exhaustive();
 
 	const indentChanges = createListIndentChanges(editor, {
 		parentLineNumber,
 		parentIndentLevel: parentIndentLevelByBehavior,
 		tabSize,
+		changeHeadingLevel: listBehavior === "sync with headings",
 	});
 
 	return indentChanges;

@@ -142,3 +142,34 @@ ${pick(input, 4)}`;
 	});
 	expect(applyEditorChanges(input, changes)).toStrictEqual(expected);
 });
+
+describe("children heading level", () => {
+	const input = `\t- list0
+\t\t- # list1`;
+
+	test("outdent to zero", () => {
+		const expected = `${pick(input, 0)}
+- # list1`; // keep heading level
+
+		const editor = new MockEditor(input);
+		const changes = createListIndentChangesByListBehavior(editor, {
+			parentLineNumber: 0,
+			parentIndentLevel: 1,
+			listBehavior: "outdent to zero",
+		});
+		expect(applyEditorChanges(input, changes)).toStrictEqual(expected);
+	});
+
+	test("sync with headings", () => {
+		const expected = `${pick(input, 0)}
+\t\t- ### list1`; // change heading level
+
+		const editor = new MockEditor(input);
+		const changes = createListIndentChangesByListBehavior(editor, {
+			parentLineNumber: 0,
+			parentIndentLevel: 1,
+			listBehavior: "sync with headings",
+		});
+		expect(applyEditorChanges(input, changes)).toStrictEqual(expected);
+	});
+});
