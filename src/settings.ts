@@ -161,11 +161,11 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					)
 					.addOption("noting" satisfies LIST_BEHAVIOR, "Noting")
 					.setValue(this.plugin.settings.list.childrenBehavior)
-					.onChange((v) => {
+					.onChange(async (v) => {
 						const behavior = LIST_BEHAVIORS_1_10_0.find((b) => b === v);
 						if (!behavior) return;
 						this.plugin.settings.list.childrenBehavior = behavior;
-						this.plugin.saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 
@@ -176,9 +176,9 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 			cb.setDynamicTooltip()
 				.setLimits(2, 8, 2)
 				.setValue(this.plugin.settings.editor.tabSize)
-				.onChange((v) => {
+				.onChange(async (v) => {
 					this.plugin.settings.editor.tabSize = v;
-					this.plugin.saveSettings();
+					await this.plugin.saveSettings();
 				});
 		});
 	}

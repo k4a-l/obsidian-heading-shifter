@@ -34,7 +34,7 @@ export default class HeadingShifter extends Plugin {
 	onunload() {}
 
 	async loadSettings() {
-		const rawSettings = await this.loadData();
+		const rawSettings: unknown = await this.loadData();
 		this.settings = migrateSettings({
 			settings: rawSettings,
 			latestVersion: this.manifest.version,

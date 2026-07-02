@@ -3,8 +3,6 @@
 import type { EditorChange, EditorPosition } from "obsidian";
 import type { MinimumEditor } from "utils/editorChange";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 /**
  * Setting
  */

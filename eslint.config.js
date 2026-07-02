@@ -6,11 +6,28 @@ import obsidianmd from "eslint-plugin-obsidianmd";
 // cspell spell-checker, which Biome does not cover.
 export default [
 	{
-		ignores: ["main.js", "coverage/", "release/"],
+		// Only the plugin source (which the tsconfig covers) is linted; build
+		// output, tooling and CI configs are left to Biome / left untouched.
+		ignores: [
+			"main.js",
+			"coverage/",
+			"release/",
+			".github/",
+			"*.mjs",
+			"*.config.ts",
+			"eslint.config.js",
+		],
 	},
 	...obsidianmd.configs.recommended,
 	{
 		files: ["src/**/*.ts", "test/**/*.ts"],
+		languageOptions: {
+			// Enable type-aware linting (several obsidianmd rules require it).
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
+			},
+		},
 		plugins: cspellRecommended.plugins,
 		rules: {
 			"@cspell/spellchecker": [
