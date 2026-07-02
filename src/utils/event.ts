@@ -11,5 +11,5 @@ export const simulateHotkey = (
 		altKey: modifiers.includes("Alt"),
 		metaKey: modifiers.includes("Meta"), // MacのCmdキー
 	});
-	document.activeElement?.dispatchEvent(event);
+	activeDocument.activeElement?.dispatchEvent(event);
 };

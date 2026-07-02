@@ -31,7 +31,6 @@
 		"esbuild": "0.28.1",
 		"eslint": "^10.6.0",
 		"eslint-plugin-obsidianmd": "^0.4.0",
-		"typescript-eslint": "^8.62.1",
 		"husky": "^9.1.7",
 		"obsidian": "latest",
 		"remark": "^15.0.1",
@@ -39,6 +38,7 @@
 		"remark-preset-lint-recommended": "^7.0.1",
 		"tslib": "2.8.1",
 		"typescript": "6.0.3",
+		"typescript-eslint": "^8.62.1",
 		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "^4.1.9"
 	},
@@ -47,7 +47,6 @@
 		"@codemirror/view": "^6.43.4",
 		"immer": "^11.1.9",
 		"semver": "^7.8.5",
-		"ts-node": "^10.9.2",
 		"ts-pattern": "^5.9.0"
 	},
 	"remarkConfig": {
