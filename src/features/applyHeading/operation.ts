@@ -55,7 +55,7 @@ export class ApplyHeading implements EditorOperation {
 	createCommand = (): Command => {
 		return {
 			id: `apply-heading${this.headingSize}`,
-			name: `Apply Heading ${this.headingSize}`,
+			name: `Apply heading ${this.headingSize}`,
 			icon: `headingShifter_heading${this.headingSize}`,
 			editorCallback: this.editorCallback,
 		};

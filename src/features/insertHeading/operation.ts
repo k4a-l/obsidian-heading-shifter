@@ -47,7 +47,7 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 	createCommand = (): Command => {
 		return {
 			id: `insert-heading-current`,
-			name: `Insert Heading at current level`,
+			name: `Insert heading at current level`,
 			icon: `headingShifter_heading`,
 			editorCallback: this.editorCallback,
 		};
@@ -71,7 +71,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 			: 0;
 
 		if (headingLevel + 1 > 6) {
-			new Notice("Cannot Increase (contains more than Heading 6)");
+			new Notice("Cannot increase (contains more than heading 6)");
 			return true;
 		}
 
@@ -101,7 +101,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 	createCommand = (): Command => {
 		return {
 			id: `insert-heading-deeper`,
-			name: `Insert Heading at one level deeper`,
+			name: `Insert heading at one level deeper`,
 			icon: `headingShifter_heading`,
 			editorCallback: this.editorCallback,
 		};
@@ -150,7 +150,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 	createCommand = (): Command => {
 		return {
 			id: `insert-heading-higher`,
-			name: `Insert Heading at one level higher`,
+			name: `Insert heading at one level higher`,
 			icon: `headingShifter_heading`,
 			editorCallback: this.editorCallback,
 		};

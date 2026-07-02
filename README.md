@@ -44,8 +44,8 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Command           | Description                         | Hotkey |
 | ----------------- | ----------------------------------- | ------ |
-| Apply Heading 0   | Change Current line to no heading.  | -      |
-| Apply Heading 1~6 | Change Current line to heading 1~6. | -      |
+| Apply heading 0   | Change Current line to no heading.  | -      |
+| Apply heading 1~6 | Change Current line to heading 1~6. | -      |
 
 > It is useful to assign a hotkey such as `Ctrl + 0 ~ 6`
 
@@ -57,8 +57,8 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Setting                      | Description                                                                              | Value(Default) |
 | ---------------------------- | ---------------------------------------------------------------------------------------- | -------------- |
-| Lower limit of Heading       | The lower Heading Size that will be decreased by the Heading Shift                       | 0~6(1)         |
-| Enable override tab behavior | If true, Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings" \[^2] | boolean(false) |
+| Lower limit of heading       | The lower heading size that will be decreased by the heading shift                       | 0~6(1)         |
+| Enable override tab behavior | If true, Tab execute "Increase headings" and Shift-Tab execute "Decrease headings" \[^2] | boolean(false) |
 
 \[^2]: May conflict with other plugin behavior
 
@@ -66,14 +66,14 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Command                   | Description                                                     | Hotkey |
 | ------------------------- | --------------------------------------------------------------- | ------ |
-| Increase Headings         | Increase heading of selected lines(with heading)                |        |
-| Increase Headings(forced) | Increase heading of selected lines(Even if there is no heading) |        |
-| Decrease Headings         | Decrease heading of selected lines(with heading)                |        |
+| Increase headings         | Increase heading of selected lines(with heading)                |        |
+| Increase headings(forced) | Increase heading of selected lines(Even if there is no heading) |        |
+| Decrease headings         | Decrease heading of selected lines(with heading)                |        |
 
 > It is useful to assign a hotkey such as `Ctrl + Shift + Left/Right`
 
-- `Increase Headings` and `Increase Headings(forced)` is ineffective if selected lines contains less than `Lower limit of Heading`.
-- `Decrease Headings` is ineffective if selected lines contains more than heading 6.
+- `Increase headings` and `Increase headings(forced)` is ineffective if selected lines contains less than `Lower limit of heading`.
+- `Decrease headings` is ineffective if selected lines contains more than heading 6.
 
 ### Insert Headings
 
@@ -81,9 +81,9 @@ Download directory(includes `main.js, manifest.json, styles.css`) from the lates
 
 | Command                            | Description                                       | Hotkey |
 | ---------------------------------- | ------------------------------------------------- | ------ |
-| Insert Heading at current level    | Change current line headings to current level     |        |
-| Insert Heading at one level deeper | Change current line headings to current level + 1 |        |
-| Insert Heading at one level higher | Change current line headings to current level - 1 |        |
+| Insert heading at current level    | Change current line headings to current level     |        |
+| Insert heading at one level deeper | Change current line headings to current level + 1 |        |
+| Insert heading at one level higher | Change current line headings to current level - 1 |        |
 
 ## Common Settings
 
@@ -125,7 +125,7 @@ This is the toggle between removing or retaining `specific style` when applying 
         - listB
 ```
 
-If you call 'Apply Heading 2',
+If you call 'Apply heading 2',
 
 #### Nothing
 
@@ -159,23 +159,23 @@ Subsequent listings will remain in depth and will not have the correct markdown 
 Operate headings like an outliner like the following,
 
 ```markdown
-# The Festival Myster -> hit "Apply 1"
+## The Festival Myster -> hit "Apply 1"
 
 This is a great document.
 
-## Chapter One -> hit "Insert deeper"
+### Chapter One -> hit "Insert deeper"
 
-### Prologue -> hit "Insert deeper"
+#### Prologue -> hit "Insert deeper"
 
 The sun was setting over the horizon...
 
-### The Summer Festival -> hit "Insert current"
+#### The Summer Festival -> hit "Insert current"
 
 As the townspeople gathered in the town square...
 
-## Chapter Two -> hit "Insert higher"
+### Chapter Two -> hit "Insert higher"
 
-### The Mystery of the Missing Prize -> hit "Insert deeper"
+#### The Mystery of the Missing Prize -> hit "Insert deeper"
 
 As the summer festival came to a close...
 ```
