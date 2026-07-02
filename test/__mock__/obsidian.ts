@@ -9,23 +9,23 @@ import type { MinimumEditor } from "utils/editorChange";
  * Setting
  */
 export class Setting {
-	constructor(containerEl: HTMLElement) {}
-	setName(name: string) {
+	// constructor(containerEl: HTMLElement) {}
+	setName(_name: string) {
 		return this;
 	}
-	setDesc(desc: string) {
+	setDesc(_desc: string) {
 		return this;
 	}
-	addText(cb: (component: unknown) => unknown) {
+	addText(_cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addToggle(cb: (component: unknown) => unknown) {
+	addToggle(_cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addDropdown(cb: (component: unknown) => unknown) {
+	addDropdown(_cb: (component: unknown) => unknown) {
 		return this;
 	}
-	addTextArea(cb: (component: unknown) => unknown) {
+	addTextArea(_cb: (component: unknown) => unknown) {
 		return this;
 	}
 }
@@ -34,7 +34,7 @@ export class Setting {
  * PluginSettingTab
  */
 export class PluginSettingTab {
-	constructor(app: App, plugin: unknown) {}
+	// constructor(_app: App, _plugin: unknown) {}
 	display() {}
 }
 

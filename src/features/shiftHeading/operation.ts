@@ -54,7 +54,7 @@ export class IncreaseHeading implements EditorOperation {
 		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
-		return editorChange.length ? true : false;
+		return !!editorChange.length;
 	};
 
 	createCommand = (): Command => {
@@ -123,7 +123,7 @@ export class DecreaseHeading implements EditorOperation {
 		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
-		return editorChange.length ? true : false;
+		return !!editorChange.length;
 	};
 
 	createCommand = () => {

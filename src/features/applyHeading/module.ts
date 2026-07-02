@@ -75,7 +75,7 @@ export const applyHeading = (
 
 	let capturedBullet = "-";
 	// Remove current leading markers
-	const principleText = removed.replace(leadingMarkersRegExp, (match, p1) => {
+	const principleText = removed.replace(leadingMarkersRegExp, (_match, p1) => {
 		// Capture the bullet part if it exists
 		if (isBullet && p1) {
 			capturedBullet = p1;

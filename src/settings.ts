@@ -1,5 +1,8 @@
 import type HeadingShifter from "main";
-import { settings_1_10_0 } from "migrations/versions/1.10.0";
+import {
+	LIST_BEHAVIORS_1_10_0,
+	settings_1_10_0,
+} from "migrations/versions/1.10.0";
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
@@ -158,8 +161,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					)
 					.addOption("noting" satisfies LIST_BEHAVIOR, "Noting")
 					.setValue(this.plugin.settings.list.childrenBehavior)
-					.onChange((v: LIST_BEHAVIOR) => {
-						this.plugin.settings.list.childrenBehavior = v;
+					.onChange((v) => {
+						const behavior = LIST_BEHAVIORS_1_10_0.find((b) => b === v);
+						if (!behavior) return;
+						this.plugin.settings.list.childrenBehavior = behavior;
 						this.plugin.saveSettings();
 					});
 			});

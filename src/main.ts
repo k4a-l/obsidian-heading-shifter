@@ -10,10 +10,10 @@ import {
 } from "settings";
 
 export default class HeadingShifter extends Plugin {
-	settings: HeadingShifterSettings;
-	obsidianService: ObsidianService;
-	interfaceService: InterfaceService;
-	registerService: RegisterService;
+	settings!: HeadingShifterSettings;
+	obsidianService!: ObsidianService;
+	interfaceService!: InterfaceService;
+	registerService!: RegisterService;
 
 	async onload() {
 		this.obsidianService = new ObsidianService();
