@@ -25,5 +25,5 @@
 		"source.fixAll.biome": "explicit"
 	},
 	"editor.defaultFormatter": "biomejs.biome",
-	"typescript.tsdk": "node_modules\\typescript\\lib"
+	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

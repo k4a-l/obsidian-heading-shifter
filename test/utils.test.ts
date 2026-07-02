@@ -312,7 +312,7 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 
 describe("getListChildrenLines", () => {
 	test("0", () => {
-		const str = String.raw` first line(not target)
+		const str = ` first line(not target)
     - a
         * b
     - c
@@ -325,7 +325,7 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("1", () => {
-		const str = String.raw` first line(not target)
+		const str = ` first line(not target)
 - a
         - b
     - c
@@ -338,7 +338,7 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("2", () => {
-		const str = String.raw` first line(not target)
+		const str = ` first line(not target)
         - a
         - b
     - c
@@ -351,7 +351,7 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("3", () => {
-		const str = String.raw` first line(not target)
+		const str = ` first line(not target)
 	- a
 		- b
 	1. 

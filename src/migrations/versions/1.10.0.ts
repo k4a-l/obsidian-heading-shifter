@@ -2,7 +2,12 @@ import type { SettingsObject } from "migrations/type";
 import { carryOverCompatibleProps } from "../../utils/object";
 import { settings_1_9_0 } from "./1.9.0";
 
-type LIST_BEHAVIOR_1_10_0 = "outdent to zero" | "sync with headings" | "noting";
+export const LIST_BEHAVIORS_1_10_0 = [
+	"outdent to zero",
+	"sync with headings",
+	"noting",
+] as const;
+type LIST_BEHAVIOR_1_10_0 = (typeof LIST_BEHAVIORS_1_10_0)[number];
 
 type HeadingShifterSettings_1_10_0 = {
 	version: string;

@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import { TABSIZE } from "constant/editor";
 import { RegExpExample } from "constant/regExp";
 import type { EditorChange } from "obsidian";
@@ -33,7 +32,7 @@ export const applyHeading = (
 				return v;
 			}
 			if (k in regExpObj && v === true) {
-				return regExpObj[k as keyof typeof regExpObj] ?? [];
+				return regExpObj[k] ?? [];
 			}
 			return [];
 		});
@@ -75,13 +74,16 @@ export const applyHeading = (
 
 	let capturedBullet = "-";
 	// Remove current leading markers
-	const principleText = removed.replace(leadingMarkersRegExp, (match, p1) => {
-		// Capture the bullet part if it exists
-		if (isBullet && p1) {
-			capturedBullet = p1;
-		}
-		return "";
-	});
+	const principleText = removed.replace(
+		leadingMarkersRegExp,
+		(_match: string, p1: string) => {
+			// Capture the bullet part if it exists
+			if (isBullet && p1) {
+				capturedBullet = p1;
+			}
+			return "";
+		},
+	);
 
 	// Make makers
 	const bulletMarkers = `${"\t".repeat(Math.max(headingSize - 1, 0))}${capturedBullet} `;

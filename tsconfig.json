@@ -1,17 +1,18 @@
 {
 	"compilerOptions": {
-		"baseUrl": "src",
+		"paths": {
+			"*": ["./src/*"]
+		},
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"module": "es2020",
 		"target": "esnext",
 		"esModuleInterop": true,
 		"allowJs": true,
-		"noImplicitAny": true,
 		"moduleResolution": "bundler",
 		"importHelpers": true,
 		"isolatedModules": true,
-		"strictNullChecks": true,
+		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2022"]
 	},

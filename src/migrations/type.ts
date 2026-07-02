@@ -6,7 +6,7 @@ export type SettingsObject<
 > = {
 	oldDefaultSettings: OS;
 	defaultSettings: S;
-	migration: (oldSettings: unknown) => S;
+	migration(oldSettings: unknown): S;
 };
 
 export type MigrationObject = Record<string, SettingsObject>;

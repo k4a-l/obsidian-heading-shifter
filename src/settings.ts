@@ -1,5 +1,8 @@
 import type HeadingShifter from "main";
-import { settings_1_10_0 } from "migrations/versions/1.10.0";
+import {
+	LIST_BEHAVIORS_1_10_0,
+	settings_1_10_0,
+} from "migrations/versions/1.10.0";
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { HEADINGS } from "types/type";
 
@@ -22,9 +25,9 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Lower limit of Heading")
+			.setName("Lower limit of heading")
 			.setDesc(
-				"The lower Heading Size that will be decreased by the Heading Shift ",
+				"The lower heading size that will be decreased by the heading shift ",
 			)
 			.addDropdown((dropdown) => {
 				// Create options from heading array like {'0':'0','1':'1',.......}
@@ -48,7 +51,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Enable override tab behavior")
 			.setDesc(
-				'Tab execute "Increase Headings" and Shift-Tab execute "Decrease Headings"',
+				'Tab execute "increase headings" and shift-tab execute "decrease headings"',
 			)
 			.addToggle((toggle) =>
 				toggle
@@ -59,10 +62,10 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					}),
 			);
 
-		containerEl.createEl("h3", { text: "Style to remove" });
-		containerEl.createEl("p", {
-			text: "If this style is at the <position> of a line, remove it",
-		});
+		new Setting(containerEl)
+			.setName("Style to remove")
+			.setDesc("If this style is at the <position> of a line, remove it")
+			.setHeading();
 
 		containerEl.createEl("b", { text: "Beginning" });
 		new Setting(containerEl)
@@ -146,7 +149,7 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl("h3", { text: "List" });
+		new Setting(containerEl).setName("List").setHeading();
 		new Setting(containerEl)
 			.setName("Children behavior")
 			.addDropdown((dropdown) => {
@@ -158,22 +161,22 @@ export class HeadingShifterSettingTab extends PluginSettingTab {
 					)
 					.addOption("noting" satisfies LIST_BEHAVIOR, "Noting")
 					.setValue(this.plugin.settings.list.childrenBehavior)
-					.onChange((v: LIST_BEHAVIOR) => {
-						this.plugin.settings.list.childrenBehavior = v;
-						this.plugin.saveSettings();
+					.onChange(async (v) => {
+						const behavior = LIST_BEHAVIORS_1_10_0.find((b) => b === v);
+						if (!behavior) return;
+						this.plugin.settings.list.childrenBehavior = behavior;
+						await this.plugin.saveSettings();
 					});
 			});
 
-		containerEl.createEl("h3", {
-			text: "Editor",
-		});
+		new Setting(containerEl).setName("Editor").setHeading();
 		new Setting(containerEl).setName("Tab size").addSlider((cb) => {
 			cb.setDynamicTooltip()
 				.setLimits(2, 8, 2)
 				.setValue(this.plugin.settings.editor.tabSize)
-				.onChange((v) => {
+				.onChange(async (v) => {
 					this.plugin.settings.editor.tabSize = v;
-					this.plugin.saveSettings();
+					await this.plugin.saveSettings();
 				});
 		});
 	}

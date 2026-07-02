@@ -30,7 +30,7 @@ export class IncreaseHeading implements EditorOperation {
 
 		// Do not increase If it contains more than heading 6 .
 		if (maxHeading !== undefined && maxHeading >= 6) {
-			new Notice("Cannot Increase (contains more than Heading 6)");
+			new Notice("Cannot increase (contains more than heading 6)");
 			return true;
 		}
 
@@ -54,13 +54,13 @@ export class IncreaseHeading implements EditorOperation {
 		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
-		return editorChange.length ? true : false;
+		return !!editorChange.length;
 	};
 
 	createCommand = (): Command => {
 		return {
 			id: `increase-heading${this.includesNoHeadingsLine ? "-forced" : ""}`,
-			name: `Increase Headings${this.includesNoHeadingsLine ? "(forced)" : ""}`,
+			name: `Increase headings${this.includesNoHeadingsLine ? "(forced)" : ""}`,
 			icon: "headingShifter_increaseIcon",
 			editorCallback: this.editorCallback,
 		};
@@ -123,13 +123,13 @@ export class DecreaseHeading implements EditorOperation {
 		if (isOneLine) {
 			editor.setCursor(editor.getCursor("anchor").line);
 		}
-		return editorChange.length ? true : false;
+		return !!editorChange.length;
 	};
 
 	createCommand = () => {
 		return {
 			id: "decrease-heading",
-			name: "Decrease Headings",
+			name: "Decrease headings",
 			icon: "headingShifter_decreaseIcon",
 			editorCallback: this.editorCallback,
 		};

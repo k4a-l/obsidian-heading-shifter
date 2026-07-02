@@ -12,7 +12,7 @@ import {
 } from "ui/icon";
 
 export class InterfaceService {
-	constructor() {}
+	// constructor() {}
 	addIcons = () => {
 		addIcon("headingShifter_decreaseIcon", icon_decrease_heading);
 		addIcon("headingShifter_increaseIcon", icon_increase_heading);

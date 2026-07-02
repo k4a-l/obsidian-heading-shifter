@@ -4,7 +4,7 @@ import { type Editor, editorInfoField } from "obsidian";
 import type { StopPropagation } from "types/type";
 
 export class ObsidianService {
-	constructor() {}
+	// constructor() {}
 
 	getEditorFromState(state: EditorState) {
 		return state.field(editorInfoField).editor;
