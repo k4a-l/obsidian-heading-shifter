@@ -66,7 +66,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 
 		// current heading level == most recently added heading
 		// 0 if no heading exists yet
-		const headingLevel = lastHeadingLine
+		const headingLevel = lastHeadingLine !== undefined
 			? checkHeading(editor.getLine(lastHeadingLine))
 			: 0;
 
@@ -120,7 +120,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 
 		// current heading level == most recently added heading
 		// 0 if no heading exists yet
-		const headingLevel = lastHeadingLine
+		const headingLevel = lastHeadingLine !== undefined
 			? checkHeading(editor.getLine(lastHeadingLine))
 			: 0;
 
