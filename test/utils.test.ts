@@ -173,6 +173,12 @@ Normal
 		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 2)).toEqual(0);
 	});
+
+	test("first line = undefined", () => {
+		const input = `# Heading1`;
+		const editor = new MockEditor(input);
+		expect(getPreviousHeading(editor, 0)).toBeUndefined();
+	});
 });
 
 describe("compose editorChange", () => {
