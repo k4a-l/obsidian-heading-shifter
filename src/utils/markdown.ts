@@ -89,6 +89,17 @@ export const getPreviousHeading = (
 	return undefined;
 };
 
+export const getPreviousHeadingLevel = (
+	editor: {
+		getLine: (number: number) => string;
+	},
+	from: number,
+): number => {
+	const prevHeadingLine = getPreviousHeading(editor, from);
+	if (prevHeadingLine === undefined) return 0;
+	return checkHeading(editor.getLine(prevHeadingLine));
+};
+
 /** Returns the result of the substitution only when the substitution is performed, otherwise undefined */
 const replaceFunc = (str: string, regExp: RegExp): string | undefined => {
 	try {

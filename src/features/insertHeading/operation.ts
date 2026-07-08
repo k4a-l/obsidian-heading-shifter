@@ -5,7 +5,7 @@ import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
 import { composeLineChanges } from "utils/editorChange";
-import { checkHeading, getPreviousHeading } from "utils/markdown";
+import { getPreviousHeadingLevel } from "utils/markdown";
 
 export class InsertHeadingAtCurrentLevel implements EditorOperation {
 	settings: HeadingShifterSettings;
@@ -15,14 +15,7 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 
 	editorCallback = (editor: Editor): StopPropagation => {
 		const cursorLine = editor.getCursor("from").line;
-		const lastHeadingLine = getPreviousHeading(editor, cursorLine);
-
-		// current heading level == most recently added heading
-		// 0 if no heading exists yet
-		const headingLevel =
-			lastHeadingLine !== undefined
-				? checkHeading(editor.getLine(lastHeadingLine))
-				: 0;
+		const headingLevel = getPreviousHeadingLevel(editor, cursorLine);
 		const targetHeadingLevel = headingLevel;
 
 		const headingChanges = composeLineChanges(editor, [cursorLine], (chunk) =>
@@ -62,13 +55,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 
 	editorCallback = (editor: Editor): StopPropagation => {
 		const cursorLine = editor.getCursor("from").line;
-		const lastHeadingLine = getPreviousHeading(editor, cursorLine);
-
-		// current heading level == most recently added heading
-		// 0 if no heading exists yet
-		const headingLevel = lastHeadingLine !== undefined
-			? checkHeading(editor.getLine(lastHeadingLine))
-			: 0;
+		const headingLevel = getPreviousHeadingLevel(editor, cursorLine);
 
 		if (headingLevel + 1 > 6) {
 			new Notice("Cannot increase (contains more than heading 6)");
@@ -116,14 +103,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 
 	editorCallback = (editor: Editor): StopPropagation => {
 		const cursorLine = editor.getCursor("from").line;
-		const lastHeadingLine = getPreviousHeading(editor, cursorLine);
-
-		// current heading level == most recently added heading
-		// 0 if no heading exists yet
-		const headingLevel = lastHeadingLine !== undefined
-			? checkHeading(editor.getLine(lastHeadingLine))
-			: 0;
-
+		const headingLevel = getPreviousHeadingLevel(editor, cursorLine);
 		const targetHeadingLevel = headingLevel - 1;
 
 		const headingChanges = composeLineChanges(
