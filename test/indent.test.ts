@@ -1,6 +1,7 @@
 import { createListIndentChangesByListBehavior } from "features/applyHeading/module";
 import { describe, expect, test } from "vitest";
 import { applyEditorChanges, MockEditor } from "./__mock__/obsidian";
+import { _t } from "./helper";
 
 const pick = (input: string, lineNumber: number) =>
 	input.split("\n")[lineNumber];
@@ -29,11 +30,13 @@ describe("Sync with headings", () => {
 	// ------------------------------------ //
 
 	test("0->0", () => {
-		const input = `- list0
+		const input = _t`
+- list0
 \t- list1
 \t\t- list2
 \t1. list3
-- list4`;
+- list4
+`;
 
 		const expected = input;
 
@@ -41,28 +44,34 @@ describe("Sync with headings", () => {
 	});
 
 	test("0->2", () => {
-		const input = `- list0
+		const input = _t`
+- list0
 \t- list1
 \t\t- list2
 \t1. list3
-- list4`;
+- list4
+`;
 
 		// `pick(input, n)` indicates that the line remains unchanged.
-		const expected = `${pick(input, 0)}
+		const expected = _t`
+${pick(input, 0)}
 \t\t\t- list1
 \t\t\t\t- list2
 \t\t\t1. list3
-${pick(input, 4)}`;
+${pick(input, 4)}
+`;
 
 		commonTestFunc({ input, expected }, { parentIndentLevel: 2 });
 	});
 
 	test("2->2", () => {
-		const input = `\t\t- list0
+		const input = _t`
+\t\t- list0
 \t\t\t- list1
 \t\t\t\t- list2
 \t\t\t1. list3
-\t- list4`;
+\t- list4
+`;
 
 		const expected = input;
 
@@ -70,41 +79,51 @@ ${pick(input, 4)}`;
 	});
 
 	test("2->0", () => {
-		const input = `\t\t- list0
+		const input = _t`
+\t\t- list0
 \t\t\t\t- list1
 \t\t\t- list2
 \t\t1. list3
-\t- list4`;
+\t- list4
+`;
 
-		const expected = `${pick(input, 0)}
+		const expected = _t`
+${pick(input, 0)}
 \t\t- list1
 \t- list2
 ${pick(input, 3)}
-${pick(input, 4)}`;
+${pick(input, 4)}
+`;
 
 		commonTestFunc({ input, expected }, { parentIndentLevel: 0 });
 	});
 
 	test("3->1: space(2)", () => {
 		const tab = `  `;
-		const input = `${tab}${tab}${tab}- list0
+		const input = _t`
+${tab}${tab}${tab}- list0
 ${tab}${tab}${tab}${tab}${tab}- list1
 ${tab}${tab}${tab}${tab}1. list2
 ${tab}${tab}${tab}- list3
-- list4`;
+- list4
+`;
 
-		const expected = `${pick(input, 0)}
+		const expected = _t`
+${pick(input, 0)}
 \t\t\t- list1
 \t\t1. list2
 ${pick(input, 3)}
-${pick(input, 4)}`;
+${pick(input, 4)}
+`;
 
 		commonTestFunc({ input, expected }, { parentIndentLevel: 1, tabSize: 2 });
 	});
 
 	test("no bullets in children", () => {
-		const input = `\t- list0
-\t\tlist1`;
+		const input = _t`
+\t- list0
+\t\tlist1
+`;
 
 		const expected = input;
 
@@ -112,8 +131,10 @@ ${pick(input, 4)}`;
 	});
 
 	test("no bullets in parent", () => {
-		const input = `\tlist0
-\t\t-list1`;
+		const input = _t`
+\tlist0
+\t\t-list1
+`;
 
 		const expected = input;
 
@@ -122,17 +143,21 @@ ${pick(input, 4)}`;
 });
 
 test("outdent to zero", () => {
-	const input = `\t- list0
+	const input = _t`
+\t- list0
 \t\t- list1
 \t\t\t- list2
 \t\t1. list3
-\t- list4`;
+\t- list4
+`;
 
-	const expected = `${pick(input, 0)}
+	const expected = _t`
+${pick(input, 0)}
 - list1
 \t- list2
 1. list3
-${pick(input, 4)}`;
+${pick(input, 4)}
+`;
 
 	const editor = new MockEditor(input);
 	const changes = createListIndentChangesByListBehavior(editor, {
@@ -144,12 +169,16 @@ ${pick(input, 4)}`;
 });
 
 describe("children heading level", () => {
-	const input = `\t- list0
-\t\t- # list1`;
+	const input = _t`
+\t- list0
+\t\t- # list1
+`;
 
 	test("outdent to zero", () => {
-		const expected = `${pick(input, 0)}
-- # list1`; // keep heading level
+		const expected = _t`
+${pick(input, 0)}
+- # list1
+`; // keep heading level
 
 		const editor = new MockEditor(input);
 		const changes = createListIndentChangesByListBehavior(editor, {
@@ -161,8 +190,10 @@ describe("children heading level", () => {
 	});
 
 	test("sync with headings", () => {
-		const expected = `${pick(input, 0)}
-\t\t- ### list1`; // change heading level
+		const expected = _t`
+${pick(input, 0)}
+\t\t- ### list1
+`; // change heading level
 
 		const editor = new MockEditor(input);
 		const changes = createListIndentChangesByListBehavior(editor, {
