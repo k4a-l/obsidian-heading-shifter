@@ -1,8 +1,8 @@
 {
 	"id": "obsidian-heading-shifter",
 	"name": "Heading Shifter",
-	"version": "1.12.0",
-	"minAppVersion": "1.0.0",
+	"version": "1.12.1",
+	"minAppVersion": "1.12.0",
 	"description": "Easily Shift and Change markdown headings.",
 	"author": "kasahala",
 	"authorUrl": "https://github.com/k4a-l",

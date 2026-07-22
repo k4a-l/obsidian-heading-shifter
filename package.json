@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-heading-shifter",
-	"version": "1.12.0",
+	"version": "1.12.1",
 	"description": "Easily shift multiple heading of markdown",
 	"main": "main.js",
 	"type": "module",
@@ -32,7 +32,7 @@
 		"eslint": "^10.6.0",
 		"eslint-plugin-obsidianmd": "^0.4.0",
 		"husky": "^9.1.7",
-		"obsidian": "latest",
+		"obsidian": "1.12.3",
 		"remark": "^15.0.1",
 		"remark-cli": "^12.0.1",
 		"remark-preset-lint-recommended": "^7.0.1",
@@ -43,8 +43,8 @@
 		"vitest": "^4.1.9"
 	},
 	"dependencies": {
-		"@codemirror/state": "^6.7.0",
-		"@codemirror/view": "^6.43.4",
+		"@codemirror/state": "6.5.0",
+		"@codemirror/view": "6.38.6",
 		"immer": "^11.1.9",
 		"semver": "^7.8.5",
 		"ts-pattern": "^5.9.0"
