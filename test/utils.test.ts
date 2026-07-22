@@ -14,6 +14,7 @@ import { assignUnknownObjectFromDefaultObject } from "utils/object";
 import { createRange } from "utils/range";
 import { describe, expect, test } from "vitest";
 import { MockEditor } from "./__mock__/obsidian";
+import { _t } from "./helper";
 
 describe("checkHeading", () => {
 	test("match", () => {
@@ -87,7 +88,8 @@ describe("fenceStatus", () => {
 
 describe("getHeadingLines", () => {
 	test("normal", () => {
-		const input = `# Heading1
+		const input = _t`
+# Heading1
 
 ## Heading2
 
@@ -107,7 +109,8 @@ Normal
 
 ~~~~
 
-### Heading3`;
+### Heading3
+`;
 
 		const editor = new MockEditor(input);
 
@@ -121,7 +124,8 @@ Normal
 
 describe("getPreviousHeading", () => {
 	test("normal", () => {
-		const input = `# Heading1
+		const input = _t`
+# Heading1
 
 ## Heading2
 
@@ -134,7 +138,8 @@ Normal
 	});
 
 	test("edge", () => {
-		const input = `# Heading1
+		const input = _t`
+# Heading1
 
 ## Heading2
 
@@ -145,7 +150,8 @@ Normal
 	});
 
 	test("no heading", () => {
-		const input = `Normal
+		const input = _t`
+Normal
 
 Normal
 
@@ -164,12 +170,13 @@ Normal
 	});
 
 	test("'from line' contains heading", () => {
-		const input = `# Heading1
+		const input = _t`
+# Heading1
 
 ## Heading2
 
 Normal
-	`;
+`;
 		const editor = new MockEditor(input);
 		expect(getPreviousHeading(editor, 2)).toEqual(0);
 	});
@@ -183,12 +190,14 @@ Normal
 
 describe("compose editorChange", () => {
 	test("", () => {
-		const input = `a
+		const input = _t`
+a
 b
 c
 d
 e
-f`;
+f
+`;
 		const editor = new MockEditor(input);
 		const changeCallback = (chunk: string) =>
 			`==begin==${chunk.toUpperCase()}==end==`;
@@ -318,11 +327,13 @@ describe("assignUnknownObjectFromDefaultObject", () => {
 
 describe("getListChildrenLines", () => {
 	test("0", () => {
-		const str = ` first line(not target)
+		const str = _t`
+ first line(not target)
     - a
         * b
     - c
-- d `;
+- d
+`;
 		expect(
 			getListChildrenLines(new MockEditor(str), {
 				parentLineNumber: 0,
@@ -331,11 +342,13 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("1", () => {
-		const str = ` first line(not target)
+		const str = _t`
+ first line(not target)
 - a
         - b
     - c
-- d `;
+- d
+`;
 		expect(
 			getListChildrenLines(new MockEditor(str), {
 				parentLineNumber: 0,
@@ -344,11 +357,13 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("2", () => {
-		const str = ` first line(not target)
+		const str = _t`
+ first line(not target)
         - a
         - b
     - c
-    - d `;
+    - d
+`;
 		expect(
 			getListChildrenLines(new MockEditor(str), {
 				parentLineNumber: 0,
@@ -357,11 +372,13 @@ describe("getListChildrenLines", () => {
 	});
 
 	test("3", () => {
-		const str = ` first line(not target)
+		const str = _t`
+ first line(not target)
 	- a
 		- b
 	1. 
--d `;
+-d
+`;
 		expect(
 			getListChildrenLines(new MockEditor(str), {
 				parentLineNumber: 0,

@@ -1,14 +1,35 @@
 import { TABSIZE } from "constant/editor";
-import type { EditorChange, EditorPosition } from "obsidian";
+import type { Editor, EditorChange } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import { match, P } from "ts-pattern";
 import { countIndentLevel, getListChildrenLines } from "./markdown";
 
-export type MinimumEditor = {
-	getLine: (number: number) => string;
-	lineCount: () => number;
-	setSelection: (anchor: EditorPosition, head?: EditorPosition) => void;
-	getCursor(string?: "from" | "to" | "head" | "anchor"): EditorPosition;
+/**  Narrower than obsidian's `Editor` (which is assignable to it),
+ * so operations can be driven with a lightweight mock in tests without casting. */
+export type MinimumEditor = Pick<
+	Editor,
+	| "getLine"
+	| "getCursor"
+	| "lineCount"
+	| "listSelections"
+	| "transaction"
+	| "setSelection"
+	| "setCursor"
+>;
+/** Combine heading changes with indent changes, dropping any indent change that
+ * targets a line already edited by a heading change. Two changes on the same
+ * line would corrupt a single editor transaction; heading changes win. */
+export const combineHeadingAndIndentChanges = (
+	headingChanges: EditorChange[],
+	indentChanges: EditorChange[],
+): EditorChange[] => {
+	const headingLines = new Set(
+		headingChanges.map((change) => change.from.line),
+	);
+	return [
+		...headingChanges,
+		...indentChanges.filter((change) => !headingLines.has(change.from.line)),
+	];
 };
 
 export const composeLineChanges = (
