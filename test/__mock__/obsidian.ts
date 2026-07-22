@@ -57,31 +57,6 @@ export class MockEditor implements MinimumEditor {
 	getCursor(): EditorPosition {
 		return { ch: 0, line: 0 };
 	}
-
-	/**
-	 * Apply a transaction in-place to this.lines.
-	 * Handles EditorChange objects that replace a range from `from.line`..`to.line`
-	 * with `text` (which may contain multiple lines). Multiple changes are applied
-	 * bottom-up (descending by from.line) so indexes remain valid.
-	 */
-	transaction(transaction: { changes: EditorChange[] }): void {
-		const sortedChanges = [...transaction.changes].sort((a, b) => {
-			if (a.from.line === b.from.line) return (b.to.line ?? b.from.line) - (a.to.line ?? a.from.line);
-			return b.from.line - a.from.line;
-		});
-
-		for (const change of sortedChanges) {
-			const from = change.from.line;
-			const to = (change as any).to?.line ?? change.from.line;
-			const newLines = change.text === undefined || change.text === null ? [""] : change.text.split("\n");
-			// splice: remove (to - from + 1) lines and insert newLines
-			this.lines.splice(from, to - from + 1, ...newLines);
-		}
-	}
-
-	getValue(): string {
-		return this.lines.join("\n");
-	}
 }
 
 export const applyEditorChanges = (
@@ -89,16 +64,10 @@ export const applyEditorChanges = (
 	changes: EditorChange[],
 ): string => {
 	const lines = content.split("\n");
-	const sortedChanges = [...changes].sort((a, b) => {
-		if (a.from.line === b.from.line) return (b.to?.line ?? b.from.line) - (a.to?.line ?? a.from.line);
-		return b.from.line - a.from.line;
-	});
+	const sortedChanges = [...changes].sort((a, b) => b.from.line - a.from.line);
 
 	for (const change of sortedChanges) {
-		const from = change.from.line;
-		const to = (change as any).to?.line ?? change.from.line;
-		const newLines = change.text === undefined || change.text === null ? [""] : change.text.split("\n");
-		lines.splice(from, to - from + 1, ...newLines);
+		lines[change.from.line] = change.text;
 	}
 
 	return lines.join("\n");
