@@ -374,8 +374,8 @@ describe("getListChildrenLines", () => {
 	test("3", () => {
 		const str = _t`
  first line(not target)
-\t- a
-\t\t- b
+	- a
+		- b
 	1. 
 -d
 `;
