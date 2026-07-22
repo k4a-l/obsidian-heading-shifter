@@ -1,6 +1,6 @@
 // __mocks__/obsidian.ts
 
-import type { EditorChange, EditorPosition } from "obsidian";
+import type { EditorChange, EditorPosition, EditorSelection } from "obsidian";
 import type { MinimumEditor } from "utils/editorChange";
 
 /**
@@ -42,10 +42,27 @@ export class PluginSettingTab {
 export type App = unknown;
 export class Plugin {}
 
+/**
+ * Notice
+ */
+export class Notice {
+	message: string | DocumentFragment;
+	constructor(message: string | DocumentFragment, _duration?: number) {
+		this.message = message;
+	}
+}
+
 export class MockEditor implements MinimumEditor {
 	private lines: string[];
-	constructor(content: string) {
+	private selections: EditorSelection[];
+	constructor(
+		content: string,
+		selections: EditorSelection[] = [
+			{ anchor: { line: 0, ch: 0 }, head: { line: 0, ch: 0 } },
+		],
+	) {
 		this.lines = content.split(`\n`);
+		this.selections = selections;
 	}
 	getLine(number: number) {
 		return this.lines[number] ?? "";
@@ -54,8 +71,24 @@ export class MockEditor implements MinimumEditor {
 		return this.lines.length;
 	}
 	setSelection() {}
+	setCursor(_pos: number | EditorPosition): void {}
 	getCursor(): EditorPosition {
 		return { ch: 0, line: 0 };
+	}
+	listSelections(): EditorSelection[] {
+		return this.selections;
+	}
+	transaction(transaction: { changes: EditorChange[] }): void {
+		// Apply bottom-up; changes only replace whole lines, so order is safe.
+		const sorted = [...transaction.changes].sort(
+			(a, b) => b.from.line - a.from.line,
+		);
+		for (const change of sorted) {
+			this.lines[change.from.line] = change.text;
+		}
+	}
+	getValue(): string {
+		return this.lines.join("\n");
 	}
 }
 
