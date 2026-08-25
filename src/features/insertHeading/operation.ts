@@ -5,6 +5,7 @@ import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
 import {
+	applyChangesWithSelectionTracking,
 	combineHeadingAndIndentChanges,
 	composeLineChanges,
 	type MinimumEditor,
@@ -94,14 +95,7 @@ const insertHeadingAtSelections = (
 		return true;
 	}
 
-	editor.transaction({ changes });
-
-	// If a single line is targeted, place the cursor there (typing usually
-	// follows). Consistent with ApplyHeading / shift; multi-block leaves the
-	// selections to the transaction.
-	if (blocks.length === 1 && blocks[0]?.start === blocks[0]?.end) {
-		editor.setCursor(editor.getCursor("anchor").line);
-	}
+	applyChangesWithSelectionTracking(editor, changes);
 	return true;
 };
 

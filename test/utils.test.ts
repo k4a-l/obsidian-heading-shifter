@@ -1,5 +1,9 @@
 import { RegExpExample } from "constant/regExp";
-import { composeLineChanges } from "utils/editorChange";
+import {
+	composeLineChanges,
+	computeLineChange,
+	mapSelectionPositions,
+} from "utils/editorChange";
 import {
 	checkFence,
 	checkHeading,
@@ -15,6 +19,122 @@ import { createRange } from "utils/range";
 import { describe, expect, test } from "vitest";
 import { MockEditor } from "./__mock__/obsidian";
 import { _t } from "./helper";
+
+describe("computeLineChange", () => {
+	test("returns null when there is no change", () => {
+		expect(computeLineChange(0, "abc", "abc")).toBeNull();
+	});
+
+	test("inserts prefix on an empty line", () => {
+		expect(computeLineChange(0, "", "## ")).toEqual({
+			text: "## ",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 0 },
+		});
+	});
+
+	test("inserts prefix on a non-empty line (heading added)", () => {
+		expect(computeLineChange(1, "abcde", "## abcde")).toEqual({
+			text: "## ",
+			from: { line: 1, ch: 0 },
+			to: { line: 1, ch: 0 },
+		});
+	});
+
+	test("removes prefix (heading removed)", () => {
+		expect(computeLineChange(0, "## abcde", "abcde")).toEqual({
+			text: "",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 3 },
+		});
+	});
+
+	test("increments heading level (inserts single #)", () => {
+		expect(computeLineChange(0, "## abcde", "### abcde")).toEqual({
+			text: "#",
+			from: { line: 0, ch: 2 },
+			to: { line: 0, ch: 2 },
+		});
+	});
+
+	test("decrements heading level (deletes single #)", () => {
+		expect(computeLineChange(0, "### abcde", "## abcde")).toEqual({
+			text: "",
+			from: { line: 0, ch: 2 },
+			to: { line: 0, ch: 3 },
+		});
+	});
+
+	test("changes non-consecutive prefix", () => {
+		expect(computeLineChange(0, "- abc", "\t- ## abc")).toEqual({
+			text: "\t- ##",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 1 },
+		});
+	});
+});
+
+describe("mapSelectionPositions", () => {
+	test("shifts cursor at column 0 to after inserted prefix", () => {
+		const change = {
+			text: "## ",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 0 },
+		};
+		const selections = [
+			{
+				anchor: { line: 0, ch: 0 },
+				head: { line: 0, ch: 0 },
+			},
+		];
+		expect(mapSelectionPositions(selections, [change])).toEqual([
+			{
+				anchor: { line: 0, ch: 3 },
+				head: { line: 0, ch: 3 },
+			},
+		]);
+	});
+
+	test("shifts selection range starting at column 0", () => {
+		const change = {
+			text: "## ",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 0 },
+		};
+		const selections = [
+			{
+				anchor: { line: 0, ch: 0 },
+				head: { line: 0, ch: 3 },
+			},
+		];
+		expect(mapSelectionPositions(selections, [change])).toEqual([
+			{
+				anchor: { line: 0, ch: 3 },
+				head: { line: 0, ch: 6 },
+			},
+		]);
+	});
+
+	test("keeps selections on untouched lines unmodified", () => {
+		const change = {
+			text: "## ",
+			from: { line: 0, ch: 0 },
+			to: { line: 0, ch: 0 },
+		};
+		const selections = [
+			{
+				anchor: { line: 1, ch: 2 },
+				head: { line: 1, ch: 2 },
+			},
+		];
+		expect(mapSelectionPositions(selections, [change])).toEqual([
+			{
+				anchor: { line: 1, ch: 2 },
+				head: { line: 1, ch: 2 },
+			},
+		]);
+	});
+});
 
 describe("checkHeading", () => {
 	test("match", () => {

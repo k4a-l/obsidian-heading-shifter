@@ -30,7 +30,8 @@ g
 					input,
 					selection,
 				),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 # a
 # b
 # c
@@ -38,7 +39,12 @@ g
 e
 ### f
 ### g
-`);
+`,
+				selections: [
+					range({ line: 1, ch: 2 }, { line: 3, ch: 2 }),
+					cursor(6, 4),
+				],
+			});
 		});
 
 		test("deeper: one level below each block's section", () => {
@@ -48,7 +54,8 @@ e
 					input,
 					selection,
 				),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 # a
 ## b
 ## c
@@ -56,7 +63,12 @@ e
 e
 ### f
 #### g
-`);
+`,
+				selections: [
+					range({ line: 1, ch: 3 }, { line: 3, ch: 3 }),
+					cursor(6, 5),
+				],
+			});
 		});
 
 		test("higher: one level above each section (clamped to H1)", () => {
@@ -66,7 +78,8 @@ e
 					input,
 					selection,
 				),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 # a
 # b
 # c
@@ -74,7 +87,12 @@ e
 e
 ### f
 ## g
-`);
+`,
+				selections: [
+					range({ line: 1, ch: 2 }, { line: 3, ch: 2 }),
+					cursor(6, 3),
+				],
+			});
 		});
 	});
 
@@ -93,14 +111,17 @@ f
 				runCommand(new InsertHeadingAtCurrentLevel(DEFAULT_SETTINGS), input, [
 					range(0, 2),
 				]),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 # a
 # b
 # c
 d
 ### e
 f
-`);
+`,
+				selections: [range({ line: 0, ch: 0 }, { line: 2, ch: 0 })],
+			});
 		});
 
 		test("range spanning sub-sections flattens inner headings to the outer level", () => {
@@ -108,23 +129,29 @@ f
 				runCommand(new InsertHeadingAtCurrentLevel(DEFAULT_SETTINGS), input, [
 					range(2, 5),
 				]),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 # a
 b
 # c
 # d
 # e
 # f
-`);
+`,
+				selections: [range({ line: 2, ch: 0 }, { line: 5, ch: 2 })],
+			});
 		});
 	});
 
 	test("no previous heading still inserts a heading (clamped to H1)", () => {
 		expect(
 			runCommand(new InsertHeadingAtCurrentLevel(DEFAULT_SETTINGS), "a", [
-				cursor(0),
+				cursor(0, 1),
 			]),
-		).toBe("# a");
+		).toEqual({
+			value: "# a",
+			selections: [cursor(0, 3)],
+		});
 	});
 
 	test("aborts entirely when a block would exceed heading 6", () => {
@@ -136,7 +163,10 @@ b
 			runCommand(new InsertHeadingAtDeeperLevel(DEFAULT_SETTINGS), input, [
 				cursor(1),
 			]),
-		).toBe(input); // unchanged
+		).toEqual({
+			value: input,
+			selections: [cursor(1)],
+		});
 	});
 
 	// Pins the deliberate `higher` indent behavior: promoting the heading must NOT
@@ -154,21 +184,27 @@ b
 		test("current keeps the child one level below the heading", () => {
 			expect(
 				runCommand(new InsertHeadingAtCurrentLevel(sync), input, [cursor(1)]),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 ### a
 \t\t- ### b
 \t\t\t- c
-`);
+`,
+				selections: [cursor(1, 7)],
+			});
 		});
 
 		test("higher promotes only the heading; child depth matches current", () => {
 			expect(
 				runCommand(new InsertHeadingAtHigherLevel(sync), input, [cursor(1)]),
-			).toBe(_t`
+			).toEqual({
+				value: _t`
 ### a
 \t- ## b
 \t\t\t- c
-`);
+`,
+				selections: [cursor(1, 5)],
+			});
 		});
 	});
 });
