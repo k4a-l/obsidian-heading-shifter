@@ -2,7 +2,11 @@ import { type Command, type Editor, Notice } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
-import { composeLineChanges, type MinimumEditor } from "utils/editorChange";
+import {
+	applyChangesWithSelectionTracking,
+	composeLineChanges,
+	type MinimumEditor,
+} from "utils/editorChange";
 import { getHeadingLines } from "utils/markdown";
 import { selectionsToLineBlocks } from "utils/range";
 import { decreaseHeading, increaseHeading } from "./module";
@@ -47,23 +51,13 @@ export class IncreaseHeading implements EditorOperation {
 			return true;
 		}
 
-		const isOneLine =
-			blocks.length === 1 && blocks[0]?.start === blocks[0]?.end;
-
 		// Dispatch Transaction
 		const editorChange = perBlock.flatMap(({ headingLines }) =>
 			composeLineChanges(editor, headingLines, increaseHeading, this.settings),
 		);
-		editor.transaction({
-			changes: editorChange,
-		});
+		applyChangesWithSelectionTracking(editor, editorChange);
 
 		// Since SHIFT is for items that already have a HEADING, it does not do `execOutdent`.
-
-		// If only one line is targeted, move the cursor to the end of the line.
-		if (isOneLine) {
-			editor.setCursor(editor.getCursor("anchor").line);
-		}
 		return !!editorChange.length;
 	};
 
@@ -113,21 +107,12 @@ export class DecreaseHeading implements EditorOperation {
 			return true;
 		}
 
-		const isOneLine =
-			blocks.length === 1 && blocks[0]?.start === blocks[0]?.end;
-
 		// Dispatch Transaction
 		const editorChange = perBlock.flatMap(({ headingLines }) =>
 			composeLineChanges(editor, headingLines, decreaseHeading, this.settings),
 		);
-		editor.transaction({
-			changes: editorChange,
-		});
+		applyChangesWithSelectionTracking(editor, editorChange);
 
-		// If only one line is targeted, move the cursor to the end of the line.
-		if (isOneLine) {
-			editor.setCursor(editor.getCursor("anchor").line);
-		}
 		return !!editorChange.length;
 	};
 

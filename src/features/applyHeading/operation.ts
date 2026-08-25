@@ -3,6 +3,7 @@ import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
 import {
+	applyChangesWithSelectionTracking,
 	combineHeadingAndIndentChanges,
 	composeLineChanges,
 	type MinimumEditor,
@@ -42,16 +43,11 @@ export class ApplyHeading implements EditorOperation {
 			}),
 		);
 
-		editor.transaction({
-			changes: combineHeadingAndIndentChanges(headingsChanges, indentChanges),
-		});
+		applyChangesWithSelectionTracking(
+			editor,
+			combineHeadingAndIndentChanges(headingsChanges, indentChanges),
+		);
 
-		// If a single line is targeted, move the cursor to the end of the line.
-		const isOneLine =
-			blocks.length === 1 && blocks[0]?.start === blocks[0]?.end;
-		if (isOneLine) {
-			editor.setCursor(editor.getCursor("anchor").line);
-		}
 		return true;
 	};
 
