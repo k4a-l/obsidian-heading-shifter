@@ -7,43 +7,7 @@ import type {
 } from "obsidian";
 import type { MinimumEditor } from "utils/editorChange";
 
-/**
- * Setting
- */
-export class Setting {
-	// constructor(containerEl: HTMLElement) {}
-	setName(_name: string) {
-		return this;
-	}
-	setDesc(_desc: string) {
-		return this;
-	}
-	addText(_cb: (component: unknown) => unknown) {
-		return this;
-	}
-	addToggle(_cb: (component: unknown) => unknown) {
-		return this;
-	}
-	addDropdown(_cb: (component: unknown) => unknown) {
-		return this;
-	}
-	addTextArea(_cb: (component: unknown) => unknown) {
-		return this;
-	}
-}
-
-/**
- * PluginSettingTab
- */
-export class PluginSettingTab {
-	// constructor(_app: App, _plugin: unknown) {}
-	display() {}
-}
-
-/**
- * App, Plugin などの型定義のモック
- */
-export type App = unknown;
+export class PluginSettingTab {}
 export class Plugin {}
 
 /**
