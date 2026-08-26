@@ -8,7 +8,11 @@ import {
 	icon_heading_4,
 	icon_heading_5,
 	icon_heading_6,
+	icon_heading_menu,
 	icon_increase_heading,
+	icon_insert_heading_at_current_level,
+	icon_insert_heading_at_deeper_level,
+	icon_insert_heading_at_higher_level,
 } from "ui/icon";
 
 export class InterfaceService {
@@ -23,6 +27,19 @@ export class InterfaceService {
 		addIcon("headingShifter_heading4", icon_heading_4);
 		addIcon("headingShifter_heading5", icon_heading_5);
 		addIcon("headingShifter_heading6", icon_heading_6);
+		addIcon(
+			"headingShifter_insertHeadingAtCurrentLevel",
+			icon_insert_heading_at_current_level,
+		);
+		addIcon(
+			"headingShifter_insertHeadingAtDeeperLevel",
+			icon_insert_heading_at_deeper_level,
+		);
+		addIcon(
+			"headingShifter_insertHeadingAtHigherLevel",
+			icon_insert_heading_at_higher_level,
+		);
+		addIcon("headingShifter_headingMenu", icon_heading_menu);
 	};
 
 	exec() {
