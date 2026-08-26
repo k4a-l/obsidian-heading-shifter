@@ -115,7 +115,7 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 		return {
 			id: `insert-heading-current`,
 			name: `Insert heading at current level`,
-			icon: `headingShifter_heading`,
+			icon: `headingShifter_insertHeadingAtCurrentLevel`,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -137,7 +137,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 		return {
 			id: `insert-heading-deeper`,
 			name: `Insert heading at one level deeper`,
-			icon: `headingShifter_heading`,
+			icon: `headingShifter_insertHeadingAtDeeperLevel`,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -159,7 +159,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 		return {
 			id: `insert-heading-higher`,
 			name: `Insert heading at one level higher`,
-			icon: `headingShifter_heading`,
+			icon: `headingShifter_insertHeadingAtHigherLevel`,
 			editorCallback: this.editorCallback,
 		};
 	};

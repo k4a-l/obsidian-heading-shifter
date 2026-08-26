@@ -1,3 +1,14 @@
+import icon_insert_heading_at_current_level_svg from "ui/assets/insert-heading-at-current-level.svg";
+import icon_insert_heading_at_deeper_level_svg from "ui/assets/insert-heading-at-deeper-level.svg";
+import icon_insert_heading_at_higher_level_svg from "ui/assets/insert-heading-at-higher-level.svg";
+
+export const icon_insert_heading_at_current_level =
+	icon_insert_heading_at_current_level_svg;
+export const icon_insert_heading_at_deeper_level =
+	icon_insert_heading_at_deeper_level_svg;
+export const icon_insert_heading_at_higher_level =
+	icon_insert_heading_at_higher_level_svg;
+
 export const icon_increase_heading = `
 <path d="M100 50L81.25 68.1865L81.25 31.8135L100 50Z" fill="currentColor" />
 <line x1="5" y1="37" x2="73" y2="37"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
