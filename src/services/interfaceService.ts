@@ -8,6 +8,7 @@ import {
 	icon_heading_4,
 	icon_heading_5,
 	icon_heading_6,
+	icon_heading_menu,
 	icon_increase_heading,
 	icon_insert_heading_at_current_level,
 	icon_insert_heading_at_deeper_level,
@@ -38,6 +39,7 @@ export class InterfaceService {
 			"headingShifter_insertHeadingAtHigherLevel",
 			icon_insert_heading_at_higher_level,
 		);
+		addIcon("headingShifter_headingMenu", icon_heading_menu);
 	};
 
 	exec() {

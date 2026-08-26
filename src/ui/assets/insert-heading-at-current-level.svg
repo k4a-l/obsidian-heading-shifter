@@ -42,7 +42,10 @@
         id="path3" />
     <text
         xml:space="preserve"
-        style="font-weight:bold;font-size:55.5556px;font-family:sans-serif;writing-mode:lr-tb;direction:ltr;fill:#000000;stroke-width:4.16667"
+        fill="currentColor"
+        font-family="sans-serif"
+        font-size="55.5556px"
+        font-weight="bold"
         x="33.590004"
         y="69.954002"
         id="text3"><tspan

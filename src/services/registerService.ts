@@ -1,6 +1,7 @@
 import { Prec } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { ApplyHeading } from "features/applyHeading";
+import { OpenHeadingMenu } from "features/headingMenu";
 import {
 	InsertHeadingAtCurrentLevel,
 	InsertHeadingAtDeeperLevel,
@@ -8,7 +9,15 @@ import {
 } from "features/insertHeading";
 import { DecreaseHeading, IncreaseHeading } from "features/shiftHeading";
 import type HeadingShifter from "main";
+import type { Command } from "obsidian";
+import type { StopPropagation } from "types/type";
 import { HEADINGS } from "types/type";
+import type { MinimumEditor } from "utils/editorChange";
+
+type EditorOperationLike = {
+	createCommand: () => Command;
+	editorCallback: (editor: MinimumEditor) => StopPropagation;
+};
 
 export class RegisterService {
 	plugin: HeadingShifter;
@@ -18,10 +27,7 @@ export class RegisterService {
 	}
 
 	exec() {
-		this.addCommands();
-	}
-
-	addCommands() {
+		// Create operations
 		const increaseHeading = new IncreaseHeading(this.plugin.settings, false);
 		const increaseHeadingForced = new IncreaseHeading(
 			this.plugin.settings,
@@ -37,18 +43,48 @@ export class RegisterService {
 		const insertHeadingAtHigherLevel = new InsertHeadingAtHigherLevel(
 			this.plugin.settings,
 		);
+		const applyHeadings = HEADINGS.map(
+			(heading) => new ApplyHeading(this.plugin.settings, heading),
+		);
 
-		HEADINGS.forEach((heading) => {
-			const applyHeading = new ApplyHeading(this.plugin.settings, heading);
-			this.plugin.addCommand(applyHeading.createCommand());
+		// Register commands
+		this.addCommands([
+			...applyHeadings,
+			insertHeadingAtCurrentLabel,
+			insertHeadingAtDeeperLevel,
+			insertHeadingAtHigherLevel,
+			increaseHeading,
+			increaseHeadingForced,
+			decreaseHeading,
+		]);
+
+		// Register Tab / Shift-Tab keymaps
+		this.registerTabKeyMap(increaseHeading, decreaseHeading);
+	}
+
+	/** Register each operation as its own command, plus one menu command listing all of them. */
+	addCommands(operations: EditorOperationLike[]) {
+		const commands = operations.map((operation) => ({
+			...operation.createCommand(),
+			editorCallback: operation.editorCallback,
+		}));
+
+		// addCommand mutates the object it's given (it prefixes `name` with the
+		// plugin name), so the menu keeps its own copy of the original names.
+		const menuCommands = commands.map((command) => ({ ...command }));
+
+		commands.forEach((command) => {
+			this.plugin.addCommand(command);
 		});
-		this.plugin.addCommand(increaseHeading.createCommand());
-		this.plugin.addCommand(increaseHeadingForced.createCommand());
-		this.plugin.addCommand(decreaseHeading.createCommand());
-		this.plugin.addCommand(insertHeadingAtCurrentLabel.createCommand());
-		this.plugin.addCommand(insertHeadingAtDeeperLevel.createCommand());
-		this.plugin.addCommand(insertHeadingAtHigherLevel.createCommand());
 
+		const openHeadingMenu = new OpenHeadingMenu(menuCommands);
+		this.plugin.addCommand(openHeadingMenu.createCommand());
+	}
+
+	registerTabKeyMap(
+		increaseHeading: IncreaseHeading,
+		decreaseHeading: DecreaseHeading,
+	) {
 		this.plugin.registerEditorExtension(
 			Prec.highest(
 				keymap.of([

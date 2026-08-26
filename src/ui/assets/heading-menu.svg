@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 100 100"
+   fill="none"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="heading-menu.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="31.104167"
+     inkscape:cx="10.754186"
+     inkscape:cy="12.458138"
+     inkscape:window-width="2400"
+     inkscape:window-height="1261"
+     inkscape:window-x="7991"
+     inkscape:window-y="740"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <defs
+     id="defs3" />
+  <line
+     x1="8"
+     y1="28.046885"
+     x2="92"
+     y2="28.046885"
+     stroke="currentColor"
+     stroke-width="10"
+     stroke-linecap="round"
+     id="line1" />
+  <line
+     x1="8"
+     y1="50"
+     x2="92"
+     y2="50"
+     stroke="currentColor"
+     stroke-width="10"
+     stroke-linecap="round"
+     id="line2" />
+  <line
+     x1="8"
+     y1="71.551239"
+     x2="92"
+     y2="71.551239"
+     stroke="currentColor"
+     stroke-width="10"
+     stroke-linecap="round"
+     id="line3" />
+  <line
+     x1="35.814896"
+     y1="8.5981884"
+     x2="36.028015"
+     y2="92.597923"
+     stroke="currentColor"
+     stroke-width="10"
+     stroke-linecap="round"
+     id="line4" />
+  <line
+     x1="62.981384"
+     y1="8.6506796"
+     x2="63.23703"
+     y2="92.650299"
+     stroke="currentColor"
+     stroke-width="10"
+     stroke-linecap="round"
+     id="line4-2" />
+</svg>
