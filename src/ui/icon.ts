@@ -99,3 +99,85 @@ export const icon_heading_6 = `
 <path d="M49.3995 65.3977C47.7044 65.3977 46.0946 65.1326 44.57 64.6023C43.0548 64.0625 41.7101 63.215 40.5359 62.0597C39.3616 60.9044 38.4383 59.3987 37.766 57.5426C37.1031 55.6866 36.7764 53.4375 36.7859 50.7955C36.7953 48.4375 37.0984 46.3163 37.695 44.4318C38.301 42.5473 39.158 40.9422 40.266 39.6165C41.3834 38.2907 42.7186 37.2775 44.2717 36.5767C45.8247 35.8665 47.5529 35.5114 49.4563 35.5114C51.5965 35.5114 53.4809 35.9233 55.1097 36.7472C56.7385 37.571 58.0359 38.6742 59.0018 40.0568C59.9772 41.4299 60.5453 42.9451 60.7063 44.6023H52.9222C52.7423 43.7784 52.3256 43.1771 51.6722 42.7983C51.0283 42.41 50.2897 42.2159 49.4563 42.2159C47.7991 42.2159 46.5823 42.9356 45.8058 44.375C45.0387 45.8144 44.6457 47.7083 44.6268 50.0568H44.7972C45.1665 49.1667 45.7253 48.4044 46.4734 47.7699C47.2215 47.1354 48.0927 46.6477 49.087 46.3068C50.0813 45.9659 51.1325 45.7955 52.2404 45.7955C54.0018 45.7955 55.5406 46.1932 56.8569 46.9886C58.1826 47.7841 59.2148 48.8731 59.9535 50.2557C60.6921 51.6383 61.0567 53.2197 61.0472 55C61.0567 57.0833 60.5643 58.9062 59.57 60.4688C58.5851 62.0312 57.2167 63.2434 55.4648 64.1051C53.713 64.9669 51.6912 65.3977 49.3995 65.3977ZM49.3427 59.4318C50.1287 59.4318 50.8247 59.2519 51.4308 58.892C52.0463 58.5322 52.5245 58.0398 52.8654 57.4148C53.2158 56.7898 53.3862 56.0795 53.3768 55.2841C53.3862 54.4792 53.2158 53.7689 52.8654 53.1534C52.5245 52.5284 52.0463 52.036 51.4308 51.6761C50.8247 51.3163 50.1287 51.1364 49.3427 51.1364C48.765 51.1364 48.23 51.2405 47.7376 51.4489C47.2546 51.6477 46.8332 51.9366 46.4734 52.3153C46.1135 52.6847 45.8294 53.125 45.6211 53.6364C45.4222 54.1383 45.3181 54.6875 45.3086 55.2841C45.3181 56.0795 45.498 56.7898 45.8484 57.4148C46.1987 58.0398 46.677 58.5322 47.283 58.892C47.8891 59.2519 48.5756 59.4318 49.3427 59.4318Z"  fill="currentColor"/>
 <line x1="11" y1="78" x2="89" y2="78"  stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
 <path d="M28 8L28 92"  stroke="currentColor" stroke-width="10" stroke-linecap="round"/>`;
+
+export type IconDefinition = {
+	id: string;
+	svg: string;
+};
+
+export const ICONS = {
+	increase: {
+		id: "headingShifter_increaseIcon",
+		svg: icon_increase_heading,
+	},
+	increaseForced: {
+		id: "headingShifter_increaseForcedIcon",
+		svg: icon_increase_heading_forced,
+	},
+	increaseWithSubheadings: {
+		id: "headingShifter_increaseWithSubheadingsIcon",
+		svg: icon_increase_heading_with_subheadings,
+	},
+	decrease: {
+		id: "headingShifter_decreaseIcon",
+		svg: icon_decrease_heading,
+	},
+	decreaseWithSubheadings: {
+		id: "headingShifter_decreaseWithSubheadingsIcon",
+		svg: icon_decrease_heading_with_subheadings,
+	},
+	heading0: {
+		id: "headingShifter_heading0",
+		svg: icon_heading_0,
+	},
+	heading1: {
+		id: "headingShifter_heading1",
+		svg: icon_heading_1,
+	},
+	heading2: {
+		id: "headingShifter_heading2",
+		svg: icon_heading_2,
+	},
+	heading3: {
+		id: "headingShifter_heading3",
+		svg: icon_heading_3,
+	},
+	heading4: {
+		id: "headingShifter_heading4",
+		svg: icon_heading_4,
+	},
+	heading5: {
+		id: "headingShifter_heading5",
+		svg: icon_heading_5,
+	},
+	heading6: {
+		id: "headingShifter_heading6",
+		svg: icon_heading_6,
+	},
+	insertHeadingAtCurrentLevel: {
+		id: "headingShifter_insertHeadingAtCurrentLevel",
+		svg: icon_insert_heading_at_current_level,
+	},
+	insertHeadingAtDeeperLevel: {
+		id: "headingShifter_insertHeadingAtDeeperLevel",
+		svg: icon_insert_heading_at_deeper_level,
+	},
+	insertHeadingAtHigherLevel: {
+		id: "headingShifter_insertHeadingAtHigherLevel",
+		svg: icon_insert_heading_at_higher_level,
+	},
+	headingMenu: {
+		id: "headingShifter_headingMenu",
+		svg: icon_heading_menu,
+	},
+} as const satisfies Record<string, IconDefinition>;
+
+export const HEADING_ICONS: readonly IconDefinition[] = [
+	ICONS.heading0,
+	ICONS.heading1,
+	ICONS.heading2,
+	ICONS.heading3,
+	ICONS.heading4,
+	ICONS.heading5,
+	ICONS.heading6,
+];

@@ -2,6 +2,7 @@ import type { Command } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
+import { HEADING_ICONS, ICONS } from "ui/icon";
 import {
 	applyChangesWithSelectionTracking,
 	combineHeadingAndIndentChanges,
@@ -52,10 +53,11 @@ export class ApplyHeading implements EditorOperation {
 	};
 
 	createCommand = (): Command => {
+		const icon = HEADING_ICONS[this.headingSize]?.id ?? ICONS.heading0.id;
 		return {
 			id: `apply-heading${this.headingSize}`,
 			name: `Apply heading ${this.headingSize}`,
-			icon: `headingShifter_heading${this.headingSize}`,
+			icon,
 			editorCallback: this.editorCallback,
 		};
 	};

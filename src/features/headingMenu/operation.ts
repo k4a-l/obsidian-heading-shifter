@@ -1,5 +1,6 @@
 import { type Command, type Editor, Menu, Platform } from "obsidian";
 import type { StopPropagation } from "types/type";
+import { ICONS } from "ui/icon";
 import type { MinimumEditor } from "utils/editorChange";
 
 /** The subset of a Command that OpenHeadingMenu needs to render a menu item
@@ -70,7 +71,7 @@ export class OpenHeadingMenu {
 		return {
 			id: "heading-shifter-menu",
 			name: "Heading Shifter menu",
-			icon: "headingShifter_headingMenu",
+			icon: ICONS.headingMenu.id,
 			editorCallback: this.editorCallback,
 		};
 	};

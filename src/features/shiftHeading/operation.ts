@@ -2,6 +2,7 @@ import { type Command, type Editor, Notice } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
+import { ICONS } from "ui/icon";
 import {
 	applyChangesWithSelectionTracking,
 	composeLineChanges,
@@ -71,10 +72,10 @@ export class IncreaseHeading implements EditorOperation {
 
 	createCommand = (): Command => {
 		const icon = this.options.withSubHeadings
-			? "headingShifter_increaseWithSubheadingsIcon"
+			? ICONS.increaseWithSubheadings.id
 			: this.options.includesNoHeadingsLine
-				? "headingShifter_increaseForcedIcon"
-				: "headingShifter_increaseIcon";
+				? ICONS.increaseForced.id
+				: ICONS.increase.id;
 
 		return {
 			id: `increase-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}${this.options.includesNoHeadingsLine ? "-forced" : ""}`,
@@ -141,8 +142,8 @@ export class DecreaseHeading implements EditorOperation {
 
 	createCommand = () => {
 		const icon = this.options.withSubHeadings
-			? "headingShifter_decreaseWithSubheadingsIcon"
-			: "headingShifter_decreaseIcon";
+			? ICONS.decreaseWithSubheadings.id
+			: ICONS.decrease.id;
 
 		return {
 			id: `decrease-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}`,
