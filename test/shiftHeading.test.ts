@@ -1,6 +1,7 @@
 import {
 	DecreaseHeading,
 	IncreaseHeading,
+	type ShiftHeadingOptions,
 } from "features/shiftHeading/operation";
 import { DEFAULT_SETTINGS } from "settings";
 import { describe, expect, test } from "vitest";
@@ -8,9 +9,10 @@ import { _t, cursor, range, runCommand } from "./helper";
 
 // DEFAULT_SETTINGS.limitHeadingFrom === 1, so decreasing a level-1 heading is
 // blocked by default.
-const increase = (forced = false) =>
-	new IncreaseHeading(DEFAULT_SETTINGS, forced);
-const decrease = () => new DecreaseHeading(DEFAULT_SETTINGS);
+const increase = (options: ShiftHeadingOptions = {}) =>
+	new IncreaseHeading(DEFAULT_SETTINGS, options);
+const decrease = (options: ShiftHeadingOptions = {}) =>
+	new DecreaseHeading(DEFAULT_SETTINGS, options);
 
 describe("increase heading command", () => {
 	test("increases a single heading", () => {
@@ -53,7 +55,11 @@ b
 	});
 
 	test("forced also turns a plain line into a heading", () => {
-		expect(runCommand(increase(true), "a", [cursor(0, 1)])).toEqual({
+		expect(
+			runCommand(increase({ includesNoHeadingsLine: true }), "a", [
+				cursor(0, 1),
+			]),
+		).toEqual({
 			value: "# a",
 			selections: [cursor(0, 3)],
 		});
@@ -98,6 +104,91 @@ b
 		expect(runCommand(increase(), input, [cursor(0), cursor(2)])).toEqual({
 			value: input,
 			selections: [cursor(0), cursor(2)],
+		});
+	});
+});
+
+describe("increase heading (with sub-headings) command", () => {
+	test("increases heading and all child subheadings until equal or higher heading", () => {
+		const input = _t`
+# H1
+## H2-A
+### H3-A1
+body
+## H2-B
+`;
+		// Cursor on ## H2-A (line 1)
+		expect(
+			runCommand(increase({ withSubHeadings: true }), input, [cursor(1, 2)]),
+		).toEqual({
+			value: _t`
+# H1
+### H2-A
+#### H3-A1
+body
+## H2-B
+`,
+			selections: [cursor(1, 3)],
+		});
+	});
+
+	test("aborts entire operation if any child heading is already at heading 6", () => {
+		const input = _t`
+## H2
+### H3
+###### H6
+## Next H2
+`;
+		// Cursor on ## H2 (line 0)
+		expect(
+			runCommand(increase({ withSubHeadings: true }), input, [cursor(0, 2)]),
+		).toEqual({
+			value: input,
+			selections: [cursor(0, 2)],
+		});
+	});
+
+	test("handles multiple scattered selections with subheadings", () => {
+		const input = _t`
+## Section 1
+### Sub 1
+## Section 2
+### Sub 2
+`;
+		// Cursor on ## Section 1 (line 0) and ## Section 2 (line 2)
+		expect(
+			runCommand(increase({ withSubHeadings: true }), input, [
+				cursor(0, 2),
+				cursor(2, 2),
+			]),
+		).toEqual({
+			value: _t`
+### Section 1
+#### Sub 1
+### Section 2
+#### Sub 2
+`,
+			selections: [cursor(0, 3), cursor(2, 3)],
+		});
+	});
+
+	test("handles overlapping parent and child selections without duplicate shift", () => {
+		const input = _t`
+## Section 1
+### Sub 1
+`;
+		// Both Section 1 (line 0) and Sub 1 (line 1) are selected
+		expect(
+			runCommand(increase({ withSubHeadings: true }), input, [
+				cursor(0, 2),
+				cursor(1, 3),
+			]),
+		).toEqual({
+			value: _t`
+### Section 1
+#### Sub 1
+`,
+			selections: [cursor(0, 3), cursor(1, 4)],
 		});
 	});
 });
@@ -149,6 +240,69 @@ b
 		expect(runCommand(decrease(), input, [cursor(0), cursor(2)])).toEqual({
 			value: input,
 			selections: [cursor(0), cursor(2)],
+		});
+	});
+});
+
+describe("decrease heading (with sub-headings) command", () => {
+	test("decreases heading and all child subheadings until equal or higher heading", () => {
+		const input = _t`
+# H1
+### H3-A
+#### H4-A1
+body
+### H3-B
+`;
+		// Cursor on ### H3-A (line 1)
+		expect(
+			runCommand(decrease({ withSubHeadings: true }), input, [cursor(1, 3)]),
+		).toEqual({
+			value: _t`
+# H1
+## H3-A
+### H4-A1
+body
+### H3-B
+`,
+			selections: [cursor(1, 2)],
+		});
+	});
+
+	test("aborts entire operation if parent heading is already at lower limit", () => {
+		const input = _t`
+# H1
+## H2
+`;
+		// Cursor on # H1 (line 0)
+		expect(
+			runCommand(decrease({ withSubHeadings: true }), input, [cursor(0, 1)]),
+		).toEqual({
+			value: input,
+			selections: [cursor(0, 1)],
+		});
+	});
+
+	test("handles multiple scattered selections with subheadings", () => {
+		const input = _t`
+### Section 1
+#### Sub 1
+### Section 2
+#### Sub 2
+`;
+		// Cursor on ### Section 1 (line 0) and ### Section 2 (line 2)
+		expect(
+			runCommand(decrease({ withSubHeadings: true }), input, [
+				cursor(0, 3),
+				cursor(2, 3),
+			]),
+		).toEqual({
+			value: _t`
+## Section 1
+### Sub 1
+## Section 2
+### Sub 2
+`,
+			selections: [cursor(0, 2), cursor(2, 2)],
 		});
 	});
 });

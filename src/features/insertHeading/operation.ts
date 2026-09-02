@@ -4,6 +4,7 @@ import { type Command, type EditorChange, Notice } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
+import { ICONS } from "ui/icon";
 import {
 	applyChangesWithSelectionTracking,
 	combineHeadingAndIndentChanges,
@@ -115,7 +116,7 @@ export class InsertHeadingAtCurrentLevel implements EditorOperation {
 		return {
 			id: `insert-heading-current`,
 			name: `Insert heading at current level`,
-			icon: `headingShifter_insertHeadingAtCurrentLevel`,
+			icon: ICONS.insertHeadingAtCurrentLevel.id,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -137,7 +138,7 @@ export class InsertHeadingAtDeeperLevel implements EditorOperation {
 		return {
 			id: `insert-heading-deeper`,
 			name: `Insert heading at one level deeper`,
-			icon: `headingShifter_insertHeadingAtDeeperLevel`,
+			icon: ICONS.insertHeadingAtDeeperLevel.id,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -159,7 +160,7 @@ export class InsertHeadingAtHigherLevel implements EditorOperation {
 		return {
 			id: `insert-heading-higher`,
 			name: `Insert heading at one level higher`,
-			icon: `headingShifter_insertHeadingAtHigherLevel`,
+			icon: ICONS.insertHeadingAtHigherLevel.id,
 			editorCallback: this.editorCallback,
 		};
 	};

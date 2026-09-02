@@ -10,6 +10,7 @@ import {
 	type FenceType,
 	getFenceStatus,
 	getHeadingLines,
+	getHeadingSubtreeLines,
 	getListChildrenLines,
 	getPreviousHeading,
 	removeUsingRegexpStrings,
@@ -237,6 +238,90 @@ Normal
 		expect(getHeadingLines(editor, 0, 20)).toEqual({
 			headingLines: [0, 2, 20],
 			minHeading: 1,
+			maxHeading: 3,
+		});
+	});
+});
+
+describe("getHeadingSubtreeLines", () => {
+	const input = _t`
+# H1
+Body 1
+## H2-A
+Body 2-A
+### H3-A1
+Body 3-A1
+### H3-A2
+Body 3-A2
+## H2-B
+Body 2-B
+### H3-B1
+# Next H1
+`;
+
+	test("collects entire subtree under a single heading", () => {
+		const editor = new MockEditor(input);
+		// Selecting line 2 (## H2-A)
+		expect(getHeadingSubtreeLines(editor, 2, 2)).toEqual({
+			headingLines: [2, 4, 6],
+			minHeading: 2,
+			maxHeading: 3,
+		});
+	});
+
+	test("collects all subheadings under root H1 until next H1", () => {
+		const editor = new MockEditor(input);
+		// Selecting line 0 (# H1)
+		expect(getHeadingSubtreeLines(editor, 0, 0)).toEqual({
+			headingLines: [0, 2, 4, 6, 8, 10],
+			minHeading: 1,
+			maxHeading: 3,
+		});
+	});
+
+	test("leaf heading without children only collects itself", () => {
+		const editor = new MockEditor(input);
+		// Selecting line 4 (### H3-A1)
+		expect(getHeadingSubtreeLines(editor, 4, 4)).toEqual({
+			headingLines: [4],
+			minHeading: 3,
+			maxHeading: 3,
+		});
+	});
+
+	test("range selection over multiple headings merges their subtrees without duplicates", () => {
+		const editor = new MockEditor(input);
+		// Selecting from line 2 (## H2-A) to line 8 (## H2-B)
+		expect(getHeadingSubtreeLines(editor, 2, 8)).toEqual({
+			headingLines: [2, 4, 6, 8, 10],
+			minHeading: 2,
+			maxHeading: 3,
+		});
+	});
+
+	test("returns empty when no headings are in selection", () => {
+		const editor = new MockEditor(input);
+		// Selecting line 1 (Body 1)
+		expect(getHeadingSubtreeLines(editor, 1, 1)).toEqual({
+			headingLines: [],
+			minHeading: undefined,
+			maxHeading: undefined,
+		});
+	});
+
+	test("ignores headings inside code fences in subtree", () => {
+		const fencedInput = _t`
+## Target H2
+Body text
+\`\`\`markdown
+### Fenced heading (not real)
+\`\`\`
+### Real Child H3
+`;
+		const editor = new MockEditor(fencedInput);
+		expect(getHeadingSubtreeLines(editor, 0, 0)).toEqual({
+			headingLines: [0, 5],
+			minHeading: 2,
 			maxHeading: 3,
 		});
 	});

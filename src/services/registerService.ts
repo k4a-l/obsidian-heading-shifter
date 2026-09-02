@@ -28,12 +28,20 @@ export class RegisterService {
 
 	exec() {
 		// Create operations
-		const increaseHeading = new IncreaseHeading(this.plugin.settings, false);
-		const increaseHeadingForced = new IncreaseHeading(
+		const increaseHeading = new IncreaseHeading(this.plugin.settings);
+		// I thought about getting rid of `force` and switching behaviors using `Tab` and commands instead, but since `force` applies to the entire line, selecting multiple lines would cause it to apply to all of them.
+		const increaseHeadingForced = new IncreaseHeading(this.plugin.settings, {
+			includesNoHeadingsLine: true,
+		});
+		const increaseHeadingWithSubheadings = new IncreaseHeading(
 			this.plugin.settings,
-			true,
+			{ withSubHeadings: true },
 		);
 		const decreaseHeading = new DecreaseHeading(this.plugin.settings);
+		const decreaseHeadingWithSubheadings = new DecreaseHeading(
+			this.plugin.settings,
+			{ withSubHeadings: true },
+		);
 		const insertHeadingAtCurrentLabel = new InsertHeadingAtCurrentLevel(
 			this.plugin.settings,
 		);
@@ -55,7 +63,9 @@ export class RegisterService {
 			insertHeadingAtHigherLevel,
 			increaseHeading,
 			increaseHeadingForced,
+			increaseHeadingWithSubheadings,
 			decreaseHeading,
+			decreaseHeadingWithSubheadings,
 		]);
 
 		// Register Tab / Shift-Tab keymaps
@@ -74,6 +84,7 @@ export class RegisterService {
 		const menuCommands = commands.map((command) => ({ ...command }));
 
 		commands.forEach((command) => {
+			// 検索時は先頭一致 > 文字列長 > の順番でソートされるらしい なので登録順とかアルファベット順は尊重されない
 			this.plugin.addCommand(command);
 		});
 

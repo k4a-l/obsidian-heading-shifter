@@ -2,14 +2,20 @@ import { type Command, type Editor, Notice } from "obsidian";
 import type { HeadingShifterSettings } from "settings";
 import type { EditorOperation } from "types/editorOperation";
 import type { StopPropagation } from "types/type";
+import { ICONS } from "ui/icon";
 import {
 	applyChangesWithSelectionTracking,
 	composeLineChanges,
 	type MinimumEditor,
 } from "utils/editorChange";
-import { getHeadingLines } from "utils/markdown";
+import { getHeadingLines, getHeadingSubtreeLines } from "utils/markdown";
 import { selectionsToLineBlocks } from "utils/range";
 import { decreaseHeading, increaseHeading } from "./module";
+
+export type ShiftHeadingOptions = {
+	includesNoHeadingsLine?: boolean;
+	withSubHeadings?: boolean;
+};
 
 /** Whether any selected block (across scattered selections) contains a heading.
  * Used by `check` to decide if Tab / Shift-Tab should be intercepted — the same
@@ -22,13 +28,14 @@ const selectionHasHeading = (editor: MinimumEditor): boolean =>
 
 export class IncreaseHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
-	includesNoHeadingsLine: boolean;
+	options: ShiftHeadingOptions;
+
 	constructor(
 		settings: HeadingShifterSettings,
-		includesNoHeadingsLine: boolean,
+		options: ShiftHeadingOptions = {},
 	) {
 		this.settings = settings;
-		this.includesNoHeadingsLine = includesNoHeadingsLine;
+		this.options = options;
 	}
 
 	editorCallback = (editor: MinimumEditor): StopPropagation => {
@@ -36,9 +43,11 @@ export class IncreaseHeading implements EditorOperation {
 
 		// Get the lines that contain heading, per block
 		const perBlock = blocks.map((block) =>
-			getHeadingLines(editor, block.start, block.end, {
-				includesNoHeadingsLine: this.includesNoHeadingsLine,
-			}),
+			this.options.withSubHeadings
+				? getHeadingSubtreeLines(editor, block.start, block.end)
+				: getHeadingLines(editor, block.start, block.end, {
+						includesNoHeadingsLine: this.options.includesNoHeadingsLine,
+					}),
 		);
 
 		// Do not increase if any block contains more than heading 6.
@@ -62,10 +71,16 @@ export class IncreaseHeading implements EditorOperation {
 	};
 
 	createCommand = (): Command => {
+		const icon = this.options.withSubHeadings
+			? ICONS.increaseWithSubheadings.id
+			: this.options.includesNoHeadingsLine
+				? ICONS.increaseForced.id
+				: ICONS.increase.id;
+
 		return {
-			id: `increase-heading${this.includesNoHeadingsLine ? "-forced" : ""}`,
-			name: `Increase headings${this.includesNoHeadingsLine ? "(forced)" : ""}`,
-			icon: "headingShifter_increaseIcon",
+			id: `increase-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}${this.options.includesNoHeadingsLine ? "-forced" : ""}`,
+			name: `Increase headings${this.options.withSubHeadings ? "(with sub-headings)" : ""}${this.options.includesNoHeadingsLine ? "(forced)" : ""}`,
+			icon,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -80,15 +95,24 @@ export class IncreaseHeading implements EditorOperation {
 
 export class DecreaseHeading implements EditorOperation {
 	settings: HeadingShifterSettings;
-	constructor(settings: HeadingShifterSettings) {
+	options: ShiftHeadingOptions;
+
+	constructor(
+		settings: HeadingShifterSettings,
+		options: ShiftHeadingOptions = {},
+	) {
 		this.settings = settings;
+		this.options = options;
 	}
+
 	editorCallback = (editor: MinimumEditor) => {
 		const blocks = selectionsToLineBlocks(editor.listSelections());
 
 		// Get the lines that contain heading, per block
 		const perBlock = blocks.map((block) =>
-			getHeadingLines(editor, block.start, block.end),
+			this.options.withSubHeadings
+				? getHeadingSubtreeLines(editor, block.start, block.end)
+				: getHeadingLines(editor, block.start, block.end),
 		);
 
 		// Do not decrease if any block contains less than the configured heading.
@@ -117,10 +141,14 @@ export class DecreaseHeading implements EditorOperation {
 	};
 
 	createCommand = () => {
+		const icon = this.options.withSubHeadings
+			? ICONS.decreaseWithSubheadings.id
+			: ICONS.decrease.id;
+
 		return {
-			id: "decrease-heading",
-			name: "Decrease headings",
-			icon: "headingShifter_decreaseIcon",
+			id: `decrease-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}`,
+			name: `Decrease headings${this.options.withSubHeadings ? "(with sub-headings)" : ""}`,
+			icon,
 			editorCallback: this.editorCallback,
 		};
 	};
