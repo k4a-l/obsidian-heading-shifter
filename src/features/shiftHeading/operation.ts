@@ -70,10 +70,16 @@ export class IncreaseHeading implements EditorOperation {
 	};
 
 	createCommand = (): Command => {
+		const icon = this.options.withSubHeadings
+			? "headingShifter_increaseWithSubheadingsIcon"
+			: this.options.includesNoHeadingsLine
+				? "headingShifter_increaseForcedIcon"
+				: "headingShifter_increaseIcon";
+
 		return {
 			id: `increase-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}${this.options.includesNoHeadingsLine ? "-forced" : ""}`,
 			name: `Increase headings${this.options.withSubHeadings ? "(with sub-headings)" : ""}${this.options.includesNoHeadingsLine ? "(forced)" : ""}`,
-			icon: "headingShifter_increaseIcon",
+			icon,
 			editorCallback: this.editorCallback,
 		};
 	};
@@ -134,10 +140,14 @@ export class DecreaseHeading implements EditorOperation {
 	};
 
 	createCommand = () => {
+		const icon = this.options.withSubHeadings
+			? "headingShifter_decreaseWithSubheadingsIcon"
+			: "headingShifter_decreaseIcon";
+
 		return {
 			id: `decrease-heading${this.options.withSubHeadings ? "-with-subheadings" : ""}`,
 			name: `Decrease headings${this.options.withSubHeadings ? "(with sub-headings)" : ""}`,
-			icon: "headingShifter_decreaseIcon",
+			icon,
 			editorCallback: this.editorCallback,
 		};
 	};

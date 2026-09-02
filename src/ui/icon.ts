@@ -18,11 +18,37 @@ export const icon_increase_heading = `
 <line x1="5" y1="62" x2="73" y2="62"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
 <line x1="27" y1="8" x2="27" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />`;
 
+export const icon_increase_heading_forced = `
+<path d="M100 50L81.25 68.1865L81.25 31.8135L100 50Z" fill="currentColor" />
+<line x1="5" y1="37" x2="73" y2="37"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="52" y1="8" x2="52" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="5" y1="62" x2="73" y2="62"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="27" y1="8" x2="27" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="90.625" y1="6" x2="90.625" y2="15" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+<circle cx="90.625" cy="23" r="3" fill="currentColor" />`;
+
+export const icon_increase_heading_with_subheadings = `
+<line x1="5" y1="37" x2="73" y2="37"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="52" y1="8" x2="52" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="5" y1="62" x2="73" y2="62"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="27" y1="8" x2="27" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<path d="M100 37L81.25 47L81.25 27L100 37Z" fill="currentColor" />
+<path d="M100 62L81.25 72L81.25 52L100 62Z" fill="currentColor" />`;
+
 export const icon_decrease_heading = `<path d="M2.50422e-07 50L18.75 31.8135L18.75 68.1865L2.50422e-07 50Z" fill="currentColor" />
 <line x1="27" y1="37" x2="95" y2="37"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
 <line x1="74" y1="8" x2="74" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
 <line x1="27" y1="62" x2="95" y2="62"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
 <line x1="49" y1="8" x2="49" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+`;
+
+export const icon_decrease_heading_with_subheadings = `
+<line x1="27" y1="37" x2="95" y2="37"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="74" y1="8" x2="74" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="27" y1="62" x2="95" y2="62"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<line x1="49" y1="8" x2="49" y2="92"  stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+<path d="M0 37L18.75 27L18.75 47L0 37Z" fill="currentColor" />
+<path d="M0 62L18.75 52L18.75 72L0 62Z" fill="currentColor" />
 `;
 
 export const icon_heading_0 = `

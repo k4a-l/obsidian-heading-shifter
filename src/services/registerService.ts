@@ -29,6 +29,7 @@ export class RegisterService {
 	exec() {
 		// Create operations
 		const increaseHeading = new IncreaseHeading(this.plugin.settings);
+		// I thought about getting rid of `force` and switching behaviors using `Tab` and commands instead, but since `force` applies to the entire line, selecting multiple lines would cause it to apply to all of them.
 		const increaseHeadingForced = new IncreaseHeading(this.plugin.settings, {
 			includesNoHeadingsLine: true,
 		});

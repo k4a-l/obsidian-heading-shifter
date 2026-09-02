@@ -1,6 +1,7 @@
 import { addIcon } from "obsidian";
 import {
 	icon_decrease_heading,
+	icon_decrease_heading_with_subheadings,
 	icon_heading_0,
 	icon_heading_1,
 	icon_heading_2,
@@ -10,6 +11,8 @@ import {
 	icon_heading_6,
 	icon_heading_menu,
 	icon_increase_heading,
+	icon_increase_heading_forced,
+	icon_increase_heading_with_subheadings,
 	icon_insert_heading_at_current_level,
 	icon_insert_heading_at_deeper_level,
 	icon_insert_heading_at_higher_level,
@@ -19,7 +22,16 @@ export class InterfaceService {
 	// constructor() {}
 	addIcons = () => {
 		addIcon("headingShifter_decreaseIcon", icon_decrease_heading);
+		addIcon(
+			"headingShifter_decreaseWithSubheadingsIcon",
+			icon_decrease_heading_with_subheadings,
+		);
 		addIcon("headingShifter_increaseIcon", icon_increase_heading);
+		addIcon("headingShifter_increaseForcedIcon", icon_increase_heading_forced);
+		addIcon(
+			"headingShifter_increaseWithSubheadingsIcon",
+			icon_increase_heading_with_subheadings,
+		);
 		addIcon("headingShifter_heading0", icon_heading_0);
 		addIcon("headingShifter_heading1", icon_heading_1);
 		addIcon("headingShifter_heading2", icon_heading_2);
