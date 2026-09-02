@@ -66,6 +66,74 @@ export const getHeadingLines = (
 	return { headingLines, minHeading, maxHeading };
 };
 
+export const getHeadingSubtreeLines = (
+	editor: {
+		getLine: (number: number) => string;
+		lineCount: () => number;
+	},
+	from: number,
+	to: number,
+) => {
+	const selectedHeadings: { line: number; level: number }[] = [];
+	let fence: FenceType = null;
+	const start = Math.min(from, to);
+	const end = Math.max(from, to);
+
+	for (let line = start; line <= end; line++) {
+		fence = getFenceStatus(fence, checkFence(editor.getLine(line)));
+		if (fence) continue;
+
+		const heading = checkHeading(editor.getLine(line));
+		if (heading > 0) {
+			selectedHeadings.push({ line, level: heading });
+		}
+	}
+
+	if (selectedHeadings.length === 0) {
+		return {
+			headingLines: [] as number[],
+			minHeading: undefined as number | undefined,
+			maxHeading: undefined as number | undefined,
+		};
+	}
+
+	const targetLines = new Set<number>();
+	const totalLines = editor.lineCount();
+
+	for (const { line: headingLine, level: parentLevel } of selectedHeadings) {
+		targetLines.add(headingLine);
+		let subFence: FenceType = null;
+
+		for (let line = headingLine + 1; line < totalLines; line++) {
+			const lineText = editor.getLine(line);
+			subFence = getFenceStatus(subFence, checkFence(lineText));
+			if (!subFence) {
+				const heading = checkHeading(lineText);
+				if (heading > 0) {
+					if (heading <= parentLevel) {
+						// Reached a heading of equal or higher level -> subtree ends
+						break;
+					}
+					// Deeper heading -> include in subtree
+					targetLines.add(line);
+				}
+			}
+		}
+	}
+
+	const headingLines = Array.from(targetLines).sort((a, b) => a - b);
+	let minHeading: undefined | number;
+	let maxHeading: undefined | number;
+
+	for (const line of headingLines) {
+		const heading = checkHeading(editor.getLine(line));
+		minHeading = setMin(minHeading, heading);
+		maxHeading = setMax(maxHeading, heading);
+	}
+
+	return { headingLines, minHeading, maxHeading };
+};
+
 // goes backwards from the `from` line, returns line number of first line containing any heading
 export const getPreviousHeading = (
 	editor: {

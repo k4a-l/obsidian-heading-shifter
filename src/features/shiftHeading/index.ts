@@ -1,1 +1,5 @@
-export { DecreaseHeading, IncreaseHeading } from "./operation";
+export {
+	DecreaseHeading,
+	IncreaseHeading,
+	type ShiftHeadingOptions,
+} from "./operation";
